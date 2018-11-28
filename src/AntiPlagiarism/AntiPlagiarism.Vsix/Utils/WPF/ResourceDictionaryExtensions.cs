@@ -8,7 +8,7 @@ using System.Resources;
 using System.Windows;
 
 
-namespace Acuminator.Vsix.Utilities
+namespace AntiPlagiarism.Vsix.Utilities
 {
 	/// <summary>
 	/// A static helper for the WPF <see cref="ResourceDictionary"/>.

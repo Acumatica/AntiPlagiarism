@@ -7,12 +7,11 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.Shell;
 
-using Acuminator.Utilities;
-using Acuminator.Utilities.Common;
-using Acuminator.Vsix.Utilities;
+using AntiPlagiarism.Core.Utilities.Common;
+using AntiPlagiarism.Vsix.Utilities;
 
 
-namespace Acuminator.Vsix
+namespace AntiPlagiarism.Vsix
 {
 	[AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]
 	internal sealed class CategoryFromResourcesAttribute : CategoryAttribute

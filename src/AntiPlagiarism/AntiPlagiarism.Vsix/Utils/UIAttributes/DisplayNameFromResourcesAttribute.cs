@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using Acuminator.Utilities;
-using Acuminator.Utilities.Common;
-using Acuminator.Vsix.Utilities;
+using AntiPlagiarism.Core.Utilities.Common;
+using AntiPlagiarism.Vsix.Utilities;
 
 
-namespace Acuminator.Vsix
+namespace AntiPlagiarism.Vsix
 {
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
 	internal sealed class DisplayNameFromResourcesAttribute : DisplayNameAttribute
