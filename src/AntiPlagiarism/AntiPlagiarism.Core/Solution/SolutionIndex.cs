@@ -1,7 +1,7 @@
-﻿using AcumaticaPlagiarism.Method;
+﻿using AntiPlagiarism.Core.Method;
 using System.Collections.Generic;
 
-namespace AcumaticaPlagiarism.Solution
+namespace AntiPlagiarism.Core.Solution
 {
     internal class SolutionIndex
     {

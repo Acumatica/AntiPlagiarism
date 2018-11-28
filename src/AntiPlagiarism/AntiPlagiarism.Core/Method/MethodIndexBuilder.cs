@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AcumaticaPlagiarism.Method
+namespace AntiPlagiarism.Core.Method
 {
     internal static class MethodIndexBuilder
     {

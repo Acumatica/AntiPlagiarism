@@ -1,11 +1,12 @@
-﻿using AcumaticaPlagiarism.Method;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
 using System.Collections.Generic;
 using System.Linq;
+using AntiPlagiarism.Core.Method;
 
-namespace AcumaticaPlagiarism.Solution
+
+namespace AntiPlagiarism.Core.Solution
 {
     internal static class SolutionIndexBuilder
     {

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AcumaticaPlagiarism")]
+[assembly: AssemblyTitle("AntiPlagiarism.ConsoleRunner")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AcumaticaPlagiarism")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyProduct("AntiPlagiarism.ConsoleRunner")]
+[assembly: AssemblyCopyright("Copyright © 2017-2018 Acumatica Ltd.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("7cb50417-d544-4302-8f4f-300a26570a98")]
+[assembly: Guid("88d39887-a804-4ecc-8d1d-f3b44928c921")]
 
 // Version information for an assembly consists of the following four values:
 //

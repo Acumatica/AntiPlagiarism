@@ -1,7 +1,7 @@
-﻿using AcumaticaPlagiarism.Method;
+﻿using AntiPlagiarism.Core.Method;
 using System;
 
-namespace AcumaticaPlagiarism
+namespace AntiPlagiarism.Core
 {
     public static class DefaultSimilarityStrategies
     {

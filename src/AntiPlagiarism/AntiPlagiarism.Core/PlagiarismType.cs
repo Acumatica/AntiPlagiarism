@@ -1,4 +1,4 @@
-﻿namespace AcumaticaPlagiarism
+﻿namespace AntiPlagiarism.Core
 {
     public enum PlagiarismType
     {

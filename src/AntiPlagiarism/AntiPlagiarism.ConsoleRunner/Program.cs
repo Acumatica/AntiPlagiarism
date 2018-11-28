@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using AntiPlagiarism.Core;
 
-namespace AcumaticaPlagiarism.Tests
+namespace AntiPlagiarism.ConsoleRunner
 {
     class Program
     {
@@ -10,7 +11,7 @@ namespace AcumaticaPlagiarism.Tests
             string referenceSolutionPath = @"C:\repos\ReferenceSolution\ReferenceSolution.sln";
             string solutionToAnalyzePath = @"C:\repos\SolutionToAnalyze\SolutionToAnalyze.sln";
             PlagiarismScanner scanner = new PlagiarismScanner(referenceSolutionPath, solutionToAnalyzePath);
-            IEnumerable<PlagiarismInfo> scanResults = scanner.Scan();
+            IEnumerable<PlagiarismInfo> scanResults = scanner.Scan(callFromVS: false);
 
             foreach (PlagiarismInfo info in scanResults)
             {

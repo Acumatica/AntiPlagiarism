@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AcumaticaPlagiarism.Method
+namespace AntiPlagiarism.Core.Method
 {
     internal class MethodStatementWalker : CSharpSyntaxWalker
     {

@@ -1,10 +1,10 @@
-﻿using AcumaticaPlagiarism.Method;
-using AcumaticaPlagiarism.Solution;
+﻿using AntiPlagiarism.Core.Method;
+using AntiPlagiarism.Core.Solution;
 using Microsoft.Build.Locator;
 using System;
 using System.Collections.Generic;
 
-namespace AcumaticaPlagiarism
+namespace AntiPlagiarism.Core
 {
     public class PlagiarismScanner
     {

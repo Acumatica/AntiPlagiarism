@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AcumaticaPlagiarism.Method
+namespace AntiPlagiarism.Core.Method
 {
     public class MethodIndex : Index
     {

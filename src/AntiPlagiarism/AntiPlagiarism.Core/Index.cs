@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AcumaticaPlagiarism
+namespace AntiPlagiarism.Core
 {
     public abstract class Index
     {
