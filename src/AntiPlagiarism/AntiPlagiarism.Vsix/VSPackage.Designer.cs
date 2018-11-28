@@ -22,14 +22,14 @@ namespace AntiPlagiarism.Vsix {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class VSIXResource {
+    public class VSPackage {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal VSIXResource() {
+        internal VSPackage() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace AntiPlagiarism.Vsix {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AntiPlagiarism.Vsix.Resources.VSIXResource", typeof(VSIXResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AntiPlagiarism.Vsix.VSPackage", typeof(VSPackage).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,11 +61,30 @@ namespace AntiPlagiarism.Vsix {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AntiPlagiarism.
+        ///   Looks up a localized string similar to AntiPlagiarism Tool.
         /// </summary>
-        public static string AntiPlagiatorWindowTitle {
+        public static string _110 {
             get {
-                return ResourceManager.GetString("AntiPlagiatorWindowTitle", resourceCulture);
+                return ResourceManager.GetString("110", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provides the ability to analyze solutions for copypasted code from a provided reference solution. The tool was designed to use the  Acumatica Framework as a reference solution but can be used with other solutions unrelated to Acumatica..
+        /// </summary>
+        public static string _112 {
+            get {
+                return ResourceManager.GetString("112", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon _400 {
+            get {
+                object obj = ResourceManager.GetObject("400", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
     }
