@@ -5,8 +5,6 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Acuminator.Vsix.Utilities;
-using Acuminator.Utilities.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Shell;
@@ -21,7 +19,7 @@ using DTE = EnvDTE.DTE;
 
 
 
-namespace Acuminator.Vsix.Utilities.Navigation
+namespace AntiPlagiarism.Vsix.Utilities.Navigation
 {
 	public static class VSDocumentNavigation
 	{

@@ -26,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -210,6 +211,9 @@
     <Compile Include="SimilarityStrategies.cs" />
     <Compile Include="Solution\SolutionIndex.cs" />
     <Compile Include="Solution\SolutionIndexBuilder.cs" />
+    <Compile Include="Utilities\Common\EnumerableExtensions.cs" />
+    <Compile Include="Utilities\Common\ExceptionExtensions.cs" />
+    <Compile Include="Utilities\Common\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

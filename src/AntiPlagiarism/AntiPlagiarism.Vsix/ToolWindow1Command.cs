@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 
-namespace AntiPlagiarism
+namespace AntiPlagiarism.Vsix
 {
 	/// <summary>
 	/// Command handler

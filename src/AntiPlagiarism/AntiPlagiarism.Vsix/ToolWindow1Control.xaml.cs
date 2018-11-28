@@ -1,9 +1,10 @@
-﻿namespace AntiPlagiarism
-{
-	using System.Diagnostics.CodeAnalysis;
-	using System.Windows;
-	using System.Windows.Controls;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows;
+using System.Windows.Controls;
 
+
+namespace AntiPlagiarism.Vsix
+{
 	/// <summary>
 	/// Interaction logic for ToolWindow1Control.
 	/// </summary>

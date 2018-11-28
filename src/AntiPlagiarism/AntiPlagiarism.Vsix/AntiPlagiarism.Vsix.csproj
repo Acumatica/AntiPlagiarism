@@ -47,6 +47,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -57,14 +58,88 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\BQL Fixer\AngleBracesBqlRewriter.cs" />
+    <Compile Include="Commands\BQL Fixer\FixBqlCommand.cs" />
+    <Compile Include="Commands\Formatter\BqlAggregateRewriter.cs" />
+    <Compile Include="Commands\Formatter\BqlConditionRewriter.cs" />
+    <Compile Include="Commands\Formatter\BqlContext.cs" />
+    <Compile Include="Commands\Formatter\BqlFirstTableRewriter.cs" />
+    <Compile Include="Commands\Formatter\BqlFormatter.cs" />
+    <Compile Include="Commands\Formatter\BqlJoinRewriter.cs" />
+    <Compile Include="Commands\Formatter\BqlRewriter.cs" />
+    <Compile Include="Commands\Formatter\BqlRewriterBase.cs" />
+    <Compile Include="Commands\Formatter\BqlStatementRewriter.cs" />
+    <Compile Include="Commands\Formatter\BqlViewDeclarationRewriter.cs" />
+    <Compile Include="Commands\Formatter\FormatBqlCommand.cs" />
+    <Compile Include="Commands\Formatter\SelectedNodesCollector.cs" />
+    <Compile Include="Commands\Formatter\SpanWalker.cs" />
+    <Compile Include="Commands\Formatter\SyntaxTriviaListExtensions.cs" />
+    <Compile Include="Commands\GoToDeclarationOrHandler\GoToDeclarationOrHandlerCommand.cs" />
+    <Compile Include="Commands\VSCommandBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\VSIXResource.Designer.cs" />
+    <Compile Include="Tool Windows\AntiPlagiator\AntiPlagiatorWindow.cs" />
+    <Compile Include="Tool Windows\AntiPlagiator\AntiPlagiatorWindowControl.xaml.cs">
+      <DependentUpon>AntiPlagiatorWindowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tool Windows\AntiPlagiator\LocationType.cs" />
+    <Compile Include="Tool Windows\AntiPlagiator\OpenAntiPlagiatorWindowCommand.cs" />
+    <Compile Include="Tool Windows\AntiPlagiator\ViewModel\AntiPlagiatorWindowViewModel.cs" />
+    <Compile Include="Tool Windows\AntiPlagiator\ViewModel\PlagiarismInfoViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\CodeMapWindow.cs" />
+    <Compile Include="Tool Windows\CodeMap\CodeMapWindowControl.xaml.cs">
+      <DependentUpon>CodeMapWindowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tool Windows\CodeMap\Convertes\TreeNodeToImageSourceConverter.cs" />
+    <Compile Include="Tool Windows\CodeMap\Convertes\TreeNodeToTooltipConverter.cs" />
+    <Compile Include="Tool Windows\CodeMap\Model\DocumentModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\Model\GraphMemberType.cs" />
+    <Compile Include="Tool Windows\CodeMap\OpenCodeMapWindowCommand.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Base\GraphEventCategoryNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Base\GraphEventNodeByDacConstructor.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Base\GraphMemberCategoryNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Base\TreeNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\CodeMapWindowViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\AttributeNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\DacGroupingNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMemberNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMembersCategories\ActionCategoryNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMembersCategories\ActionHandlerCategoryNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMembersCategories\CacheAttachedCategoryNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMembersCategories\FieldEventCategoryNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMembersCategories\RowEventCategoryNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMembersCategories\ViewCategoryNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMembersCategories\ViewDelegateCategoryNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMembers\CacheAttachedNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMembers\FieldEventNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphMembers\RowEventNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\Nodes\GraphNodeViewModel.cs" />
+    <Compile Include="Tool Windows\CodeMap\ViewModel\TreeViewModel.cs" />
+    <Compile Include="Tool Windows\Converters\BoolInversionConverter.cs" />
+    <Compile Include="Tool Windows\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Tool Windows\Converters\IsBackgroundDarkConverter.cs" />
+    <Compile Include="Tool Windows\Converters\ObjectToItsTypeConverter.cs" />
+    <Compile Include="Tool Windows\Converters\VisibilityInverter.cs" />
+    <Compile Include="Tool Windows\OpenToolWindowCommandBase.cs" />
+    <Compile Include="Tool Windows\ViewModel\Command.cs" />
+    <Compile Include="Tool Windows\ViewModel\ToolWindowViewModelBase.cs" />
+    <Compile Include="Tool Windows\ViewModel\ViewModelBase.cs" />
     <Compile Include="ToolWindow1.cs" />
     <Compile Include="ToolWindow1Command.cs" />
     <Compile Include="ToolWindow1Control.xaml.cs">
       <DependentUpon>ToolWindow1Control.xaml</DependentUpon>
     </Compile>
     <Compile Include="AntiPlagiarismPackage.cs" />
+    <Compile Include="Utils\AcuminatorLogger.cs" />
+    <Compile Include="Utils\EditorExtensions.cs" />
+    <Compile Include="Utils\Navigation\VSDocumentNavigation.cs" />
+    <Compile Include="Utils\ResourceManagerExtensions.cs" />
+    <Compile Include="Utils\UIAttributes\CategoryFromResourcesAttribute.cs" />
+    <Compile Include="Utils\UIAttributes\DescriptionFromResourcesAttribute.cs" />
+    <Compile Include="Utils\UIAttributes\DisplayNameFromResourcesAttribute.cs" />
+    <Compile Include="Utils\VSServicesExtensions.cs" />
+    <Compile Include="Utils\WPF\Collection\ExtendedObservableCollection.cs" />
+    <Compile Include="Utils\WPF\ResourceDictionaryExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -186,6 +261,22 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Tool Windows\AntiPlagiator\AntiPlagiatorWindowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tool Windows\CodeMap\CodeMapWindowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tool Windows\Themes\BitmapImages.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tool Windows\Themes\Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ToolWindow1Control.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
