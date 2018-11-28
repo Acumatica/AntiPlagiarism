@@ -7,11 +7,10 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.Utilities;
-using Acuminator.Utilities;
-using Acuminator.Utilities.Common;
+using AntiPlagiarism.Core.Utilities.Common;
 
 
-namespace Acuminator.Vsix.Utilities
+namespace AntiPlagiarism.Vsix.Utilities
 {
     public static class EditorExtensions
     {

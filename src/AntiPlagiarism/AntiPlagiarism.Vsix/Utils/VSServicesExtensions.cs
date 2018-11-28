@@ -15,11 +15,10 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Outlining;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.LanguageServices;
-using Acuminator.Utilities;
-using Acuminator.Utilities.Common;
+using AntiPlagiarism.Core.Utilities.Common;
 
 
-namespace Acuminator.Vsix.Utilities
+namespace AntiPlagiarism.Vsix.Utilities
 {
     /// <summary>
     /// The Visual Studio services extensions.

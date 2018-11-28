@@ -11,6 +11,9 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Outlining;
+using AntiPlagiarism.Core.Utilities.Common;
+
+
 
 
 using TextSpan = Microsoft.CodeAnalysis.Text.TextSpan;
@@ -35,10 +38,10 @@ namespace AntiPlagiarism.Vsix.Utilities.Navigation
 				return default;
 
 			var filePath = syntaxReferences[0].SyntaxTree?.FilePath;
-			var workspace = AcuminatorVSPackage.Instance.GetVSWorkspace();
+			var workspace = AntiPlagiarismPackage.Instance.GetVSWorkspace();
 
-			return AcuminatorVSPackage.Instance.OpenCodeFileAndNavigateToPosition(workspace?.CurrentSolution, filePath,
-																				  syntaxReferences[0].Span.Start);
+			return AntiPlagiarismPackage.Instance.OpenCodeFileAndNavigateToPosition(workspace?.CurrentSolution, filePath,
+																				    syntaxReferences[0].Span.Start);
 		}
 
 		public static (IWpfTextView WpfTextView, CaretPosition CaretPosition) OpenCodeFileAndNavigateByLineAndChar(
