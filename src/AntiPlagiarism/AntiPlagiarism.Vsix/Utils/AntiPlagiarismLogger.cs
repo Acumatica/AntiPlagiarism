@@ -2,49 +2,47 @@
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Acuminator.Analyzers;
-using Acuminator.Analyzers.StaticAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
-using Acuminator.Vsix.Utilities;
-using Acuminator.Utilities;
-using Acuminator.Utilities.Common;
+using AntiPlagiarism.Vsix.Utilities;
+using AntiPlagiarism.Core.Utilities.Common;
+
+
 using FirstChanceExceptionEventArgs = System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs;
 
 
-namespace Acuminator.Vsix.Logger
+namespace AntiPlagiarism.Vsix.Logger
 {
 	/// <summary>
-	/// An acuminator logger used to log unhandled exceptions.
+	/// An AntiPlagiarism logger used to log unhandled exceptions.
 	/// </summary>
-	internal class AcuminatorLogger : IDisposable
+	internal class AntiPlagiarismLogger : IDisposable
 	{
-		public const string PackageName = "Acuminator";
+		public const string PackageName = "AntiPlagiarism";
 
-		private readonly string AnalyzersDll = typeof(PXDiagnosticAnalyzer).Assembly.GetName().Name;
-		private readonly string UtilitiesDll = typeof(CodeAnalysisSettings).Assembly.GetName().Name;
-		private readonly string VsixDll = typeof(AcuminatorLogger).Assembly.GetName().Name;
+		private readonly string CoreDll = typeof(Core.PlagiarismScanner).Assembly.GetName().Name;
+		private readonly string VsixDll = typeof(AntiPlagiarismLogger).Assembly.GetName().Name;
 
-		private readonly AcuminatorVSPackage _package;
+		private readonly AntiPlagiarismPackage _package;
 
-		public AcuminatorLogger(AcuminatorVSPackage acuminatorPackage)
+		public AntiPlagiarismLogger(AntiPlagiarismPackage antiPlagiarismPackage)
 		{
-			acuminatorPackage.ThrowOnNull(nameof(acuminatorPackage));
-			_package = acuminatorPackage;
-			AppDomain.CurrentDomain.FirstChanceException += Acuminator_FirstChanceException;
+			antiPlagiarismPackage.ThrowOnNull(nameof(antiPlagiarismPackage));
+			_package = antiPlagiarismPackage;
+			AppDomain.CurrentDomain.FirstChanceException += AntiPlagiarism_FirstChanceException;
 		}
 
-		private void Acuminator_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
+		private void AntiPlagiarism_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
 		{
 			LogException(e.Exception);
 		}
 
 		public void LogException(Exception exception)
 		{		
-			if (exception == null || (exception.Source != AnalyzersDll && exception.Source != UtilitiesDll && exception.Source != VsixDll))
+			if (exception == null || (exception.Source != CoreDll && exception.Source != VsixDll))
 				return;
 
 			IWpfTextView activeTextView = _package.GetWpfTextView();
@@ -75,7 +73,7 @@ namespace Acuminator.Vsix.Logger
 
 		public void Dispose()
 		{
-			AppDomain.CurrentDomain.FirstChanceException -= Acuminator_FirstChanceException;
+			AppDomain.CurrentDomain.FirstChanceException -= AntiPlagiarism_FirstChanceException;
 		}		
 	}
 }
