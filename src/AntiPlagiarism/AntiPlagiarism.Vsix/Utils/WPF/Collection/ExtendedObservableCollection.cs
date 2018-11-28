@@ -5,11 +5,11 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Collections.Specialized;
-using Acuminator.Utilities.Common;
+using AntiPlagiarism.Core.Utilities.Common;
 
 
 
-namespace Acuminator.Vsix.Utilities
+namespace AntiPlagiarism.Vsix.Utilities
 {
 	/// <summary>
 	/// Modified <see cref="ObservableCollection{T}"/> which allows to add multiple items at once with only one notification.
