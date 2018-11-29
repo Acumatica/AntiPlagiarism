@@ -58,6 +58,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Tool Window\AntiPlagiator\AntiPlagiarismWindow.cs" />
+    <Compile Include="Tool Window\AntiPlagiator\OpenAntiPlagiarismWindowCommand.cs" />
+    <Compile Include="Tool Window\AntiPlagiator\ViewModel\AntiPlagiarismWindowViewModel.cs" />
     <Compile Include="Utils\Colors\VSColors.cs" />
     <Compile Include="Tool Window\VSCommandBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,8 +72,6 @@
       <DependentUpon>AntiPlagiatorWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tool Window\AntiPlagiator\LocationType.cs" />
-    <Compile Include="Tool Window\AntiPlagiator\OpenAntiPlagiatorWindowCommand.cs" />
-    <Compile Include="Tool Window\AntiPlagiator\ViewModel\AntiPlagiatorWindowViewModel.cs" />
     <Compile Include="Tool Window\AntiPlagiator\ViewModel\PlagiarismInfoViewModel.cs" />
     <Compile Include="Tool Window\Converters\BoolInversionConverter.cs" />
     <Compile Include="Tool Window\Converters\BoolToVisibilityConverter.cs" />

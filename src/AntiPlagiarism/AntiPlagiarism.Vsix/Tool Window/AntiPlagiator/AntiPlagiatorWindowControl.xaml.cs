@@ -1,20 +1,21 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.VisualStudio.Shell;
 
 
 
-namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
+namespace AntiPlagiarism.Vsix.ToolWindows
 {
 	/// <summary>
-	/// Interaction logic for AntiPlagiatorWindowControl.
+	/// Interaction logic for AntiPlagiarismWindowControl.
 	/// </summary>
-	public partial class AntiPlagiatorWindowControl : UserControl
+	public partial class AntiPlagiarismWindowControl : UserControl
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AntiPlagiatorWindowControl"/> class.
+		/// Initializes a new instance of the <see cref="AntiPlagiarismWindowControl"/> class.
 		/// </summary>
-		public AntiPlagiatorWindowControl()
+		public AntiPlagiarismWindowControl()
 		{
 			this.InitializeComponent();
 		}
@@ -27,7 +28,8 @@ namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
 				return;
 			}
 
-			plagiarismInfo.OpenLocation(locationType);
+			plagiarismInfo.OpenLocationAsync(locationType)
+						  .FileAndForget($"vs/{AntiPlagiarismPackage.PackageName}/{nameof(PlagiarismInfoViewModel.OpenLocationAsync)}");
 		}
 	}
 }

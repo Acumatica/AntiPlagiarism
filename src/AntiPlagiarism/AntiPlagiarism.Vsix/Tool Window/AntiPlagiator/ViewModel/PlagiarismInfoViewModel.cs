@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Acuminator.Utilities.Common;
-using Acuminator.Vsix.Utilities;
-using Acuminator.Vsix.Utilities.Navigation;
-using AcumaticaPlagiarism;
+using AntiPlagiarism.Core;
+using AntiPlagiarism.Core.Utilities.Common;
+using AntiPlagiarism.Vsix.Utilities;
+using AntiPlagiarism.Vsix.Utilities.Navigation;
 
 using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
 
 
-namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
+namespace AntiPlagiarism.Vsix.ToolWindows
 {
 	public class PlagiarismInfoViewModel : ViewModelBase
 	{
@@ -21,7 +22,7 @@ namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
 
 		private readonly PlagiarismInfo _plagiarismInfo;
 
-		public AntiPlagiatorWindowViewModel ParentViewModel { get; }
+		public AntiPlagiarismWindowViewModel ParentViewModel { get; }
 
 		public string Type => _plagiarismInfo.Type.ToString();
 
@@ -44,7 +45,7 @@ namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
 
 		public string SourceLocation { get; }
 
-		public PlagiarismInfoViewModel(AntiPlagiatorWindowViewModel parentViewModel, PlagiarismInfo plagiarismInfo,
+		public PlagiarismInfoViewModel(AntiPlagiarismWindowViewModel parentViewModel, PlagiarismInfo plagiarismInfo,
 									   string referenceSolutionDir, string sourceSolutionDir)
 		{
 			parentViewModel.ThrowOnNull(nameof(parentViewModel));
@@ -58,11 +59,8 @@ namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
 			SourceLocation = ExtractShortLocation(_plagiarismInfo.Source.Path, sourceSolutionDir);
 		}
 
-		public void OpenLocation(LocationType locationType)
+		public async Task OpenLocationAsync(LocationType locationType)
 		{
-			if (!ThreadHelper.CheckAccess())
-				return;
-
 			Index location;
 
 			switch (locationType)
@@ -77,13 +75,14 @@ namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
 					return;
 			}
 
-			var vsWorkspace = AcuminatorVSPackage.Instance.GetVSWorkspace();
+			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(AntiPlagiarismPackage.Instance.DisposalToken);
+			var vsWorkspace = await AntiPlagiarismPackage.Instance.GetVSWorkspaceAsync();
 
 			if (vsWorkspace?.CurrentSolution == null)
 				return;
 
-			AcuminatorVSPackage.Instance.OpenCodeFileAndNavigateByLineAndChar(vsWorkspace.CurrentSolution, location.Path,
-																			  location.Line, location.Character);
+			await AntiPlagiarismPackage.Instance.OpenCodeFileAndNavigateByLineAndCharAsync(vsWorkspace.CurrentSolution, location.Path,
+																							location.Line, location.Character);
 		}
 
 		private string ExtractShortLocation(string location, string solutionDir)

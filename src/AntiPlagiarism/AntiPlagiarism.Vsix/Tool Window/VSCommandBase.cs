@@ -88,7 +88,7 @@ namespace AntiPlagiarism.Vsix
 
 		protected abstract void CommandCallback(object sender, EventArgs e);
 
-		protected Task<OleMenuCommandService> GetOleCommandServiceAsync() =>
-			ServiceProvider.GetServiceAsync<IMenuCommandService, OleMenuCommandService>();
+		protected static Task<OleMenuCommandService> GetOleCommandServiceAsync(Shell.IAsyncServiceProvider serviceProvider) =>
+			serviceProvider.GetServiceAsync<IMenuCommandService, OleMenuCommandService>();
 	}
 }

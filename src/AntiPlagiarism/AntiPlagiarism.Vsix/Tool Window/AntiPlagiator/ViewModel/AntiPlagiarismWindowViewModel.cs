@@ -9,17 +9,16 @@ using System.Windows;
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
-using Acuminator.Utilities.Common;
-using Acuminator.Vsix.Utilities;
-using AcumaticaPlagiarism;
+using AntiPlagiarism.Core;
+using AntiPlagiarism.Core.Utilities.Common;
+using AntiPlagiarism.Vsix.Utilities;
 
 using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
 
 
-
-namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
+namespace AntiPlagiarism.Vsix.ToolWindows
 {
-	public class AntiPlagiatorWindowViewModel : ToolWindowViewModelBase
+	public class AntiPlagiarismWindowViewModel : ToolWindowViewModelBase
 	{
 		private CancellationTokenSource _cancellationTokenSource;
 
@@ -98,7 +97,7 @@ namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
 
 		public Command CancelAnalysisCommand { get; }
 
-		public AntiPlagiatorWindowViewModel()
+		public AntiPlagiarismWindowViewModel()
 		{
 			PlagiatedItems = new ExtendedObservableCollection<PlagiarismInfoViewModel>();
 
@@ -168,7 +167,7 @@ namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
 		private async Task FillItemsAsync(CancellationToken cancellationToken)
 		{
 			PlagiatedItems.Clear();
-			string solutionPath = AcuminatorVSPackage.Instance.GetSolutionPath();
+			string solutionPath = await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
 
 			if (ReferenceSolutionPath.IsNullOrWhiteSpace() || solutionPath.IsNullOrWhiteSpace() || cancellationToken.IsCancellationRequested)
 				return;
