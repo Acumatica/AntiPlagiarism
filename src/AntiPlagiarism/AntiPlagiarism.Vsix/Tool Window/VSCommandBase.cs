@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using System.Threading.Tasks;
 using System.Linq;
 using EnvDTE;
 using EnvDTE80;
@@ -12,11 +13,13 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Acuminator.Utilities;
-using Acuminator.Utilities.Common;
-using Acuminator.Vsix.Utilities;
+using AntiPlagiarism.Core.Utilities.Common;
+using AntiPlagiarism.Vsix.Utilities;
 
-namespace Acuminator.Vsix
+using Shell = Microsoft.VisualStudio.Shell;
+
+
+namespace AntiPlagiarism.Vsix
 {
 	/// <summary>
 	/// Base command handler
@@ -28,25 +31,25 @@ namespace Acuminator.Vsix
 		/// <summary>
 		/// Command menu group (command set GUID).
 		/// </summary>
-		protected Guid DefaultCommandSet { get; } = new Guid(AcuminatorVSPackage.AcuminatorDefaultCommandSetGuidString);
+		protected Guid DefaultCommandSet { get; } = new Guid(AntiPlagiarismPackage.AntiPlagiarismDefaultCommandSetGuidString);
 
 		/// <summary>
 		/// VS Package that provides this command, not null.
 		/// </summary>
-		protected Package Package { get; }
+		protected AsyncPackage Package { get; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="FormatBqlCommand"/> class.
+		/// Initializes a new instance of the command.
 		/// Adds our command handlers for menu (commands must exist in the command table file)
 		/// </summary>
 		/// <param name="package">Owner package, not null.</param>
-		protected VSCommandBase(Package package, int commandID, Guid? customCommandSet = null)
+		protected VSCommandBase(AsyncPackage package, OleMenuCommandService commandService, int commandID, Guid? customCommandSet = null)
 		{
 			package.ThrowOnNull(nameof(package));
+			commandService.ThrowOnNull(nameof(commandService));
 
 			Package = package;
 			Guid commandSet = customCommandSet ?? DefaultCommandSet;
-			OleMenuCommandService commandService = ServiceProvider.GetService<IMenuCommandService, OleMenuCommandService>();
 
 			if (commandService != null)
 			{
@@ -60,7 +63,7 @@ namespace Acuminator.Vsix
 		/// <summary>
 		/// Gets the service provider from the owner package.
 		/// </summary>
-		protected IServiceProvider ServiceProvider => Package;
+		protected Shell.IAsyncServiceProvider ServiceProvider => Package;
 		
 		protected virtual void QueryFormatButtonStatus(object sender, EventArgs e)
 		{
@@ -68,7 +71,7 @@ namespace Acuminator.Vsix
 				return;
 
 			ThreadHelper.ThrowIfNotOnUIThread();
-			DTE2 dte = ServiceProvider.GetService<DTE, DTE2>();
+			DTE2 dte = ThreadHelper.JoinableTaskFactory.Run(() => ServiceProvider.GetServiceAsync<DTE, DTE2>());
 			bool visible = false;
 			bool enabled = false;
 
@@ -84,5 +87,8 @@ namespace Acuminator.Vsix
 		}
 
 		protected abstract void CommandCallback(object sender, EventArgs e);
+
+		protected Task<OleMenuCommandService> GetOleCommandServiceAsync() =>
+			ServiceProvider.GetServiceAsync<IMenuCommandService, OleMenuCommandService>();
 	}
 }

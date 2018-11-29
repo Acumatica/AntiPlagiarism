@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 
-namespace Acuminator.Vsix.ToolWindows
+namespace AntiPlagiarism.Vsix.ToolWindows
 {
 	/// <summary>
 	/// Open Tool Window base command class.

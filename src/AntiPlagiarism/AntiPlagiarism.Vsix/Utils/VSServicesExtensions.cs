@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using EnvDTE80;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
@@ -17,45 +18,61 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.LanguageServices;
 using AntiPlagiarism.Core.Utilities.Common;
 
+using Shell = Microsoft.VisualStudio.Shell;
+
 
 namespace AntiPlagiarism.Vsix.Utilities
 {
     /// <summary>
-    /// The Visual Studio services extensions.
+    /// The Visual Studio services extensions. Access only from UI thread!
     /// </summary>
     internal static class VSServicesExtensions
 	{
-		public static TService GetService<TService>(this IServiceProvider serviceProvider)
+		public static async Task<TService> GetServiceAsync<TService>(this Shell.IAsyncServiceProvider serviceProvider)
 		where TService : class
 		{
-			return serviceProvider?.GetService(typeof(TService)) as TService;
+			if (serviceProvider == null)
+				return null;
+
+			var service = await serviceProvider.GetServiceAsync(typeof(TService));
+			return service as TService;
 		}
 
-		public static TActual GetService<TRequested, TActual>(this IServiceProvider serviceProvider)
+		public static async Task<TActual> GetServiceAsync<TRequested, TActual>(this Shell.IAsyncServiceProvider serviceProvider)
 		where TRequested : class
 		where TActual : class
 		{
-			return serviceProvider?.GetService(typeof(TRequested)) as TActual;
+			if (serviceProvider == null)
+				return null;
+
+			var service = await serviceProvider.GetServiceAsync(typeof(TRequested));
+			return service as TActual;
 		}
 
-		internal static VisualStudioWorkspace GetVSWorkspace(this IServiceProvider serviceProvider)
+		internal static async Task<VisualStudioWorkspace> GetVSWorkspaceAsync(this Shell.IAsyncServiceProvider serviceProvider)
 		{
-			IComponentModel componentModel = serviceProvider?.GetService(typeof(SComponentModel)) as IComponentModel;
+			if (serviceProvider == null)
+				return null;
+
+			IComponentModel componentModel = (await serviceProvider.GetServiceAsync(typeof(SComponentModel))) as IComponentModel;
 			return componentModel?.GetService<VisualStudioWorkspace>();
 		}
 
-		internal static string GetSolutionPath(this IServiceProvider serviceProvider)
+		internal static async Task<string> GetSolutionPathAsync(this Shell.IAsyncServiceProvider serviceProvider)
 		{
-			VisualStudioWorkspace workspace = serviceProvider?.GetVSWorkspace();	
+			if (serviceProvider == null)
+				return null;
+
+			VisualStudioWorkspace workspace = await serviceProvider.GetVSWorkspaceAsync();	
 			return workspace?.CurrentSolution?.FilePath ?? string.Empty;
 		}
 
-		internal static IOutliningManager GetOutliningManager(this IServiceProvider serviceProvider, ITextView textView)
+		internal static async Task<IOutliningManager> GetOutliningManagerAsync(this Shell.IAsyncServiceProvider serviceProvider, ITextView textView)
 		{
 			if (serviceProvider == null || textView == null)
 				return null;
 
-			IComponentModel componentModel = serviceProvider.GetService<SComponentModel, IComponentModel>();
+			IComponentModel componentModel = await serviceProvider.GetServiceAsync<SComponentModel, IComponentModel>();
 			IOutliningManagerService outliningManagerService = componentModel?.GetService<IOutliningManagerService>();
 
 			if (outliningManagerService == null)
@@ -64,14 +81,17 @@ namespace AntiPlagiarism.Vsix.Utilities
 			return outliningManagerService.GetOutliningManager(textView);
 		}
 
-		internal static IWpfTextView GetWpfTextView(this IServiceProvider serviceProvider)
+		internal static async Task<IWpfTextView> GetWpfTextViewAsync(this Shell.IAsyncServiceProvider serviceProvider)
 		{
-			IVsTextManager textManager = serviceProvider?.GetService<SVsTextManager, IVsTextManager>();
+			if (serviceProvider == null)
+				return null;
+
+			IVsTextManager textManager = await serviceProvider.GetServiceAsync<SVsTextManager, IVsTextManager>();
 			
 			if (textManager == null || textManager.GetActiveView(1, null, out IVsTextView textView) != VSConstants.S_OK)
 				return null;
 
-			return serviceProvider.GetWpfTextViewFromTextView(textView);
+			return await serviceProvider.GetWpfTextViewFromTextViewAsync(textView);
 		}
 
 		/// <summary>
@@ -82,14 +102,15 @@ namespace AntiPlagiarism.Vsix.Utilities
 		/// <returns>
 		/// The IVsTextView for this file, if it is open, null otherwise.
 		/// </returns>
-		internal static IWpfTextView GetWpfTextViewByFilePath(this IServiceProvider packageServiceProvider, string filePath)
+		internal static async Task<IWpfTextView> GetWpfTextViewByFilePathAsync(this Shell.IAsyncServiceProvider packageServiceProvider,
+																			   string filePath)
 		{
-			ThreadHelper.ThrowIfNotOnUIThread();
+			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-			if (filePath.IsNullOrWhiteSpace())
+			if (filePath.IsNullOrWhiteSpace() || packageServiceProvider == null)
 				return null;
 
-			DTE2 dte2 = packageServiceProvider?.GetService<SDTE, DTE2>();
+			DTE2 dte2 = await packageServiceProvider.GetServiceAsync<SDTE, DTE2>();
 			var oleServiceProvider = dte2 as Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
 			if (dte2 == null || oleServiceProvider == null)
@@ -97,25 +118,24 @@ namespace AntiPlagiarism.Vsix.Utilities
 
 			ServiceProvider shellServiceProvider = new ServiceProvider(oleServiceProvider);
 
-			IVsUIHierarchy uiHierarchy;
-			uint itemID;
-			IVsWindowFrame windowFrame;
-			
-			if (VsShellUtilities.IsDocumentOpen(shellServiceProvider, filePath, Guid.Empty, out uiHierarchy, out itemID, out windowFrame))
-			{		
+
+			if (VsShellUtilities.IsDocumentOpen(shellServiceProvider, filePath, Guid.Empty, 
+												out IVsUIHierarchy uiHierarchy, out uint itemID, out IVsWindowFrame windowFrame))
+			{
 				IVsTextView textView = VsShellUtilities.GetTextView(windowFrame);   // Get the IVsTextView from the windowFrame
-				return packageServiceProvider.GetWpfTextViewFromTextView(textView);
+				return await packageServiceProvider.GetWpfTextViewFromTextViewAsync(textView);
 			}
 
 			return null;
 		}
 
-		private static IWpfTextView GetWpfTextViewFromTextView(this IServiceProvider serviceProvider, IVsTextView vsTextView)
+		private static async Task<IWpfTextView> GetWpfTextViewFromTextViewAsync(this Shell.IAsyncServiceProvider serviceProvider, 
+																				IVsTextView vsTextView)
 		{
 			if (vsTextView == null)
 				return null;
 
-			IComponentModel componentModel = serviceProvider.GetService<SComponentModel, IComponentModel>();
+			IComponentModel componentModel = await serviceProvider.GetServiceAsync<SComponentModel, IComponentModel>();
 			IVsEditorAdaptersFactoryService vsEditorAdaptersFactoryService = componentModel?.GetService<IVsEditorAdaptersFactoryService>();
 			return vsEditorAdaptersFactoryService?.GetWpfTextView(vsTextView);
 		}

@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Threading;
 using Microsoft.VisualStudio.Text.Editor;
 using AntiPlagiarism.Vsix.Utilities;
 using AntiPlagiarism.Core.Utilities.Common;
@@ -36,16 +37,18 @@ namespace AntiPlagiarism.Vsix.Logger
 		}
 
 		private void AntiPlagiarism_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
-		{
-			LogException(e.Exception);
+		{			
+			LogExceptionAsync(e.Exception)
+				.FileAndForget($"vs/{PackageName}/{nameof(AntiPlagiarismLogger)}/{nameof(LogExceptionAsync)}");
 		}
 
-		public void LogException(Exception exception)
+		public async System.Threading.Tasks.Task LogExceptionAsync(Exception exception)
 		{		
 			if (exception == null || (exception.Source != CoreDll && exception.Source != VsixDll))
 				return;
 
-			IWpfTextView activeTextView = _package.GetWpfTextView();
+			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+			IWpfTextView activeTextView = await _package.GetWpfTextViewAsync();
 
 			if (activeTextView == null)
 				return;
