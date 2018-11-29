@@ -3,24 +3,24 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
 
-namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
+namespace AntiPlagiarism.Vsix.ToolWindows
 {
 	/// <summary>
-	/// The tool window for the <see cref="AntiPlagiatorWindow"/>.
+	/// The tool window for the <see cref="AntiPlagiarismWindow"/>.
 	/// </summary>
-	[Guid(AntiPlagiatorWindowGuidString)]
-	public class AntiPlagiatorWindow : ToolWindowPane
+	[Guid(AntiPlagiarismWindowGuidString)]
+	public class AntiPlagiarismWindow : ToolWindowPane
 	{
-		public const string AntiPlagiatorWindowGuidString = "CF9278BB-4C9E-4099-8E50-A0505B21000E";
+		public const string AntiPlagiarismWindowGuidString = "A78F6E50-0A04-4A19-B858-F1BB83AAD8A7";
 
 		private readonly AntiPlagiatorWindowControl _control;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AntiPlagiatorWindow"/> class.
+		/// Initializes a new instance of the <see cref="AntiPlagiarismWindow"/> class.
 		/// </summary>
-		public AntiPlagiatorWindow() : base(null)
+		public AntiPlagiarismWindow() : base(null)
 		{
-			this.Caption = VSIXResource.AntiPlagiatorWindowTitle;
+			this.Caption = VSIXResource.AntiPlagiarismWindowTitle;
 
 			// This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
 			// we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on

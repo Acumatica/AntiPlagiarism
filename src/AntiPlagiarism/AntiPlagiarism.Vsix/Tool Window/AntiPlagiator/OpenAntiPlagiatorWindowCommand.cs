@@ -8,12 +8,12 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 
 
-namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
+namespace AntiPlagiarism.Vsix.ToolWindows
 {
 	/// <summary>
-	/// Open AntiPlagiator window command.
+	/// Open AntiPlagiarism window command.
 	/// </summary>
-	internal sealed class OpenAntiPlagiatorWindowCommand : OpenToolWindowCommandBase<AntiPlagiatorWindow>
+	internal sealed class OpenAntiPlagiatorWindowCommand : OpenToolWindowCommandBase<AntiPlagiarismWindow>
 	{
 		private static int _isCommandInitialized = NOT_INITIALIZED;
 

@@ -63,9 +63,9 @@ namespace AntiPlagiarism.Vsix {
         /// <summary>
         ///   Looks up a localized string similar to AntiPlagiarism.
         /// </summary>
-        public static string AntiPlagiatorWindowTitle {
+        public static string AntiPlagiarismWindowTitle {
             get {
-                return ResourceManager.GetString("AntiPlagiatorWindowTitle", resourceCulture);
+                return ResourceManager.GetString("AntiPlagiarismWindowTitle", resourceCulture);
             }
         }
     }

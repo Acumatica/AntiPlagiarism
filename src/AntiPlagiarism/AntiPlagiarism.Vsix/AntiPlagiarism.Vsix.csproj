@@ -57,6 +57,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Tool Window\AntiPlagiator\AntiPlagiarismWindow.cs" />
     <Compile Include="Utils\Colors\VSColors.cs" />
     <Compile Include="Tool Window\VSCommandBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -65,7 +66,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VSIXResource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Tool Window\AntiPlagiator\AntiPlagiatorWindow.cs" />
     <Compile Include="Tool Window\AntiPlagiator\AntiPlagiatorWindowControl.xaml.cs">
       <DependentUpon>AntiPlagiatorWindowControl.xaml</DependentUpon>
     </Compile>

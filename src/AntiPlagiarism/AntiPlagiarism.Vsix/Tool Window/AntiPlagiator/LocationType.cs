@@ -2,7 +2,7 @@
 
 
 
-namespace Acuminator.Vsix.ToolWindows.AntiPlagiator
+namespace AntiPlagiarism.Vsix.ToolWindows
 {
 	public enum LocationType
 	{
