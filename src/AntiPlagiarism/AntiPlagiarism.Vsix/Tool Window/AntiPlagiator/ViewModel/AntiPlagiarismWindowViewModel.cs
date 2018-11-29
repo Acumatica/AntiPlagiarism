@@ -102,7 +102,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			PlagiatedItems = new ExtendedObservableCollection<PlagiarismInfoViewModel>();
 
             OpenReferenceSolutionCommand = new Command(p => OpenReferenceSolution());
-			RunAnalysisCommand = new Command(p => RunAntiplagiatorAsync());
+			RunAnalysisCommand = new Command(p => RunAntiplagiatorAsync().Forget());
 			CancelAnalysisCommand = new Command(p => CancelAntiplagiator());
 		}
 
