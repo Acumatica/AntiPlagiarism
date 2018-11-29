@@ -39,6 +39,8 @@ namespace AntiPlagiarism.Vsix
 	[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
 	public sealed class AntiPlagiarismPackage : AsyncPackage
 	{
+		public const string PackageName = "AntiPlagiarism";
+
 		/// <summary>
 		/// AntiPlagiarism Package GUID string.
 		/// </summary>

@@ -22,8 +22,6 @@ namespace AntiPlagiarism.Vsix.Logger
 	/// </summary>
 	internal class AntiPlagiarismLogger : IDisposable
 	{
-		public const string PackageName = "AntiPlagiarism";
-
 		private readonly string CoreDll = typeof(Core.PlagiarismScanner).Assembly.GetName().Name;
 		private readonly string VsixDll = typeof(AntiPlagiarismLogger).Assembly.GetName().Name;
 
@@ -39,7 +37,7 @@ namespace AntiPlagiarism.Vsix.Logger
 		private void AntiPlagiarism_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
 		{			
 			LogExceptionAsync(e.Exception)
-				.FileAndForget($"vs/{PackageName}/{nameof(AntiPlagiarismLogger)}/{nameof(LogExceptionAsync)}");
+				.FileAndForget($"vs/{AntiPlagiarismPackage.PackageName}/{nameof(AntiPlagiarismLogger)}/{nameof(LogExceptionAsync)}");
 		}
 
 		public async System.Threading.Tasks.Task LogExceptionAsync(Exception exception)
@@ -59,7 +57,7 @@ namespace AntiPlagiarism.Vsix.Logger
 				return;
 
 			string logMessage = CreateLogMessageFromException(exception, currentDocument);
-			ActivityLog.TryLogError(PackageName, logMessage);
+			ActivityLog.TryLogError(AntiPlagiarismPackage.PackageName, logMessage);
 		}
 
 		private string CreateLogMessageFromException(Exception exception, Document currentDocument)

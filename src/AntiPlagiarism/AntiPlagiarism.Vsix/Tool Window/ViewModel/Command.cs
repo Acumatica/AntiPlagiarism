@@ -5,9 +5,9 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Acuminator.Utilities.Common;
+using AntiPlagiarism.Core.Utilities.Common;
 
-namespace Acuminator.Vsix.ToolWindows
+namespace AntiPlagiarism.Vsix.ToolWindows
 {
 	public class Command : ICommand
 	{
