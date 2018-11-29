@@ -8,7 +8,7 @@ using System.Windows.Data;
 using System.Windows;
 
 
-namespace Acuminator.Vsix.ToolWindows.Converters
+namespace AntiPlagiarism.Vsix.ToolWindows.Converters
 {
 	/// <summary>
 	/// Converter which inverts <see cref="Visibility"/> values from <see cref="Visibility.Visible"/> to <see cref="Visibility.Collapsed"/>.

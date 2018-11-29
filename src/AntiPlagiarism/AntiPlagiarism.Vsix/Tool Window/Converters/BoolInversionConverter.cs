@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 
 
-namespace Acuminator.Vsix.ToolWindows.Converters
+namespace AntiPlagiarism.Vsix.ToolWindows.Converters
 {
 	/// <summary>
 	/// Converter, which inverts bool values.

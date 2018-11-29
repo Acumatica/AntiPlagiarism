@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 
 
-namespace Acuminator.Vsix.ToolWindows.Converters
+namespace AntiPlagiarism.Vsix.ToolWindows.Converters
 {
 	/// <summary>
 	/// Converter which converts background <see cref="Brush"/> to <see cref="bool"/> if it is dark.

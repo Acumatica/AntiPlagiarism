@@ -8,7 +8,7 @@ using System.Windows.Data;
 using System.Windows;
 
 
-namespace Acuminator.Vsix.ToolWindows.Converters
+namespace AntiPlagiarism.Vsix.ToolWindows.Converters
 {
 	/// <summary>
 	/// Converter which converts <see cref="bool"/> bool values to the <see cref="Visibility"/> values.
