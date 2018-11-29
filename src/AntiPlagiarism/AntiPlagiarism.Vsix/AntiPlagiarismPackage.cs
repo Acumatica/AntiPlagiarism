@@ -40,9 +40,14 @@ namespace AntiPlagiarism.Vsix
 	public sealed class AntiPlagiarismPackage : AsyncPackage
 	{
 		/// <summary>
-		/// AntiPlagiarismPackage GUID string.
+		/// AntiPlagiarism Package GUID string.
 		/// </summary>
 		public const string PackageGuidString = "f571df7b-c776-4783-859e-9946ff1ce156";
+
+		/// <summary>
+		/// The AntiPlagiarism default command set GUID string.
+		/// </summary>
+		public const string AntiPlagiarismDefaultCommandSetGuidString = "ADE9FE1C-58B0-4CB7-A6DC-177C794BF72B";
 
 		private const int INSTANCE_UNINITIALIZED = 0;
 		private const int INSTANCE_INITIALIZED = 1;
