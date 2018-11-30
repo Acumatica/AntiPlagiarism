@@ -11,7 +11,13 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using AntiPlagiarism.Vsix.ToolWindows;
+using AntiPlagiarism.Vsix.Logger;
+using EnvDTE;
+
 using Task = System.Threading.Tasks.Task;
+
+
 
 namespace AntiPlagiarism.Vsix
 {
@@ -37,6 +43,7 @@ namespace AntiPlagiarism.Vsix
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[Guid(AntiPlagiarismPackage.PackageGuidString)]
 	[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
+	[ProvideToolWindow(typeof(AntiPlagiarismWindow))]
 	public sealed class AntiPlagiarismPackage : AsyncPackage
 	{
 		public const string PackageName = "AntiPlagiarism";
@@ -55,9 +62,13 @@ namespace AntiPlagiarism.Vsix
 		private const int INSTANCE_INITIALIZED = 1;
 		private static int instanceInitialized;
 
-		public static AntiPlagiarismPackage Instance { get; private set; }
+		internal AntiPlagiarismLogger AntiPlagiarismLogger
+		{
+			get;
+			private set;
+		}
 
-		private object locker = new object();
+		public static AntiPlagiarismPackage Instance { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AntiPlagiarismPackage"/> class.
@@ -82,9 +93,12 @@ namespace AntiPlagiarism.Vsix
 		protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
 		{
 			// When initialized asynchronously, the current thread may be a background thread at this point.
-			// Do any initialization that requires the UI thread after switching to the UI thread.
-			await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-			await ToolWindow1Command.InitializeAsync(this);
+			// Do any initialization that requires the UI thread after switching to the UI thread
+			await base.InitializeAsync(cancellationToken, progress);
+
+			await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+			await OpenAntiPlagiarismWindowCommand.InitializeAsync(this);
+			InitializeLogger();
 		}
 
 		private static void SetupSingleton(AntiPlagiarismPackage package)
@@ -95,6 +109,25 @@ namespace AntiPlagiarism.Vsix
 			if (Interlocked.CompareExchange(ref instanceInitialized, INSTANCE_INITIALIZED, INSTANCE_UNINITIALIZED) == INSTANCE_UNINITIALIZED)
 			{
 				Instance = package;
+			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
+			AntiPlagiarismLogger?.Dispose();
+		}
+
+		private void InitializeLogger()
+		{
+			try
+			{
+				AntiPlagiarismLogger = new AntiPlagiarismLogger(this);
+			}
+			catch (Exception ex)
+			{
+				ActivityLog.TryLogError(PackageName,
+					$"An error occurred during the logger initialization: ({ex.GetType().Name}, message: \"{ex.Message}\")");
 			}
 		}
 	}
