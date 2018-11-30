@@ -43,7 +43,7 @@ namespace AntiPlagiarism.Vsix
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[Guid(AntiPlagiarismPackage.PackageGuidString)]
 	[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-	[ProvideToolWindow(typeof(AntiPlagiarismWindow))]
+	[ProvideToolWindow(toolType: typeof(AntiPlagiarismWindow))]
 	public sealed class AntiPlagiarismPackage : AsyncPackage
 	{
 		public const string PackageName = "AntiPlagiarism";
