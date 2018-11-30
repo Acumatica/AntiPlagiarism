@@ -57,9 +57,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Tool Window\AntiPlagiator\AntiPlagiarismWindow.cs" />
-    <Compile Include="Tool Window\AntiPlagiator\OpenAntiPlagiarismWindowCommand.cs" />
-    <Compile Include="Tool Window\AntiPlagiator\ViewModel\AntiPlagiarismWindowViewModel.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\AntiPlagiarismWindow.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\OpenAntiPlagiarismWindowCommand.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\AntiPlagiarismWindowViewModel.cs" />
     <Compile Include="Utils\Colors\VSColors.cs" />
     <Compile Include="Tool Window\VSCommandBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,11 +68,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VSIXResource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Tool Window\AntiPlagiator\AntiPlagiatorWindowControl.xaml.cs">
+    <Compile Include="Tool Window\AntiPlagiarism\AntiPlagiatorWindowControl.xaml.cs">
       <DependentUpon>AntiPlagiatorWindowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tool Window\AntiPlagiator\LocationType.cs" />
-    <Compile Include="Tool Window\AntiPlagiator\ViewModel\PlagiarismInfoViewModel.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\LocationType.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\PlagiarismInfoViewModel.cs" />
     <Compile Include="Tool Window\Converters\BoolInversionConverter.cs" />
     <Compile Include="Tool Window\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Tool Window\Converters\IsBackgroundDarkConverter.cs" />
@@ -448,7 +448,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Tool Window\AntiPlagiator\AntiPlagiatorWindowControl.xaml">
+    <Page Include="Tool Window\AntiPlagiarism\AntiPlagiatorWindowControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
