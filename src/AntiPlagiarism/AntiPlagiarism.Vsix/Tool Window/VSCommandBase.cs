@@ -55,7 +55,7 @@ namespace AntiPlagiarism.Vsix
 			{
 				var menuCommandID = new CommandID(commandSet, commandID);
 				var menuItem = new OleMenuCommand(CommandCallback, menuCommandID);
-				menuItem.BeforeQueryStatus += QueryFormatButtonStatus;
+				menuItem.BeforeQueryStatus += QueryButtonStatus;
 				commandService.AddCommand(menuItem);
 			}
 		}
@@ -65,7 +65,7 @@ namespace AntiPlagiarism.Vsix
 		/// </summary>
 		protected Shell.IAsyncServiceProvider ServiceProvider => Package;
 		
-		protected virtual void QueryFormatButtonStatus(object sender, EventArgs e)
+		protected virtual void QueryButtonStatus(object sender, EventArgs e)
 		{
 			if (!(sender is OleMenuCommand menuCommand))
 				return;

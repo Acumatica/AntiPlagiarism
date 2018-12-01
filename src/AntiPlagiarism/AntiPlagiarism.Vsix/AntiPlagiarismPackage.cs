@@ -39,6 +39,7 @@ namespace AntiPlagiarism.Vsix
 	/// </para>
 	/// </remarks>
 	[PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
+	[ProvideAutoLoad(UIContextGuids80.SolutionExists)]  
 	[InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[Guid(AntiPlagiarismPackage.PackageGuidString)]

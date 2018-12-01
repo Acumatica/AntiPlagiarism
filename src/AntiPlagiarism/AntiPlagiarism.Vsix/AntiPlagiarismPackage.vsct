@@ -55,7 +55,8 @@
       <!--Tool Window Command-->
       <Button guid="guidAntiPlagiarismCmdSet" id="OpenAntiPlagiarismWindowCommand" type="Button">
         <Icon guid="guidAntiPlagiarismIcon" id="antiPlagiarismIcon" />
-        <!--<CommandFlag>DefaultDisabled</CommandFlag>-->
+        <CommandFlag>DefaultDisabled</CommandFlag>    
+        <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidOpenAntiPlagiarismWindowCommand</CommandName>
           <ButtonText>AntiPlagiarism</ButtonText>
