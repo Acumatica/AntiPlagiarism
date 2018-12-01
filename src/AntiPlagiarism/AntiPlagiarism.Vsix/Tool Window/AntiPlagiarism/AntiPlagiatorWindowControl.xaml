@@ -82,7 +82,7 @@
                             Style="{StaticResource toolbarButtonStyle}"
                             IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
                                                 Converter={StaticResource boolInversionConverter}}">
-                        <Image Source="pack://application:,,,/Acuminator;component/Resources/OpenFolder.ico"/>
+                        <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/OpenFolder.ico"/>
                     </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -103,14 +103,14 @@
                             </Style>
                         </Button.Style>
 
-                        <Image Source="pack://application:,,,/Acuminator;component/Resources/Run.ico"/>
+                        <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Run.ico"/>
                     </Button>
 
                     <Button ToolTip="Cancel analysis" Command="{Binding Path=CancelAnalysisCommand}" Style="{StaticResource toolbarButtonStyle}"
                             IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                             Visibility="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
                                                 Converter={StaticResource visibilityConverter}}">
-                        <Image Source="pack://application:,,,/Acuminator;component/Resources/Cancel.ico"/>
+                        <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Cancel.ico"/>
                     </Button>
 
                     <ProgressBar MinWidth="100" Margin="10,5,0,5"
@@ -162,7 +162,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                                <Image Source="pack://application:,,,/Acuminator;component/Resources/StatusInvalid.ico"
+                                <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/StatusInvalid.ico"
                                        Style="{StaticResource vsImageStyle}" Margin="2" VerticalAlignment="Center"
                                        Visibility="{Binding Path=IsThresholdExceeded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
                                                             Converter={StaticResource visibilityConverter}}"/>

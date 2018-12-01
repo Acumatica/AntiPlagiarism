@@ -71,7 +71,7 @@
                 <ContextMenu>
                     <MenuItem Command="Copy" >
                         <MenuItem.Icon>
-                            <Image Style="{StaticResource vsImageStyle}" Source="pack://application:,,,/Acuminator;component/Resources/Copy.ico"/>
+                            <Image Style="{StaticResource vsImageStyle}" Source="pack://application:,,,/AntiPlagiarism;component/Resources/Copy.ico"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </ContextMenu>
