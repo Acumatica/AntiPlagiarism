@@ -98,6 +98,8 @@ namespace AntiPlagiarism.Vsix
 
 			await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 			await OpenAntiPlagiarismWindowCommand.InitializeAsync(this);
+
+			SubscribeOnSolutionEvents();
 			InitializeLogger();
 		}
 
@@ -116,6 +118,22 @@ namespace AntiPlagiarism.Vsix
 		{
 			base.Dispose(disposing);
 			AntiPlagiarismLogger?.Dispose();
+
+			if (ThreadHelper.CheckAccess())
+			{
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+				if (GetService(typeof(DTE)) is DTE dte)
+				{
+					dte.Events.SolutionEvents.AfterClosing -= SolutionEvents_AfterClosing;
+				}
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
+			}
+		}
+
+		protected override int QueryClose(out bool canClose)
+		{
+			CloseOpenToolWindows();
+			return base.QueryClose(out canClose);
 		}
 
 		private void InitializeLogger()
@@ -128,6 +146,43 @@ namespace AntiPlagiarism.Vsix
 			{
 				ActivityLog.TryLogError(PackageName,
 					$"An error occurred during the logger initialization: ({ex.GetType().Name}, message: \"{ex.Message}\")");
+			}
+		}
+
+		private void SubscribeOnSolutionEvents()
+		{
+			if (!ThreadHelper.CheckAccess())
+				return;
+
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+			if (GetService(typeof(DTE)) is DTE dte)
+			{
+				dte.Events.SolutionEvents.AfterClosing += SolutionEvents_AfterClosing;
+			}
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
+		}
+
+		private void SolutionEvents_AfterClosing()
+		{
+			CloseOpenToolWindows();
+		}
+
+		private void CloseOpenToolWindows()
+		{
+			if (!ThreadHelper.CheckAccess())
+				return;
+
+			try
+			{
+#pragma warning disable VSTHRD010 // Invoke single-threaded types on Main thread
+
+				DTE dte = GetService(typeof(DTE)) as DTE;
+				dte?.Windows.Item($"{{{AntiPlagiarismWindow.AntiPlagiarismWindowGuidString}}}")?.Close();	
+				
+#pragma warning restore VSTHRD010 // Invoke single-threaded types on Main thread
+			}
+			catch
+			{
 			}
 		}
 	}
