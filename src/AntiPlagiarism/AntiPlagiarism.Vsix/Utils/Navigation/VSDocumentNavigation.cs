@@ -1,0 +1,252 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Outlining;
+using AntiPlagiarism.Core.Utilities.Common;
+
+using TextSpan = Microsoft.CodeAnalysis.Text.TextSpan;
+using Document = Microsoft.CodeAnalysis.Document;
+using DTE = EnvDTE.DTE;
+
+
+
+namespace AntiPlagiarism.Vsix.Utilities.Navigation
+{
+	/// <summary>
+	/// The VS document navigation utils. Use only from UI thread!
+	/// </summary>
+	public static class VSDocumentNavigation
+	{
+		public static async Task<(IWpfTextView WpfTextView, CaretPosition CaretPosition)> NavigateToSymbolAsync(
+																								this IAsyncServiceProvider serviceProvider,
+																								ISymbol symbol)
+		{
+			serviceProvider.ThrowOnNull(nameof(serviceProvider));
+			symbol.ThrowOnNull(nameof(symbol));
+
+			var syntaxReferences = symbol.DeclaringSyntaxReferences;
+
+			if (syntaxReferences.Length != 1)
+				return default;
+
+			var filePath = syntaxReferences[0].SyntaxTree?.FilePath;
+			var workspace = await AntiPlagiarismPackage.Instance.GetVSWorkspaceAsync();
+
+			return await AntiPlagiarismPackage.Instance.OpenCodeFileAndNavigateToPositionAsync(workspace?.CurrentSolution, filePath,
+																				    syntaxReferences[0].Span.Start);
+		}
+
+		public static async Task<(IWpfTextView WpfTextView, CaretPosition CaretPosition)> OpenCodeFileAndNavigateByLineAndCharAsync(
+																									  this IAsyncServiceProvider serviceProvider,
+																									  Solution solution, string filePath,
+																									  int lineNumber, int character)
+		{
+			serviceProvider.ThrowOnNull(nameof(serviceProvider));
+
+			if (lineNumber < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(lineNumber));
+			}
+			else if (character < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(character));
+			}
+
+			IWpfTextView wpfTextView = await OpenCodeWindowAsync(serviceProvider, solution, filePath);
+
+			if (wpfTextView == null)
+			{
+				var (window, textDocument) = await OpenCodeFileNotInSolutionWithDTEAsync(serviceProvider, filePath);
+
+				if (window == null)
+					return default;
+
+				wpfTextView = await serviceProvider.GetWpfTextViewByFilePathAsync(filePath);
+			}
+
+			if (wpfTextView == null)
+				return default;
+
+			try
+			{
+				ITextSnapshotLine textLine = wpfTextView.TextSnapshot.GetLineFromLineNumber(lineNumber);
+				int absoluteOffset = textLine.Start + character;
+				SnapshotPoint point = wpfTextView.TextSnapshot.GetPoint(absoluteOffset);
+				SnapshotSpan span = new SnapshotSpan(point, length: 0);
+
+				await serviceProvider.ExpandAllRegionsContainingSpanAsync(span, wpfTextView);
+				CaretPosition newCaretPosition = wpfTextView.MoveCaretTo(absoluteOffset);
+
+				if (!wpfTextView.TextViewLines.ContainsBufferPosition(newCaretPosition.BufferPosition))
+				{
+					wpfTextView.ViewScroller.EnsureSpanVisible(span, EnsureSpanVisibleOptions.AlwaysCenter);
+				}
+
+				return (wpfTextView, newCaretPosition);
+			}
+			catch
+			{
+				return default;
+			}
+		}
+
+		public static async Task<(IWpfTextView WpfTextView, CaretPosition CaretPosition)> OpenCodeFileAndNavigateToPositionAsync(
+																					this IAsyncServiceProvider serviceProvider,
+																					Solution solution, string filePath, 
+																					int? caretPosition = null)
+		{
+			serviceProvider.ThrowOnNull(nameof(serviceProvider));
+
+			if (caretPosition.HasValue && caretPosition < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(caretPosition));
+			}
+
+			IWpfTextView wpfTextView = await OpenCodeWindowAsync(serviceProvider, solution, filePath);
+
+			if (wpfTextView == null)
+			{
+				var (window, textDocument) = await OpenCodeFileNotInSolutionWithDTEAsync(serviceProvider, filePath);
+
+				if (window == null)
+					return default;
+
+				wpfTextView = await serviceProvider.GetWpfTextViewByFilePathAsync(filePath);
+			}
+
+			if (wpfTextView == null)
+				return default;
+
+			try
+			{
+				if (caretPosition == null)
+				{
+					return (wpfTextView, wpfTextView.Caret.Position);
+				}
+
+				SnapshotPoint point = wpfTextView.TextSnapshot.GetPoint(caretPosition.Value);
+				SnapshotSpan span = new SnapshotSpan(point, length: 0);
+				await serviceProvider.ExpandAllRegionsContainingSpanAsync(span, wpfTextView);
+				CaretPosition newCaretPosition = wpfTextView.MoveCaretTo(caretPosition.Value);
+
+				if (!wpfTextView.TextViewLines.ContainsBufferPosition(newCaretPosition.BufferPosition))
+				{
+					wpfTextView.ViewScroller.EnsureSpanVisible(span, EnsureSpanVisibleOptions.AlwaysCenter);
+				}
+
+				return (wpfTextView, newCaretPosition);
+			}
+			catch
+			{
+				return default;
+			}
+		}
+
+		public static async Task<IWpfTextView> OpenCodeWindowAsync(this IAsyncServiceProvider serviceProvider, Solution solution, string filePath)
+		{
+			serviceProvider.ThrowOnNull(nameof(serviceProvider));
+			solution.ThrowOnNull(nameof(solution));
+
+			if (!ThreadHelper.CheckAccess() || !File.Exists(filePath))
+				return null;
+
+			ImmutableArray<DocumentId> documentIDs = solution.GetDocumentIdsWithFilePath(filePath);
+
+			if (documentIDs.Length != 1)
+				return null;
+
+			DocumentId documentID = documentIDs[0];
+			bool wasAlreadyOpened = solution.Workspace.GetOpenDocumentIds().Contains(documentID); 
+
+			try
+			{
+				solution.Workspace.OpenDocument(documentID);
+
+				if (wasAlreadyOpened)
+				{
+					return await serviceProvider.GetWpfTextViewByFilePathAsync(filePath);
+				}
+				else
+				{
+					return await serviceProvider.GetWpfTextViewAsync();
+				}
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
+		public static async System.Threading.Tasks.Task ExpandAllRegionsContainingSpanAsync(this IAsyncServiceProvider serviceProvider, 
+																							SnapshotSpan selectedSpan, IWpfTextView textView)
+		{
+			if (textView == null || serviceProvider == null)
+				return;
+
+			IOutliningManager outliningManager = await serviceProvider.GetOutliningManagerAsync(textView);
+
+			if (outliningManager == null)
+				return;
+
+			outliningManager.GetCollapsedRegions(selectedSpan, exposedRegionsOnly: false)
+							.ForEach(region => outliningManager.Expand(region));
+		}
+
+#pragma warning disable VSTHRD010
+		public static async Task<(EnvDTE.Window Window, EnvDTE.TextDocument TextDocument)> OpenCodeFileNotInSolutionWithDTEAsync(
+																									this IAsyncServiceProvider serviceProvider, 
+																									string filePath)
+		{
+			serviceProvider.ThrowOnNull(nameof(serviceProvider));
+
+			if (!ThreadHelper.CheckAccess() || !File.Exists(filePath))
+				return default;
+
+			DTE dte = (await serviceProvider.GetServiceAsync(typeof(DTE))) as DTE;
+
+			if (dte == null)
+				return default;
+
+			try
+			{
+				var window = dte.ItemOperations.OpenFile(filePath, EnvDTE.Constants.vsViewKindCode);
+				var textDocument = window?.GetTextDocumentFromWindow();
+
+				if (textDocument == null)
+					return default;
+
+				window.Visible = true;
+				textDocument.StartPoint.TryToShow();
+				return (window, textDocument);
+			}
+			catch
+			{
+				return default;
+			}
+		}
+
+		private static EnvDTE.TextDocument GetTextDocumentFromWindow(this EnvDTE.Window window)
+		{
+			const string TextDocumentPropertyName = "TextDocument";
+
+			try
+			{
+				return window.Document?.Object(TextDocumentPropertyName) as EnvDTE.TextDocument;
+			}
+			catch
+			{
+				return default;
+			}
+		}
+#pragma warning restore VSTHRD010
+	}
+}
