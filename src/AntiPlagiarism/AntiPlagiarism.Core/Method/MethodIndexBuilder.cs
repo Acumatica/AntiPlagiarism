@@ -7,7 +7,7 @@ namespace AntiPlagiarism.Core.Method
 {
     internal static class MethodIndexBuilder
     {
-		private const int _defaultMinMethodSize = 10;//100;
+		private const int DefaultMinMethodSize = 100;
 
         public static MethodIndex BuildIndex(MethodDeclarationSyntax method, SemanticModel semanticModel)
         {
@@ -27,7 +27,7 @@ namespace AntiPlagiarism.Core.Method
                 statementIndexes.AddRange(wordIndex);
             }
 
-            if (statementIndexes.Count < _defaultMinMethodSize)
+            if (statementIndexes.Count < DefaultMinMethodSize)
             {
                 return null;
             }
