@@ -5,7 +5,7 @@ The tool was designed to be used along with the Acumatica ERP application. Howev
 The functionality of the tool is similar to the Code Clone Detection functionality, which is available in the Visual Studio Enterprise. (For details about this functionality, see https://docs.microsoft.com/en-us/previous-versions/hh205279(v=vs.140) .)
 
 To work with the copied code fragments that the tool has found, you can open the Antiplagiarism window from the **Tools** main menu of Visual Studio. 
-You can sort the results and open the files that contain duplicated code fragments by double clicking the file names in the **Source Location** (for the copied code) and **Reference Location** (for the original code) columns of the table with the results. 
+In the table with the results, you can sort the results and open the files that contain duplicated code fragments by double clicking the file names in the **Source Location** column (for the copied code) and **Reference Location** column (for the original code). 
 
 ## The Process of Building the Solution
 To build the solution, do the following:
