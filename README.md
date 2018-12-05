@@ -1,4 +1,4 @@
-#Antiplagiarism
+# Antiplagiarism
 
 Antiplagiarism is a code analysis tool for Visual Studio that finds in the solution the fragments of code that have been copied from the another solution. 
 The tool was designed to be used along with the Acumatica ERP application. However the tool can be used with any other solutions as an instrument to find code duplication.
