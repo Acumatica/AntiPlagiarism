@@ -10,7 +10,7 @@ namespace AntiPlagiarism.Core.Solution
 {
     internal static class SolutionIndexBuilder
     {
-        public static SolutionIndex BuildIndex(string solutionPath)
+        public static SolutionIndex BuildIndex(string solutionPath, int minMethodSize)
         {
             IList<MethodIndex> indices = new List<MethodIndex>();
             MSBuildWorkspace workspace = MSBuildWorkspace.Create();
@@ -32,7 +32,7 @@ namespace AntiPlagiarism.Core.Solution
 
                     foreach (MethodDeclarationSyntax method in methodDeclarations)
                     {
-                        MethodIndex index = MethodIndexBuilder.BuildIndex(method, semanticModel);
+                        MethodIndex index = MethodIndexBuilder.BuildIndex(method, semanticModel, minMethodSize);
 
                         if (index != null)
                         {

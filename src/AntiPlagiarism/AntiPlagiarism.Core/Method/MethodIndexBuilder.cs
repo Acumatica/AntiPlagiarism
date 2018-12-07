@@ -1,17 +1,20 @@
-﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AntiPlagiarism.Core.Method
 {
     internal static class MethodIndexBuilder
     {
-		private const int DefaultMinMethodSize = 100;
-
-        public static MethodIndex BuildIndex(MethodDeclarationSyntax method, SemanticModel semanticModel)
+        public static MethodIndex BuildIndex(MethodDeclarationSyntax method, SemanticModel semanticModel, int minMethodSize)
         {
-            if (method.Body == null)
+			if (minMethodSize <= 0)
+			{
+				throw new ArgumentException("Minimum method size should be greater than 0", nameof(minMethodSize));
+			}
+            else if (method.Body == null)
             {
                 return null;
             }
@@ -27,7 +30,7 @@ namespace AntiPlagiarism.Core.Method
                 statementIndexes.AddRange(wordIndex);
             }
 
-            if (statementIndexes.Count < DefaultMinMethodSize)
+            if (statementIndexes.Count < minMethodSize)
             {
                 return null;
             }
