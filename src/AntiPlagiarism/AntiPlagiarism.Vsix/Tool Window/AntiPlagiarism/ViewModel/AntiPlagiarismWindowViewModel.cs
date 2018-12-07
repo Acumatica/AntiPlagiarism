@@ -91,6 +91,33 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			}
 		}
 
+		private const int MinCheckedMethodSizeLowerBound = 2;
+		private const int MinCheckedMethodSizeUpperBound = 1000;
+
+		private int _minCheckedMethodSize = PlagiarismScanner.DefaultMinMethodSize;
+
+		/// <summary>
+		/// The minimum number of statements in a checked method.
+		/// </summary>
+		public int MinCheckedMethodSize
+		{
+			get => _minCheckedMethodSize;
+			set
+			{
+				if (_minCheckedMethodSize == value)
+					return;
+
+				if (value < MinCheckedMethodSizeLowerBound || value > MinCheckedMethodSizeUpperBound)
+				{
+					throw new ArgumentOutOfRangeException(nameof(value), 
+								$"The value should be in range between {MinCheckedMethodSizeLowerBound} and {MinCheckedMethodSizeUpperBound}");
+				}
+
+				_minCheckedMethodSize = value;
+				NotifyPropertyChanged();
+			}
+		}
+
 		public Command OpenReferenceSolutionCommand { get; }
 
         public Command RunAnalysisCommand { get; }
@@ -176,7 +203,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			string sourceSolutionDir = Path.GetDirectoryName(solutionPath) + Path.DirectorySeparatorChar;
 			string referenceSolutionDir = Path.GetDirectoryName(ReferenceSolutionPath) + Path.DirectorySeparatorChar;
 			double threshholdFraction = ThreshholdPercent / 100.0;
-			PlagiarismScanner plagiarismScanner = new PlagiarismScanner(ReferenceSolutionPath, solutionPath, threshholdFraction);
+			PlagiarismScanner plagiarismScanner = new PlagiarismScanner(ReferenceSolutionPath, solutionPath, 
+																		threshholdFraction, MinCheckedMethodSize);
 			var plagiatedItems = plagiarismScanner.Scan(callFromVS: true)
 												  .Select(item => new PlagiarismInfoViewModel(this, item, referenceSolutionDir, sourceSolutionDir));
 			
