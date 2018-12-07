@@ -73,15 +73,26 @@
                              TextAlignment="Center" Margin="10,2,0,2" MinWidth="50" MaxWidth="50" VerticalAlignment="Center"/>
                     <TextBlock Text="%" Margin="2,2,0,2" VerticalAlignment="Center"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Reference Solution:" Margin="10,2,0,2" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding Path=ReferenceSolutionPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                             Margin="10,2,0,2" IsReadOnly="True" MinWidth="200" MaxWidth="200" VerticalAlignment="Center"
-                             ToolTip="{Binding Path=ReferenceSolutionPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button ToolTip="Open Reference Solution"  Command="{Binding Path=OpenReferenceSolutionCommand}"
-                            Style="{StaticResource toolbarButtonStyle}"
+
+                <StackPanel Orientation="Horizontal" 
+                            IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
+                                                Converter={StaticResource boolInversionConverter}}">
+                    <TextBlock Text="Min. Method Size:" Margin="10,2,0,2" VerticalAlignment="Center" TextAlignment="Center"/>
+                    <TextBox Text="{Binding Path=MinCheckedMethodSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
+                                            ValidatesOnExceptions=True}"
+                             TextAlignment="Center" Margin="10,2,0,2" MinWidth="50" MaxWidth="50" VerticalAlignment="Center"
+                             MaxLength="4"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" 
                             IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
                                                 Converter={StaticResource boolInversionConverter}}">
+                    <TextBlock Text="Reference Solution:" Margin="10,2,0,2" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding Path=ReferenceSolutionPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="10,2,0,2" IsReadOnly="True" MinWidth="300" MaxWidth="300" VerticalAlignment="Center"
+                             ToolTip="{Binding Path=ReferenceSolutionPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button ToolTip="Open Reference Solution"  Command="{Binding Path=OpenReferenceSolutionCommand}"
+                            Style="{StaticResource toolbarButtonStyle}">
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/OpenFolder.ico"/>
                     </Button>
                 </StackPanel>
