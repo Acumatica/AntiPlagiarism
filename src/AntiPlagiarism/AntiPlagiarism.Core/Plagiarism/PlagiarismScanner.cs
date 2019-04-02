@@ -51,7 +51,7 @@ namespace AntiPlagiarism.Core.Plagiarism
                 {
                     var distance = _getDistance(i, r);
                     var similarity = 1 - distance;
-                    var isPlagiat = similarity <= _similarityThreshold;
+                    var isPlagiat = similarity >= _similarityThreshold;
 
                     if (!isPlagiat)
                     {
