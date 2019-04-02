@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using AntiPlagiarism.Core;
-using AntiPlagiarism.Core.Utilities.Common;
+﻿using AntiPlagiarism.Core.Method;
+using AntiPlagiarism.Core.Plagiarism;
+using AntiPlagiarism.Core.Utilities;
 using AntiPlagiarism.Vsix.Utilities;
 using AntiPlagiarism.Vsix.Utilities.Navigation;
-
+using System.Threading.Tasks;
 using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
 
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
-	public class PlagiarismInfoViewModel : ViewModelBase
+    public class PlagiarismInfoViewModel : ViewModelBase
 	{
 		private const string LocationPrefix = "SourceFile(";
 		private const string LocationSuffix = ")";
@@ -41,7 +35,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 		public string ReferenceLocation { get; }
 
-		public string SourceName => _plagiarismInfo.Source.Name;
+		public string SourceName => _plagiarismInfo.Input.Name;
 
 		public string SourceLocation { get; }
 
@@ -56,12 +50,12 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			_plagiarismInfo = plagiarismInfo;
 			ParentViewModel = parentViewModel;
 			ReferenceLocation = ExtractShortLocation(_plagiarismInfo.Reference.Path, referenceSolutionDir);
-			SourceLocation = ExtractShortLocation(_plagiarismInfo.Source.Path, sourceSolutionDir);
+			SourceLocation = ExtractShortLocation(_plagiarismInfo.Input.Path, sourceSolutionDir);
 		}
 
 		public async Task OpenLocationAsync(LocationType locationType)
 		{
-			Index location;
+			MethodIndex location;
 
 			switch (locationType)
 			{
@@ -69,7 +63,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 					location = _plagiarismInfo.Reference;
 					break;
 				case LocationType.Source:
-					location = _plagiarismInfo.Source;
+					location = _plagiarismInfo.Input;
 					break;
 				default:
 					return;

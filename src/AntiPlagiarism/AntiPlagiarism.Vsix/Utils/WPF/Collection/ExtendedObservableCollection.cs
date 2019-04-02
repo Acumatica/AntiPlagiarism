@@ -1,21 +1,17 @@
-﻿using System;
+﻿using AntiPlagiarism.Core.Utilities;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Collections.Specialized;
-using AntiPlagiarism.Core.Utilities.Common;
-
-
+using System.ComponentModel;
 
 namespace AntiPlagiarism.Vsix.Utilities
 {
-	/// <summary>
-	/// Modified <see cref="ObservableCollection{T}"/> which allows to add multiple items at once with only one notification.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	public class ExtendedObservableCollection<T> : ObservableCollection<T>
+    /// <summary>
+    /// Modified <see cref="ObservableCollection{T}"/> which allows to add multiple items at once with only one notification.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class ExtendedObservableCollection<T> : ObservableCollection<T>
 	{
 		public ExtendedObservableCollection() : base()
 		{

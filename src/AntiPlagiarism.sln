@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiPlagiarism.Vsix", "Anti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiPlagiarism.Core", "AntiPlagiarism\AntiPlagiarism.Core\AntiPlagiarism.Core.csproj", "{7CB50417-D544-4302-8F4F-300A26570A98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiPlagiarism.ConsoleRunner", "AntiPlagiarism\AntiPlagiarism.ConsoleRunner\AntiPlagiarism.ConsoleRunner.csproj", "{88D39887-A804-4ECC-8D1D-F3B44928C921}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{7CB50417-D544-4302-8F4F-300A26570A98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CB50417-D544-4302-8F4F-300A26570A98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CB50417-D544-4302-8F4F-300A26570A98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{88D39887-A804-4ECC-8D1D-F3B44928C921}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{88D39887-A804-4ECC-8D1D-F3B44928C921}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{88D39887-A804-4ECC-8D1D-F3B44928C921}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{88D39887-A804-4ECC-8D1D-F3B44928C921}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

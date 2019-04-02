@@ -1,4 +1,4 @@
-﻿namespace AntiPlagiarism.Core
+﻿namespace AntiPlagiarism.Core.Plagiarism
 {
     public enum PlagiarismType
     {

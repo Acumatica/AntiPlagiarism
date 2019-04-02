@@ -1,30 +1,19 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Threading.Tasks;
-using System.Linq;
+﻿using AntiPlagiarism.Core.Utilities;
+using AntiPlagiarism.Vsix.Utilities;
 using EnvDTE;
 using EnvDTE80;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.TextManager.Interop;
-using AntiPlagiarism.Core.Utilities.Common;
-using AntiPlagiarism.Vsix.Utilities;
-
+using System;
+using System.ComponentModel.Design;
+using System.Threading.Tasks;
 using Shell = Microsoft.VisualStudio.Shell;
-
 
 namespace AntiPlagiarism.Vsix
 {
-	/// <summary>
-	/// Base command handler
-	/// </summary>
-	internal abstract class VSCommandBase
+    /// <summary>
+    /// Base command handler
+    /// </summary>
+    internal abstract class VSCommandBase
 	{
 		protected const int NOT_INITIALIZED = 0, INITIALIZED = 1;
 

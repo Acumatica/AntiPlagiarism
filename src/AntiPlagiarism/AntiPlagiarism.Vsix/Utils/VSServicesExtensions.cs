@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AntiPlagiarism.Core.Utilities;
 using EnvDTE80;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
+using Microsoft.VisualStudio.LanguageServices;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Outlining;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Microsoft.VisualStudio.LanguageServices;
-using AntiPlagiarism.Core.Utilities.Common;
-
+using System;
+using System.Threading.Tasks;
 using Shell = Microsoft.VisualStudio.Shell;
-
 
 namespace AntiPlagiarism.Vsix.Utilities
 {

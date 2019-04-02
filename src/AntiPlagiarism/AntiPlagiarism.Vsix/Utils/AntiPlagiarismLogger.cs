@@ -1,28 +1,22 @@
-﻿using System;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Threading;
+﻿using AntiPlagiarism.Core.Utilities;
+using AntiPlagiarism.Vsix.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Threading;
 using Microsoft.VisualStudio.Text.Editor;
-using AntiPlagiarism.Vsix.Utilities;
-using AntiPlagiarism.Core.Utilities.Common;
-
-
+using Microsoft.VisualStudio.Threading;
+using System;
+using System.Text;
 using FirstChanceExceptionEventArgs = System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs;
-
 
 namespace AntiPlagiarism.Vsix.Logger
 {
-	/// <summary>
-	/// An AntiPlagiarism logger used to log unhandled exceptions.
-	/// </summary>
-	internal class AntiPlagiarismLogger : IDisposable
+    /// <summary>
+    /// An AntiPlagiarism logger used to log unhandled exceptions.
+    /// </summary>
+    internal class AntiPlagiarismLogger : IDisposable
 	{
-		private readonly string CoreDll = typeof(Core.PlagiarismScanner).Assembly.GetName().Name;
+		private readonly string CoreDll = typeof(Core.Plagiarism.PlagiarismScanner).Assembly.GetName().Name;
 		private readonly string VsixDll = typeof(AntiPlagiarismLogger).Assembly.GetName().Name;
 
 		private readonly AntiPlagiarismPackage _package;

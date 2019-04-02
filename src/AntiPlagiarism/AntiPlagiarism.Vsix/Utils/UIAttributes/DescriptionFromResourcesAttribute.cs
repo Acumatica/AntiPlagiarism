@@ -1,16 +1,12 @@
-﻿using System;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using AntiPlagiarism.Core.Utilities.Common;
+﻿using AntiPlagiarism.Core.Utilities;
 using AntiPlagiarism.Vsix.Utilities;
+using System;
+using System.ComponentModel;
 
 
 namespace AntiPlagiarism.Vsix
 {
-	[AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = false)]
 	internal sealed class DescriptionFromResourcesAttribute : DescriptionAttribute
 	{		
 		public string ResourceKey { get; }

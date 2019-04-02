@@ -1,16 +1,10 @@
-﻿using System;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.Linq;
+﻿using AntiPlagiarism.Vsix.Utilities;
 using Microsoft.VisualStudio.PlatformUI;
-using AntiPlagiarism.Core.Utilities.Common;
-using AntiPlagiarism.Vsix.Utilities;
-
-
+using System;
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
-	public class ToolWindowViewModelBase : ViewModelBase, IDisposable
+    public class ToolWindowViewModelBase : ViewModelBase, IDisposable
 	{
 		private bool _isDarkTheme;
 
