@@ -238,7 +238,7 @@
     <Compile Include="Plagiarism\PlagiarismScanner.cs" />
     <Compile Include="Plagiarism\PlagiarismType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimilarityStrategies.cs" />
+    <Compile Include="RoslynSimilarityStrategies.cs" />
     <Compile Include="Utilities\EnumerableExtensions.cs" />
     <Compile Include="Utilities\ExceptionExtensions.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />

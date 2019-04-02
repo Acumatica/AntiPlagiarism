@@ -60,6 +60,7 @@ namespace AntiPlagiarism.Core.Plagiarism
 
                     var rIndex = MethodIndexBuilder.BuildIndex(r);
                     var iIndex = MethodIndexBuilder.BuildIndex(i);
+
                     _scanResults.Add(new PlagiarismInfo(PlagiarismType.Method, similarity, rIndex, iIndex));
                 }
             }
