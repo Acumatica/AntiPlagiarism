@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace AntiPlagiarism.Core.Utilities.Common
+namespace AntiPlagiarism.Core.Utilities
 {
 	public static class ExceptionExtensions
 	{
@@ -16,11 +16,23 @@ namespace AntiPlagiarism.Core.Utilities.Common
 			throw NewArgumentNullException(parameter, message);
 		}
 
-		[DebuggerStepThrough]
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ThrowOnNullOrWhiteSpace(this string str, string parameter = null, string message = null)
+        {
+            if (!string.IsNullOrWhiteSpace(str))
+                return;
+
+            throw str == null
+                ? NewArgumentNullException(parameter, message)
+                : NewArgumentException(parameter, message);
+        }
+
+        [DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ThrowOnNullOrWhiteSpace(this string str, string parameter = null, string message = null)
+		public static void ThrowOnNullOrEmpty(this string str, string parameter = null, string message = null)
 		{
-			if (!string.IsNullOrWhiteSpace(str))
+			if (!string.IsNullOrEmpty(str))
 				return;
 
 			throw str == null

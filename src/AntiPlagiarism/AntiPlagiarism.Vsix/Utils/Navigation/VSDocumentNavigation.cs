@@ -1,30 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AntiPlagiarism.Core.Utilities;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Outlining;
-using AntiPlagiarism.Core.Utilities.Common;
-
-using TextSpan = Microsoft.CodeAnalysis.Text.TextSpan;
-using Document = Microsoft.CodeAnalysis.Document;
+using System;
+using System.Collections.Immutable;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using DTE = EnvDTE.DTE;
-
-
 
 namespace AntiPlagiarism.Vsix.Utilities.Navigation
 {
-	/// <summary>
-	/// The VS document navigation utils. Use only from UI thread!
-	/// </summary>
-	public static class VSDocumentNavigation
+    /// <summary>
+    /// The VS document navigation utils. Use only from UI thread!
+    /// </summary>
+    public static class VSDocumentNavigation
 	{
 		public static async Task<(IWpfTextView WpfTextView, CaretPosition CaretPosition)> NavigateToSymbolAsync(
 																								this IAsyncServiceProvider serviceProvider,

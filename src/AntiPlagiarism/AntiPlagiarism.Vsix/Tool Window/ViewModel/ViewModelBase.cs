@@ -1,14 +1,11 @@
-﻿using System;
+﻿using AntiPlagiarism.Core.Utilities;
 using System.ComponentModel;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using AntiPlagiarism.Core.Utilities.Common;
 
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
-	public class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 

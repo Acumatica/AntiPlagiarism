@@ -1,15 +1,11 @@
-﻿using System;
-using System.Windows.Input;
-using System.ComponentModel;
+﻿using AntiPlagiarism.Core.Utilities;
+using System;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AntiPlagiarism.Core.Utilities.Common;
+using System.Windows.Input;
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
-	public class Command : ICommand
+    public class Command : ICommand
 	{
 		private readonly Action<object> _actionToExecute;
 		private readonly Predicate<object> _canExecute;

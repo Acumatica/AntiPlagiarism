@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using AntiPlagiarism.Core.Method;
+using AntiPlagiarism.Core.Plagiarism;
+using AntiPlagiarism.Core.Utilities;
+using AntiPlagiarism.Vsix.Utilities;
+using Microsoft.VisualStudio.Threading;
+using Microsoft.Win32;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
-using Microsoft.CodeAnalysis;
-using Microsoft.VisualStudio.Threading;
-using Microsoft.Win32;
-using AntiPlagiarism.Core;
-using AntiPlagiarism.Core.Utilities.Common;
-using AntiPlagiarism.Vsix.Utilities;
-
 using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
-
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
-	public class AntiPlagiarismWindowViewModel : ToolWindowViewModelBase
+    public class AntiPlagiarismWindowViewModel : ToolWindowViewModelBase
 	{
 		private CancellationTokenSource _cancellationTokenSource;
 
@@ -143,8 +138,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		{
 			OpenFileDialog openFileDialog = new OpenFileDialog
 			{
-				Filter = "Solution files (*.sln)|*.sln|All files (*.*)|*.*",
-				DefaultExt = "sln",
+				Filter = "Solution files (*.sln)|*.sln|Project files (*.csproj)|*.csproj|All files (*.*)|*.*",
+				DefaultExt = "csproj",
 				AddExtension = true,
 				CheckFileExists = true,
 				CheckPathExists = true,
@@ -157,7 +152,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 			string extension = Path.GetExtension(openFileDialog.FileName);
 
-			if (extension != ".sln")
+			if (extension != MethodReader.SolutionExtension && extension != MethodReader.ProjectExtension)
 				return;
 
 			ReferenceSolutionPath = openFileDialog.FileName;
