@@ -85,6 +85,7 @@
     <Compile Include="Tool Window\ViewModel\ViewModelBase.cs" />
     <Compile Include="AntiPlagiarismPackage.cs" />
     <Compile Include="Utils\AntiPlagiarismLogger.cs" />
+    <Compile Include="Utils\Constants\LegacyLanguageNames.cs" />
     <Compile Include="Utils\EditorExtensions.cs" />
     <Compile Include="Utils\Navigation\VSDocumentNavigation.cs" />
     <Compile Include="Utils\ResourceManagerExtensions.cs" />
