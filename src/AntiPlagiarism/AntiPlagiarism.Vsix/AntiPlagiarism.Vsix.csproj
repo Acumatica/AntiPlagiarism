@@ -61,6 +61,8 @@
     <Compile Include="Tool Window\AntiPlagiarism\AntiPlagiarismWindow.cs" />
     <Compile Include="Tool Window\AntiPlagiarism\OpenAntiPlagiarismWindowCommand.cs" />
     <Compile Include="Tool Window\AntiPlagiarism\ViewModel\AntiPlagiarismWindowViewModel.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\ColumnsVisibility\ColumnVisibilityViewModel.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\ColumnsVisibility\ColumnsVisibilityCollectionViewModel.cs" />
     <Compile Include="Utils\Colors\VSColors.cs" />
     <Compile Include="Tool Window\VSCommandBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
