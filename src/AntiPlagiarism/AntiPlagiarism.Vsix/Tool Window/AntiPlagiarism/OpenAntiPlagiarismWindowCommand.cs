@@ -36,6 +36,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			private set;
 		}
 
+		protected override bool CanModifyDocument => false;
+
 		/// <summary>
 		/// Initializes the singleton instance of the command.
 		/// </summary>
