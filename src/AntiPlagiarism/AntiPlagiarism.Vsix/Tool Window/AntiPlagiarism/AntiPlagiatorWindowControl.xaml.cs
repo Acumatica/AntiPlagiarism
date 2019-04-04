@@ -46,5 +46,15 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 											  .OfType<string>();
 			windowViewModel.FillColumnsVisibility(columnNames);
 		}
+
+		private void ColumnsVisibilityButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (!(sender is Button columnsVisibilityButton) || columnsVisibilityButton.ContextMenu == null)
+				return;
+
+			columnsVisibilityButton.ContextMenu.PlacementTarget = columnsVisibilityButton;
+			columnsVisibilityButton.ContextMenu.DataContext = columnsVisibilityButton.DataContext;
+			columnsVisibilityButton.ContextMenu.IsOpen = true;
+		}
 	}
 }
