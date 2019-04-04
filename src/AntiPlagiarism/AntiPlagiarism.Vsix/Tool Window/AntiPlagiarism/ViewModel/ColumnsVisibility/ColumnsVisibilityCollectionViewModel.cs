@@ -18,14 +18,23 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 		public ReadOnlyObservableCollection<ColumnVisibilityViewModel> Columns { get; }
 
+		public ColumnVisibilityViewModel this[string name] => 
+			name.IsNullOrWhiteSpace()
+				? null
+				: _columnVisibilitiesByName.TryGetValue(name, out var columnVM)
+					? columnVM
+					: null;
+
 		public ColumnsVisibilityCollectionViewModel(AntiPlagiarismWindowViewModel parentViewModel,
-													IEnumerable<ColumnVisibilityViewModel> columnVMs)
+													IEnumerable<string> columnNames)
 		{
 			parentViewModel.ThrowOnNull(nameof(parentViewModel));
-			columnVMs.ThrowOnNull(nameof(columnVMs));
+			columnNames.ThrowOnNull(nameof(columnNames));
 
 			ParentViewModel = parentViewModel;
-			_columnVisibilitiesByName = columnVMs.ToDictionary(colName => colName.ColumnName);
+			_columnVisibilitiesByName = columnNames.Distinct()
+												   .Select(name => new ColumnVisibilityViewModel(name))
+												   .ToDictionary(colName => colName.ColumnName);
 			_columns = new ObservableCollection<ColumnVisibilityViewModel>(_columnVisibilitiesByName.Values);
 			Columns = new ReadOnlyObservableCollection<ColumnVisibilityViewModel>(_columns);
 		}

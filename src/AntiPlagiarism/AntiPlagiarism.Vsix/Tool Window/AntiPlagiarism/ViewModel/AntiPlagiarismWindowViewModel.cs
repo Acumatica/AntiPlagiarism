@@ -5,6 +5,7 @@ using AntiPlagiarism.Vsix.Utilities;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -16,6 +17,21 @@ namespace AntiPlagiarism.Vsix.ToolWindows
     public class AntiPlagiarismWindowViewModel : ToolWindowViewModelBase
 	{
 		private CancellationTokenSource _cancellationTokenSource;
+
+		private ColumnsVisibilityCollectionViewModel _columnsVisibilityCollectionViewModel;
+
+		public ColumnsVisibilityCollectionViewModel ColumnsVisibilityCollectionViewModel
+		{
+			get => _columnsVisibilityCollectionViewModel;
+			private set
+			{
+				if (_columnsVisibilityCollectionViewModel != value)
+				{
+					_columnsVisibilityCollectionViewModel = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
 
 		public ExtendedObservableCollection<PlagiarismInfoViewModel> PlagiatedItems { get; }
 		 
@@ -132,6 +148,14 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		{
 			base.FreeResources();
 			_cancellationTokenSource?.Dispose();
+		}
+
+		internal void FillColumnsVisibility(IEnumerable<string> columnNames)
+		{
+			if (columnNames.IsNullOrEmpty())
+				return;
+
+			ColumnsVisibilityCollectionViewModel = new ColumnsVisibilityCollectionViewModel(this, columnNames);
 		}
 
 		private void OpenReferenceSolution()

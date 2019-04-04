@@ -1,7 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.VisualStudio.Shell;
+using System.Windows.Controls.Primitives;
 
 
 
@@ -30,6 +33,18 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 			plagiarismInfo.OpenLocationAsync(locationType)
 						  .FileAndForget($"vs/{AntiPlagiarismPackage.PackageName}/{nameof(PlagiarismInfoViewModel.OpenLocationAsync)}");
+		}
+
+		private void DataGrid_Initialized(object sender, EventArgs e)
+		{
+			if (!(sender is DataGrid dataGrid) || !(dataGrid.DataContext is AntiPlagiarismWindowViewModel windowViewModel))
+				return;
+
+			var columnNames = dataGrid.Columns.Select(col => col.Header is DataGridColumnHeader header
+																? header.Tag.ToString()
+																: col.Header.ToString())
+											  .OfType<string>();
+			windowViewModel.FillColumnsVisibility(columnNames);
 		}
 	}
 }
