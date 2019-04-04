@@ -9,7 +9,7 @@
              xmlns:converters="clr-namespace:AntiPlagiarism.Vsix.ToolWindows.Converters"
             
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="800"
+             d:DesignHeight="300" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=local:AntiPlagiarismWindowViewModel, IsDesignTimeCreatable=True}"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">
@@ -56,14 +56,50 @@
         <local:AntiPlagiarismWindowViewModel/>
     </UserControl.DataContext>
     <Grid>
+        <Grid.Resources>
+            <!--HACK - DataGridColumn isn't actually an element of VIsual Tree, it's not connected to DataGrid's data context and doesn't work with Visibility property.
+                We need proxy element to connect column to context
+                https://stackoverflow.com/questions/7660967/wpf-error-cannot-find-governing-frameworkelement-for-target-element-->
+            <FrameworkElement x:Key="proxyElement" DataContext="{Binding}"/>
+        </Grid.Resources>
+        
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!--HACK ProxyElement must be hosted as a Content into an invisible ContentControl with the same DataContext.-->
+        <ContentControl Grid.Row="0" Visibility="Collapsed" Content="{StaticResource proxyElement}"/>
+
         <Border Grid.Row="0" BorderThickness="1" CornerRadius="3" Margin="2,4"
                 BorderBrush="{DynamicResource {x:Static platformUI:EnvironmentColors.BrandedUIBorderBrushKey}}">
             <WrapPanel Orientation="Horizontal">
+                <ToggleButton x:FieldModifier="private" x:Name="settingsButton" ToolTip="Expand Setting" Margin="5,5,0,5" VerticalAlignment="Center">
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource vsToggleButtonStyle}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ToggleButton.Style>
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Settings.ico"/>
+                        <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ExpandDown.ico"
+                               Visibility="{Binding ElementName=settingsButton, Path=IsChecked, Converter={StaticResource visibilityConverter}, 
+                                                    ConverterParameter=!}"/>
+                        <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/CollapseUp.ico"
+                               Visibility="{Binding ElementName=settingsButton, Path=IsChecked,Converter={StaticResource visibilityConverter}}"/>
+                    </StackPanel>
+                </ToggleButton>
+                
                 <StackPanel Orientation="Horizontal" 
                             IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
                                                 Converter={StaticResource boolInversionConverter}}">
@@ -132,14 +168,57 @@
             </WrapPanel>
         </Border>
 
-        <DataGrid Grid.Row="1" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"               
+        <Grid Grid.Row="1">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=settingsButton, Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Style="{StaticResource toolbarButtonStyle}" ToolTip="Columns Visibility" Padding="0" Background="Transparent"
+                    BorderThickness="0" Margin="2,5,0,5" ContextMenuService.IsEnabled="False"
+                    Click="ColumnsVisibilityButton_Click">
+                <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ColumnSettings.ico"
+                       MaxHeight="20" MaxWidth="20"/>
+                <Button.ContextMenu>
+                    <ContextMenu Placement="Bottom" ItemsSource="{Binding Path=ColumnsVisibilityCollectionViewModel.Columns}">
+                        <ContextMenu.ItemContainerStyle>
+                            <Style TargetType="{x:Type MenuItem}">
+                                <Setter Property="IsCheckable" Value="True"/>
+                                <Setter Property="StaysOpenOnClick" Value="True"/>
+                                <Setter Property="IsChecked" Value="{Binding Path=IsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Setter Property="Header" Value="{Binding Path=ColumnName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Style>
+                        </ContextMenu.ItemContainerStyle>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+        </Grid>
+
+        <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"               
                   ItemsSource="{Binding Path=PlagiatedItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  Initialized="DataGrid_Initialized">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Source Name" Width="*" Binding="{Binding Path=SourceName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Visibility="{Binding Source={StaticResource proxyElement}, 
+                                                          Path='DataContext.ColumnsVisibilityCollectionViewModel[Source Name].IsVisible', 
+                                                          Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource visibilityConverter}}"
                                     ElementStyle="{StaticResource cellTextBlockStyle}"/>
 
                 <DataGridTextColumn Header="Source Location" Width="2*" Binding="{Binding Path=SourceLocation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Visibility="{Binding Source={StaticResource proxyElement}, 
+                                                          Path='DataContext.ColumnsVisibilityCollectionViewModel[Source Location].IsVisible', 
+                                                          Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource visibilityConverter}}"
                                     ElementStyle="{StaticResource cellTextBlockStyle}">
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource datagridCellStyle}">
@@ -149,10 +228,16 @@
                 </DataGridTextColumn>
 
                 <DataGridTextColumn Header="Reference Name" Width="*" Binding="{Binding Path=ReferenceName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                    ElementStyle="{StaticResource cellTextBlockStyle}"/>
+                                    ElementStyle="{StaticResource cellTextBlockStyle}"
+                                    Visibility="{Binding Source={StaticResource proxyElement}, 
+                                                         Path='DataContext.ColumnsVisibilityCollectionViewModel[Reference Name].IsVisible', 
+                                                         Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource visibilityConverter}}"/>
 
                 <DataGridTextColumn Header="Reference Location" Width="2*" Binding="{Binding Path=ReferenceLocation, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                    ElementStyle="{StaticResource cellTextBlockStyle}">
+                                    ElementStyle="{StaticResource cellTextBlockStyle}"
+                                    Visibility="{Binding Source={StaticResource proxyElement}, 
+                                                         Path='DataContext.ColumnsVisibilityCollectionViewModel[Reference Location].IsVisible', 
+                                                         Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource visibilityConverter}}">
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource datagridCellStyle}">
                             <Setter Property="Tag" Value="{x:Static local:LocationType.Reference}"/>
@@ -160,7 +245,10 @@
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
 
-                <DataGridTemplateColumn Header="Similarity" Width="0.5*" SortMemberPath="Similarity">
+                <DataGridTemplateColumn Header="Similarity" Width="0.5*" SortMemberPath="Similarity"
+                                        Visibility="{Binding Source={StaticResource proxyElement},
+                                                             Path='DataContext.ColumnsVisibilityCollectionViewModel[Similarity].IsVisible', 
+                                                             Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource visibilityConverter}}">
                     <DataGridTemplateColumn.CellStyle>
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource datagridCellStyle}">
                             <Style.Triggers>
@@ -184,9 +272,6 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
-                <!--<DataGridTextColumn Header="Type" Width="0.5*" Binding="{Binding Path=Type, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                    ElementStyle="{StaticResource cellTextBlockStyle}"/>-->
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
