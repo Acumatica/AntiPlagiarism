@@ -160,7 +160,7 @@
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
 
-                <DataGridTemplateColumn Header="Similarity" Width="0.5*">
+                <DataGridTemplateColumn Header="Similarity" Width="0.5*" SortMemberPath="Similarity">
                     <DataGridTemplateColumn.CellStyle>
                         <Style TargetType="DataGridCell" BasedOn="{StaticResource datagridCellStyle}">
                             <Style.Triggers>

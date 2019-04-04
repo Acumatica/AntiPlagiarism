@@ -97,6 +97,9 @@ namespace AntiPlagiarism.Vsix
 			// Do any initialization that requires the UI thread after switching to the UI thread
 			await base.InitializeAsync(cancellationToken, progress);
 
+			if (Zombied)
+				return;
+
 			await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 			await OpenAntiPlagiarismWindowCommand.InitializeAsync(this);
 
