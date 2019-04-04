@@ -9,7 +9,7 @@
              xmlns:converters="clr-namespace:AntiPlagiarism.Vsix.ToolWindows.Converters"
             
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="800"
+             d:DesignHeight="300" d:DesignWidth="1000"
              d:DataContext="{d:DesignInstance Type=local:AntiPlagiarismWindowViewModel, IsDesignTimeCreatable=True}"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">
@@ -75,6 +75,32 @@
         <Border Grid.Row="0" BorderThickness="1" CornerRadius="3" Margin="2,4"
                 BorderBrush="{DynamicResource {x:Static platformUI:EnvironmentColors.BrandedUIBorderBrushKey}}">
             <WrapPanel Orientation="Horizontal">
+                <ToggleButton x:FieldModifier="private" x:Name="settingsButton" ToolTip="Expand Setting"  IsChecked="True"
+                              Margin="2,5,0,5" VerticalAlignment="Center">
+                    <ToggleButton.Style>
+                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource vsToggleButtonStyle}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ToggleButton.Style>
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Settings.ico"/>
+                        <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ExpandDown.ico"
+                               Visibility="{Binding ElementName=settingsButton, Path=IsChecked, Converter={StaticResource visibilityConverter}, 
+                                                    ConverterParameter=!}"/>
+                        <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/CollapseUp.ico"
+                               Visibility="{Binding ElementName=settingsButton, Path=IsChecked,Converter={StaticResource visibilityConverter}}"/>
+                    </StackPanel>
+                </ToggleButton>
+                
                 <StackPanel Orientation="Horizontal" 
                             IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
                                                 Converter={StaticResource boolInversionConverter}}">
@@ -143,19 +169,28 @@
             </WrapPanel>
         </Border>
 
-        <Expander Grid.Row="1" IsExpanded="True" ToolTip="Settings">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+        <Grid Grid.Row="1">
+            <!--<Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=settingsButton, Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>-->
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Style="{StaticResource toolbarButtonStyle}" ToolTip="Columns Visibility"
-                        Background="Transparent" Margin="20,0,0,5" Padding="0">
-                    <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ColumnSettings.ico"
-                           MaxHeight="20" MaxWidth="20"/>
-                </Button>
-            </Grid>
-        </Expander>
+            <Button Grid.Column="0" Style="{StaticResource toolbarButtonStyle}" ToolTip="Columns Visibility" Padding="0" Background="Transparent"
+                    BorderThickness="0" Margin="2,5,0,5">
+                <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ColumnSettings.ico"
+                       MaxHeight="20" MaxWidth="20"/>
+            </Button>
+        </Grid>
 
         <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"               
                   ItemsSource="{Binding Path=PlagiatedItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
