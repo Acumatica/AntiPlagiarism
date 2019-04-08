@@ -34,7 +34,17 @@ namespace AntiPlagiarism.Vsix.ToolWindows.Converters
 
 		public object ConvertBack(object value, Type targetTypes, object parameter, CultureInfo culture)
 		{
-			throw new NotImplementedException();
+			if (!(value is Visibility visibility))
+				return false;
+
+			bool visible = visibility == Visibility.Visible;
+
+			if (InverseVisibilityValue.Equals(parameter as string, StringComparison.Ordinal))
+			{
+				visible = !visible;
+			}
+
+			return visibility;
 		}
 	}
 }
