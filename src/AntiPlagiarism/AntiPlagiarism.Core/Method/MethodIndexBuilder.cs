@@ -11,8 +11,9 @@ namespace AntiPlagiarism.Core.Method
             var path = method.GetLocation().GetMappedLineSpan().Path;
             var line = method.GetLocation().GetMappedLineSpan().StartLinePosition.Line;
             var character = method.GetLocation().GetMappedLineSpan().StartLinePosition.Character;
+			string sourceCode = method.ToFullString();
 
-            return new MethodIndex(methodName, path, line, character);
+            return new MethodIndex(methodName, path, sourceCode, line, character);
         }
     }
 }

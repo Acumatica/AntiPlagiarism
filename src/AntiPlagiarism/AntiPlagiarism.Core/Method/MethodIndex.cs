@@ -14,14 +14,16 @@ namespace AntiPlagiarism.Core.Method
 
         public int Character { get; }
 
-        public MethodIndex(string name, string path, int line, int character)
+        public MethodIndex(string name, string path, string sourceCode, int line, int character)
         {
             name.ThrowOnNullOrEmpty(nameof(name));
             path.ThrowOnNullOrEmpty(nameof(path));
+			sourceCode.ThrowOnNullOrEmpty(nameof(sourceCode));
 
             Name = name;
             Path = path;
-            Line = line;
+			SourceCode = sourceCode;
+			Line = line;
             Character = character;
         }
     }
