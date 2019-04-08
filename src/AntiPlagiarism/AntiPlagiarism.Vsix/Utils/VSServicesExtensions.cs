@@ -1,5 +1,7 @@
 ﻿using AntiPlagiarism.Core.Utilities;
 using EnvDTE80;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
@@ -57,6 +59,17 @@ namespace AntiPlagiarism.Vsix.Utilities
 
 			VisualStudioWorkspace workspace = await serviceProvider.GetVSWorkspaceAsync();	
 			return workspace?.CurrentSolution?.FilePath ?? string.Empty;
+		}
+
+		internal static async Task<int> GetTabSizeAsync(this Shell.IAsyncServiceProvider serviceProvider)
+		{
+			const int defaultTabSize = 4;
+
+			if (serviceProvider == null)
+				return defaultTabSize;
+
+			VisualStudioWorkspace workspace = await serviceProvider.GetVSWorkspaceAsync();
+			return workspace?.Options.GetOption(FormattingOptions.IndentationSize, LanguageNames.CSharp) ?? defaultTabSize;
 		}
 
 		internal static async Task<IOutliningManager> GetOutliningManagerAsync(this Shell.IAsyncServiceProvider serviceProvider, ITextView textView)
