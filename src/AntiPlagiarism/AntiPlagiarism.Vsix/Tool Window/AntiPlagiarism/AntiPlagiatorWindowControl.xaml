@@ -258,7 +258,7 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <GroupBox Grid.Column="0"  Header="Source Code Snippet" ToolTip="Source Code Snippet"
+                                    <GroupBox Grid.Column="0" Header="Source Code Snippet" ToolTip="Source Code Snippet"
                                               Style="{StaticResource dataGridRowDetailsGroupBoxStyle}">
                                         
                                         <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" 

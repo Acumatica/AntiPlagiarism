@@ -218,6 +218,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			if (ReferenceSolutionPath.IsNullOrWhiteSpace() || solutionPath.IsNullOrWhiteSpace() || cancellationToken.IsCancellationRequested)
 				return;
 
+			int tabSize = await AntiPlagiarismPackage.Instance.GetTabSizeAsync();
 			await TaskScheduler.Default; //switch to background thread
 			string sourceSolutionDir = Path.GetDirectoryName(solutionPath) + Path.DirectorySeparatorChar;
 			string referenceSolutionDir = Path.GetDirectoryName(ReferenceSolutionPath) + Path.DirectorySeparatorChar;
@@ -225,7 +226,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			PlagiarismScanner plagiarismScanner = new PlagiarismScanner(ReferenceSolutionPath, solutionPath, 
 																		threshholdFraction, MinCheckedMethodSize);
 			var plagiatedItems = plagiarismScanner.Scan(callFromVS: true)
-												  .Select(item => new PlagiarismInfoViewModel(this, item, referenceSolutionDir, sourceSolutionDir));
+												  .Select(item => new PlagiarismInfoViewModel(this, item, referenceSolutionDir, sourceSolutionDir, tabSize));
 			
 			if (cancellationToken.IsCancellationRequested)
 				return;
