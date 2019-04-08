@@ -43,6 +43,23 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 		public string SourceCodeSnippet => _plagiarismInfo.Input.SourceCode;
 
+		private bool _areCodeFragmentsVisible;
+
+		public bool AreCodeFragmentsVisible
+		{
+			get => _areCodeFragmentsVisible;
+			set
+			{
+				if (_areCodeFragmentsVisible != value)
+				{
+					_areCodeFragmentsVisible = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public Command ShowOrHideCodeCommand { get; }
+
 		public PlagiarismInfoViewModel(AntiPlagiarismWindowViewModel parentViewModel, PlagiarismInfo plagiarismInfo,
 									   string referenceSolutionDir, string sourceSolutionDir)
 		{
@@ -55,6 +72,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			ParentViewModel = parentViewModel;
 			ReferenceLocation = ExtractShortLocation(_plagiarismInfo.Reference.Path, referenceSolutionDir);
 			SourceLocation = ExtractShortLocation(_plagiarismInfo.Input.Path, sourceSolutionDir);
+			ShowOrHideCodeCommand = new Command(p => ShowOrHideCodeSnippets());
 		}
 
 		public async Task OpenLocationAsync(LocationType locationType)
@@ -104,5 +122,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 			return preparedLocation;
 		}
+
+		private void ShowOrHideCodeSnippets() => AreCodeFragmentsVisible = !AreCodeFragmentsVisible;
 	}
 }
