@@ -35,9 +35,13 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 		public string ReferenceLocation { get; }
 
+		public string ReferenceCodeSnippet => _plagiarismInfo.Reference.SourceCode;
+
 		public string SourceName => _plagiarismInfo.Input.Name;
 
 		public string SourceLocation { get; }
+
+		public string SourceCodeSnippet => _plagiarismInfo.Input.SourceCode;
 
 		public PlagiarismInfoViewModel(AntiPlagiarismWindowViewModel parentViewModel, PlagiarismInfo plagiarismInfo,
 									   string referenceSolutionDir, string sourceSolutionDir)
