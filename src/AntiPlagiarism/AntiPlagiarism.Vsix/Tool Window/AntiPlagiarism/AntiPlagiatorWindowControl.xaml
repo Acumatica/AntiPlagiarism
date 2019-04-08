@@ -42,11 +42,28 @@
                         <EventSetter Event="MouseDoubleClick" Handler="DataGridCell_MouseDoubleClick"/>
                     </Style>
                     
+                    <!--Data Grid Cell Text Block Style-->
                     <Style x:Key="cellTextBlockStyle" TargetType="TextBlock">
                         <Setter Property="VerticalAlignment" Value="Center"/>
                         <Setter Property="ToolTip" 
                                 Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <Setter Property="Margin" Value="2,0"/>
+                    </Style>
+
+                    <!--Data Grid Row Details GroupBox Style-->
+                    <Style x:Key="dataGridRowDetailsGroupBoxStyle" TargetType="GroupBox">
+                        <Style.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Style.Resources>
+
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="BorderThickness" Value="1"/>
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
@@ -204,10 +221,63 @@
             </Button>
         </Grid>
 
-        <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"               
+        <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"          
                   ItemsSource="{Binding Path=PlagiatedItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                   SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   Initialized="DataGrid_Initialized">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource dataGridRowStyle}">
+                    <Setter Property="DetailsVisibility" 
+                            Value="{Binding Path=AreCodeFragmentsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource visibilityConverter}}"/>
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding Path=ShowOrHideCodeCommand, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <MenuItem.Style>
+                                        <Style TargetType="MenuItem">
+                                            <Setter Property="Header" Value="Show Code"/>
+
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=AreCodeFragmentsVisible, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                                    <Setter Property="Header" Value="Hide Code"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </MenuItem.Style>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="DetailsTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="3" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="0"  Header="Source Code Snippet" ToolTip="Source Code Snippet"
+                                              Style="{StaticResource dataGridRowDetailsGroupBoxStyle}">
+                                        
+                                        <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" 
+                                                   Text="{Binding Path=SourceCodeSnippet, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </GroupBox>
+
+                                    <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" Style="{StaticResource vsGridSplitterStyle}"/>
+
+                                    <GroupBox Grid.Column="2" Grid.ColumnSpan="2" Header="Reference Code Snippet" ToolTip="Reference Code Snippet"
+                                              Style="{StaticResource dataGridRowDetailsGroupBoxStyle}">
+                                        <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" 
+                                                   Text="{Binding Path=ReferenceCodeSnippet, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </GroupBox>
+                                </Grid>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Source Name" Width="*" Binding="{Binding Path=SourceName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                      Visibility="{Binding Source={StaticResource proxyElement}, 
