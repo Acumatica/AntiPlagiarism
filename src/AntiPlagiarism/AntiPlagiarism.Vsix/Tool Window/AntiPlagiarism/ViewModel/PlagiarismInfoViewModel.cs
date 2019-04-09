@@ -1,15 +1,19 @@
-﻿using AntiPlagiarism.Core.Method;
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AntiPlagiarism.Core.Method;
 using AntiPlagiarism.Core.Plagiarism;
 using AntiPlagiarism.Core.Utilities;
 using AntiPlagiarism.Vsix.Utilities;
 using AntiPlagiarism.Vsix.Utilities.Navigation;
-using System.Threading.Tasks;
+
 using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
 
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
-    public class PlagiarismInfoViewModel : ViewModelBase
+	public class PlagiarismInfoViewModel : ViewModelBase
 	{
 		private const string LocationPrefix = "SourceFile(";
 		private const string LocationSuffix = ")";
@@ -35,12 +39,33 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 		public string ReferenceLocation { get; }
 
+		public string ReferenceCodeSnippet { get; }
+
 		public string SourceName => _plagiarismInfo.Input.Name;
 
 		public string SourceLocation { get; }
 
+		public string SourceCodeSnippet { get; }
+
+		private bool _areCodeFragmentsVisible;
+
+		public bool AreCodeFragmentsVisible
+		{
+			get => _areCodeFragmentsVisible;
+			set
+			{
+				if (_areCodeFragmentsVisible != value)
+				{
+					_areCodeFragmentsVisible = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public Command ShowOrHideCodeCommand { get; }
+
 		public PlagiarismInfoViewModel(AntiPlagiarismWindowViewModel parentViewModel, PlagiarismInfo plagiarismInfo,
-									   string referenceSolutionDir, string sourceSolutionDir)
+									   string referenceSolutionDir, string sourceSolutionDir, int tabSize)
 		{
 			parentViewModel.ThrowOnNull(nameof(parentViewModel));
 			plagiarismInfo.ThrowOnNull(nameof(plagiarismInfo));
@@ -49,8 +74,13 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 			_plagiarismInfo = plagiarismInfo;
 			ParentViewModel = parentViewModel;
+			ShowOrHideCodeCommand = new Command(p => ShowOrHideCodeSnippets());
+
 			ReferenceLocation = ExtractShortLocation(_plagiarismInfo.Reference.Path, referenceSolutionDir);
+			ReferenceCodeSnippet = IndentCodeSnippet(_plagiarismInfo.Reference.SourceCode, tabSize);
+
 			SourceLocation = ExtractShortLocation(_plagiarismInfo.Input.Path, sourceSolutionDir);
+			SourceCodeSnippet = IndentCodeSnippet(_plagiarismInfo.Input.SourceCode, tabSize);		
 		}
 
 		public async Task OpenLocationAsync(LocationType locationType)
@@ -79,6 +109,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 																							location.Line, location.Character);
 		}
 
+		private void ShowOrHideCodeSnippets() => AreCodeFragmentsVisible = !AreCodeFragmentsVisible;
+
 		private string ExtractShortLocation(string location, string solutionDir)
 		{
             string preparedLocation = location;
@@ -100,5 +132,42 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 			return preparedLocation;
 		}
+
+		private string IndentCodeSnippet(string codeSnippet, int tabSize)
+		{
+			codeSnippet = codeSnippet.Trim('\r', '\n');
+			int indentLength = codeSnippet.TakeWhile(c => c == ' ' || c == '\t')
+										  .Sum(c => c == '\t' ? tabSize : 1);
+
+			var sb = new StringBuilder(string.Empty, capacity: codeSnippet.Length);
+			int counter = 0;
+
+			foreach (char c in codeSnippet)
+			{
+				switch (c)
+				{
+					case '\n':
+						counter = 0;
+						sb.Append(c);
+						continue;
+
+					case ' ' when counter < indentLength:
+						counter++;
+						continue;
+
+					case '\t' when counter < indentLength:
+						counter += tabSize;
+						continue;
+
+					case ' ' when counter >= indentLength:
+					case '\t' when counter >= indentLength:
+					default:
+						sb.Append(c);
+						continue;
+				}
+			}
+
+			return sb.ToString();
+		}	
 	}
 }

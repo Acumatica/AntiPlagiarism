@@ -48,8 +48,11 @@ namespace AntiPlagiarism.Vsix
 			if (commandService != null)
 			{
 				var menuCommandID = new CommandID(commandSet, commandID);
-				var menuItem = new OleMenuCommand(CommandCallback, menuCommandID);
-				menuItem.BeforeQueryStatus += QueryButtonStatus;
+				var menuItem = new OleMenuCommand(CommandCallback, menuCommandID)
+				{
+					// This defers the visibility logic back to the VisibilityConstraints in the .vsct file
+					Supported = false
+				};
 				commandService.AddCommand(menuItem);
 			}
 		}
@@ -58,26 +61,6 @@ namespace AntiPlagiarism.Vsix
 		/// Gets the service provider from the owner package.
 		/// </summary>
 		protected Shell.IAsyncServiceProvider ServiceProvider => Package;
-		
-		protected virtual void QueryButtonStatus(object sender, EventArgs e)
-		{
-			if (!(sender is OleMenuCommand menuCommand))
-				return;
-
-			ThreadHelper.ThrowIfNotOnUIThread();
-			DTE2 dte = ThreadHelper.JoinableTaskFactory.Run(() => ServiceProvider.GetServiceAsync<DTE, DTE2>());
-			bool visible = false;
-			bool enabled = false;
-
-			if (dte?.ActiveDocument != null && dte.ActiveDocument.Language == LegacyLanguageNames.CSharp)
-			{
-				visible = true;
-				enabled = !CanModifyDocument || !dte.ActiveDocument.ReadOnly;
-			}
-
-			menuCommand.Visible = visible;
-			menuCommand.Enabled = enabled;
-		}
 
 		protected abstract void CommandCallback(object sender, EventArgs e);
 

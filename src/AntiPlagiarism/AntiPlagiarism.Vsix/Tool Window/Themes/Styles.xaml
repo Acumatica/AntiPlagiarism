@@ -16,6 +16,17 @@
         </Style.Triggers>
     </Style>
 
+    <!--VS Grid Splitter-->
+    <Style x:Key="vsGridSplitterStyle" TargetType="{x:Type GridSplitter}">
+        <Style.Resources>
+            <Style TargetType="Border">
+                <Setter Property="CornerRadius" Value="3"/>
+            </Style>
+        </Style.Resources>
+
+        <Setter Property="Background" Value="{DynamicResource {x:Static platformUI:EnvironmentColors.ToolWindowTabSeparatorBrushKey}}"/>
+    </Style>
+    
     <!--VS Read Only Data Grid Style-->
     <!--#region DataGrid Row-->
     <Style x:Key="dataGridRowStyle" TargetType="DataGridRow">

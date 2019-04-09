@@ -55,7 +55,7 @@
       <!--Tool Window Command-->
       <Button guid="guidAntiPlagiarismCmdSet" id="OpenAntiPlagiarismWindowCommand" type="Button">
         <Icon guid="guidAntiPlagiarismIcon" id="antiPlagiarismIcon" />
-        <CommandFlag>DefaultDisabled</CommandFlag>    
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <Strings>
           <CommandName>cmdidOpenAntiPlagiarismWindowCommand</CommandName>
@@ -98,6 +98,18 @@
     </CommandPlacement>
   </CommandPlacements>
 
+  <VisibilityConstraints>
+    <!-- 
+    This will show or hide the button based on the uiContextSupportedFiles which is specified in
+    the ProvideUIContextRule attribute on the package class in MyPackage.cs. 
+    
+    Note, this only applies when the package hasn't been loaded yet. When loaded, the visibility
+    of the button is controlled by the MenuItemQueryStatus method in MyButton.cs.
+    -->
+    <VisibilityItem guid="guidAntiPlagiarismCmdSet" id="OpenAntiPlagiarismWindowCommand" context="solutionExistsAndFullyLoadedUIContextGuid" />
+    <VisibilityItem guid="guidAntiPlagiarismCmdSet" id="OpenAntiPlagiarismWindowCommand" context="debuggingUIContextGuid" />
+  </VisibilityConstraints>
+
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidAntiPlagiarismVSPackage" value="{f571df7b-c776-4783-859e-9946ff1ce156}" />
@@ -113,5 +125,9 @@
     <GuidSymbol name="guidAntiPlagiarismIcon" value="{DA492559-BFB4-4769-995A-6CCFF7D56045}">
       <IDSymbol name="antiPlagiarismIcon" value="1" />
     </GuidSymbol>
+
+    <!-- This is the UI Context guid -->
+    <GuidSymbol name="solutionExistsAndFullyLoadedUIContextGuid" value="{10534154-102D-46E2-ABA8-A6BFA25BA0BE}" />
+    <GuidSymbol name="debuggingUIContextGuid" value="{ADFC4E61-0397-11D1-9F4E-00A0C911004F}" />
   </Symbols>
 </CommandTable>
