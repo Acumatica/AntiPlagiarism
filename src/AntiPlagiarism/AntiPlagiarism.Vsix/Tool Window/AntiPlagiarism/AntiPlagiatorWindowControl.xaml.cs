@@ -56,5 +56,24 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			columnsVisibilityButton.ContextMenu.DataContext = columnsVisibilityButton.DataContext;
 			columnsVisibilityButton.ContextMenu.IsOpen = true;
 		}
+
+		private void NestedScrollViewer_HandlePreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+		{
+			if (e.Handled || !(sender is ScrollViewer scrollControl) || !(scrollControl.Parent is UIElement parent))
+				return;
+
+			if ((e.Delta > 0 && scrollControl.VerticalOffset == 0) || 
+				(e.Delta <= 0 && scrollControl.VerticalOffset >= scrollControl.ExtentHeight - scrollControl.ViewportHeight))
+			{
+				e.Handled = true;
+				var eventArg = new System.Windows.Input.MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+				{
+					RoutedEvent = UIElement.MouseWheelEvent,
+					Source = sender
+				};
+
+				parent.RaiseEvent(eventArg);
+			}
+		}
 	}
 }
