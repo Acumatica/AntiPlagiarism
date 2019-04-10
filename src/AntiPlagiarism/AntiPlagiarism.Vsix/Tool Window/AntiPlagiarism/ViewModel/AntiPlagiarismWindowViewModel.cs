@@ -42,11 +42,18 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			get => _selectedItem; 
 			set
 			{
-				if (_selectedItem != value)
+				if (_selectedItem == value)
+					return;
+
+				PlagiarismInfoViewModel oldSelectedItem = _selectedItem;
+
+				if (oldSelectedItem != null)
 				{
-					_selectedItem = value;
-					NotifyPropertyChanged();
+					oldSelectedItem.AreCodeFragmentsVisible = false;
 				}
+
+				_selectedItem = value;
+				NotifyPropertyChanged();			
 			}
 		}
 
