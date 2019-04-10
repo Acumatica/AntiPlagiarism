@@ -37,8 +37,7 @@ namespace AntiPlagiarism.Vsix.Logger
 
 		private void AntiPlagiarism_FirstChanceException(object sender, FirstChanceExceptionEventArgs e)
 		{
-			LogExceptionAsync(e.Exception, logOnlyFromAcuminatorAssemblies: true, LogMode.Warning)
-				.FileAndForget($"vs/{AntiPlagiarismPackage.PackageName}/{nameof(AntiPlagiarismLogger)}/{nameof(LogExceptionAsync)}");
+			LogException(e.Exception, logOnlyFromAcuminatorAssemblies: true, LogMode.Warning);
 		}
 
 		private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -49,8 +48,7 @@ namespace AntiPlagiarism.Vsix.Logger
 					? LogMode.Error
 					: LogMode.Warning;
 
-				LogExceptionAsync(exception, logOnlyFromAcuminatorAssemblies: false, logMode)
-					.FileAndForget($"vs/{AntiPlagiarismPackage.PackageName}/{nameof(AntiPlagiarismLogger)}/{nameof(LogExceptionAsync)}");
+				LogException(exception, logOnlyFromAcuminatorAssemblies: false, logMode);
 			}
 		}
 
@@ -66,31 +64,19 @@ namespace AntiPlagiarism.Vsix.Logger
 
 			foreach (Exception exception in e.Exception.Flatten().InnerExceptions)
 			{
-				ThreadHelper.JoinableTaskFactory.Run(() => 
-					LogExceptionAsync(exception, logOnlyFromAcuminatorAssemblies: false, logMode));
+				LogException(exception, logOnlyFromAcuminatorAssemblies: false, logMode);
 			}
 		}
 
-		public async System.Threading.Tasks.Task LogExceptionAsync(Exception exception, bool logOnlyFromAcuminatorAssemblies, LogMode logMode,
-																   [CallerMemberName]string reportedFrom = null)
+		public void LogException(Exception exception, bool logOnlyFromAcuminatorAssemblies, LogMode logMode,
+								[CallerMemberName]string reportedFrom = null)
 		{
 			if (exception == null || logMode == LogMode.None)
 				return;
 			else if (logOnlyFromAcuminatorAssemblies && exception.Source != CoreDll && exception.Source != VsixDll)
 				return;
 
-			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-			IWpfTextView activeTextView = await _package.GetWpfTextViewAsync();
-
-			if (activeTextView == null)
-				return;
-
-			Document currentDocument = activeTextView.TextSnapshot.GetOpenDocumentInCurrentContextWithChanges();
-
-			if (currentDocument == null)
-				return;
-
-			string logMessage = CreateLogMessageFromException(exception, currentDocument, logMode, reportedFrom);
+			string logMessage = CreateLogMessageFromException(exception, logMode, reportedFrom);
 
 			switch (logMode)
 			{
@@ -106,7 +92,7 @@ namespace AntiPlagiarism.Vsix.Logger
 			}
 		}
 
-		private string CreateLogMessageFromException(Exception exception, Document currentDocument, LogMode logMode, string reportedFrom)
+		private string CreateLogMessageFromException(Exception exception, LogMode logMode, string reportedFrom)
 		{
 
 			StringBuilder messageBuilder = new StringBuilder(capacity: 256);
@@ -117,7 +103,6 @@ namespace AntiPlagiarism.Vsix.Logger
 			}
 
 			messageBuilder.AppendLine($"*EXCEPTION TYPE*: {exception.GetType().Name}")
-						  .AppendLine($"|*FILE PATH*: {currentDocument.FilePath}")
 						  .AppendLine($"|*MESSAGE*: {exception.Message}")
 						  .AppendLine($"|*STACK TRACE*: {exception.StackTrace}")
 						  .AppendLine($"|*TARGET SITE*: {exception.TargetSite}")
