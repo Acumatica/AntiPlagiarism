@@ -258,8 +258,10 @@
                                         <ColumnDefinition Width="3" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <GroupBox Grid.Column="0" Header="Source Code Snippet" ToolTip="Source Code Snippet"
-                                              Style="{StaticResource dataGridRowDetailsGroupBoxStyle}">
+                                    <GroupBox Grid.Column="0" ToolTip="Source Code Snippet" Style="{StaticResource dataGridRowDetailsGroupBoxStyle}">
+                                        <GroupBox.Header>
+                                            <TextBlock Text="Source Code Snippet" FontWeight="Bold" Foreground="Coral"/>
+                                        </GroupBox.Header>
                                         <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"
                                                       HorizontalAlignment="Stretch" PreviewMouseWheel="NestedScrollViewer_HandlePreviewMouseWheel">
                                             <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" 
@@ -269,12 +271,14 @@
 
                                     <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" Style="{StaticResource vsGridSplitterStyle}"/>
 
-                                    <GroupBox Grid.Column="2" Header="Reference Code Snippet" ToolTip="Reference Code Snippet"
-                                              Style="{StaticResource dataGridRowDetailsGroupBoxStyle}">
+                                    <GroupBox Grid.Column="2" ToolTip="Reference Code Snippet" Style="{StaticResource dataGridRowDetailsGroupBoxStyle}">
+                                        <GroupBox.Header>
+                                            <TextBlock Text="Reference Code Snippet" FontWeight="Bold" Foreground="Coral"/>
+                                        </GroupBox.Header>
                                         <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto"
                                                       HorizontalAlignment="Stretch" PreviewMouseWheel="NestedScrollViewer_HandlePreviewMouseWheel">
                                             <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" 
-                                                   Text="{Binding Path=ReferenceCodeSnippet, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                       Text="{Binding Path=ReferenceCodeSnippet, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                                         </ScrollViewer>
                                     </GroupBox>
                                 </Grid>
