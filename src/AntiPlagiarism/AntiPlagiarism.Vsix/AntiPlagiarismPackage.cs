@@ -146,7 +146,7 @@ namespace AntiPlagiarism.Vsix
 		{
 			try
 			{
-				AntiPlagiarismLogger = new AntiPlagiarismLogger(this);
+				AntiPlagiarismLogger = new AntiPlagiarismLogger(this, swallowUnobservedTaskExceptions: false);
 			}
 			catch (Exception ex)
 			{
