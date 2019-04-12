@@ -92,21 +92,8 @@
         <Border Grid.Row="0" BorderThickness="1" CornerRadius="3" Margin="2,4"
                 BorderBrush="{DynamicResource {x:Static platformUI:EnvironmentColors.BrandedUIBorderBrushKey}}">
             <WrapPanel Orientation="Horizontal">
-                <ToggleButton x:FieldModifier="private" x:Name="settingsButton" ToolTip="Expand Setting" Margin="5,5,0,5" VerticalAlignment="Center">
-                    <ToggleButton.Style>
-                        <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource vsToggleButtonStyle}">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ToggleButton">
-                                        <Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ToggleButton.Style>
-                    
+                <ToggleButton x:FieldModifier="private" x:Name="settingsButton" ToolTip="Expand Setting" Margin="5,5,0,5" VerticalAlignment="Center"
+                              IsChecked="True" Style="{StaticResource vsToggleButtonStyle}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Settings.ico"/>
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ExpandDown.ico"
@@ -199,6 +186,7 @@
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Style="{StaticResource toolbarButtonStyle}" ToolTip="Columns Visibility" Padding="0" Background="Transparent"
@@ -219,6 +207,38 @@
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
+
+            <ToggleButton x:FieldModifier="private" x:Name="gridRowVisibilityToggleButton"
+                          Grid.Column="1" Margin="2,5,0,5">
+                <ToggleButton.Style>
+                    <Style TargetType="ToggleButton" BasedOn="{StaticResource vsToggleButtonStyle}">
+                        <Setter Property="ToolTip" Value="Show all rows in the grid. Click to show only rows which exceed threshold"/>
+
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="ToolTip" Value="Show only rows which exceed threshold in the grid. Click to show all rows"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+                <Image MaxHeight="18" MaxWidth="18">
+                    <Image.Style>
+                        <Style TargetType="Image" BasedOn="{StaticResource vsImageStyle}">
+                            <Setter Property="Source" 
+                                    Value="pack://application:,,,/AntiPlagiarism;component/Resources/StatusInformation.ico"/>
+
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToggleButton}, 
+                                                               Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                             Value="True">
+                                    <Setter Property="Source" 
+                                            Value="pack://application:,,,/AntiPlagiarism;component/Resources/StatusInvalid.ico"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </ToggleButton>
         </Grid>
 
         <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"          
@@ -228,7 +248,8 @@
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource dataGridRowStyle}">
                     <Setter Property="DetailsVisibility" 
-                            Value="{Binding Path=AreCodeFragmentsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource visibilityConverter}}"/>
+                            Value="{Binding Path=AreCodeFragmentsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
+                                            Converter={StaticResource visibilityConverter}}"/>
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu>
@@ -276,6 +297,16 @@
                             </DataTemplate>
                         </Setter.Value>
                     </Setter>
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=gridRowVisibilityToggleButton, Path=IsChecked,
+                                                       Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                     Value="True">
+                            <Setter Property="Visibility" 
+                                    Value="{Binding Path=IsThresholdExceeded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
+                                                    Converter={StaticResource visibilityConverter}}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
