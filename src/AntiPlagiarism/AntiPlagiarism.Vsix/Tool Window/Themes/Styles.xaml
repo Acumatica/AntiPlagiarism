@@ -26,7 +26,14 @@
 
         <Setter Property="Background" Value="{DynamicResource {x:Static platformUI:EnvironmentColors.ToolWindowTabSeparatorBrushKey}}"/>
     </Style>
-    
+
+    <!--VS Combobox Style-->
+    <Style x:Key="vsComboboxStyle" TargetType="{x:Type ComboBox}" 
+           BasedOn="{StaticResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
     <!--VS Read Only Data Grid Style-->
     <!--#region DataGrid Row-->
     <Style x:Key="dataGridRowStyle" TargetType="DataGridRow">
