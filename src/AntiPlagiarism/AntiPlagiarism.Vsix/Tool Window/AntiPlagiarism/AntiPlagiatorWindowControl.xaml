@@ -93,7 +93,7 @@
                 BorderBrush="{DynamicResource {x:Static platformUI:EnvironmentColors.BrandedUIBorderBrushKey}}">
             <WrapPanel Orientation="Horizontal">
                 <ToggleButton x:FieldModifier="private" x:Name="settingsButton" ToolTip="Expand Setting" Margin="5,5,0,5" VerticalAlignment="Center"
-                              IsChecked="True" Style="{StaticResource vsToggleButtonStyle}">
+                              Style="{StaticResource vsToggleButtonStyle}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Settings.ico"/>
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ExpandDown.ico"
@@ -127,6 +127,22 @@
                 <StackPanel Orientation="Horizontal" 
                             IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
                                                 Converter={StaticResource boolInversionConverter}}">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelectedWorkMode.WorkMode, Mode=OneWay,
+                                             UpdateSourceTrigger=PropertyChanged}">
+                                    <DataTrigger.Value>
+                                        <local:WorkMode>SelfAnalysis</local:WorkMode>
+                                    </DataTrigger.Value>
+
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    
                     <TextBlock Text="Reference Solution:" Margin="10,2,0,2" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding Path=ReferenceSolutionPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                              Margin="10,2,0,2" IsReadOnly="True" MinWidth="300" MaxWidth="300" VerticalAlignment="Center"
@@ -187,6 +203,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" MinWidth="200" MaxWidth="200"/>
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Style="{StaticResource toolbarButtonStyle}" ToolTip="Columns Visibility" Padding="0" Background="Transparent"
@@ -239,6 +257,21 @@
                     </Image.Style>
                 </Image>
             </ToggleButton>
+
+            <TextBlock Grid.Column="2" Text="Work Mode:" TextAlignment="Center" VerticalAlignment="Center"
+                       Margin="20,5,0,5"/>
+            <ComboBox Grid.Column="3" Margin="5,5,0,5" Style="{StaticResource vsComboboxStyle}"
+                      ItemsSource="{Binding Path=WorkModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding Path=SelectedWorkMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ToolTip="{Binding Path=SelectedWorkMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                   Text="{Binding Path=Name, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                   ToolTip="{Binding Path=Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"          
