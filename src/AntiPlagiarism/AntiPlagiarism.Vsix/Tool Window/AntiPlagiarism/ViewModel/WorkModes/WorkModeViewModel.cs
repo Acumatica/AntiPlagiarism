@@ -19,12 +19,16 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 		public string Name { get; }
 
-		public WorkModeViewModel(WorkMode workMode, string name)
+		public string Description { get; }
+
+		public WorkModeViewModel(WorkMode workMode, string name, string description)
 		{
 			name.ThrowOnNullOrWhiteSpace(nameof(name));
-
+			description.ThrowOnNullOrWhiteSpace(nameof(description));
+			
 			WorkMode = workMode;
 			Name = name;
+			Description = description;
 		}
 	}
 }

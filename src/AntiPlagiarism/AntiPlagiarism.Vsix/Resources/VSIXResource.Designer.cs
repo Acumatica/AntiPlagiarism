@@ -61,11 +61,65 @@ namespace AntiPlagiarism.Vsix {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comparison with Acumatica sources provided with Acumatica ERP.
+        /// </summary>
+        public static string AcumaticaSourcesWorkModeDescription {
+            get {
+                return ResourceManager.GetString("AcumaticaSourcesWorkModeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Acumatica Sources.
+        /// </summary>
+        public static string AcumaticaSourcesWorkModeTitle {
+            get {
+                return ResourceManager.GetString("AcumaticaSourcesWorkModeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AntiPlagiarism.
         /// </summary>
         public static string AntiPlagiarismWindowTitle {
             get {
                 return ResourceManager.GetString("AntiPlagiarismWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comparison with selected reference solution.
+        /// </summary>
+        public static string ReferenceSolutionWorkModeDescription {
+            get {
+                return ResourceManager.GetString("ReferenceSolutionWorkModeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reference Solution.
+        /// </summary>
+        public static string ReferenceSolutionWorkModeTitle {
+            get {
+                return ResourceManager.GetString("ReferenceSolutionWorkModeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compare solution with itself to find possibilities for refactoring.
+        /// </summary>
+        public static string SelfAnalysisWorkModeDescription {
+            get {
+                return ResourceManager.GetString("SelfAnalysisWorkModeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Self-Analysis.
+        /// </summary>
+        public static string SelfAnalysisWorkModeTitle {
+            get {
+                return ResourceManager.GetString("SelfAnalysisWorkModeTitle", resourceCulture);
             }
         }
     }

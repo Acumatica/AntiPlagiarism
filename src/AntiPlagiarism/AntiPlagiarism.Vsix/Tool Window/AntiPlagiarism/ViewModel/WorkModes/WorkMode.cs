@@ -15,7 +15,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		SelfAnalysis,
 
 		/// <summary>
-		/// Comparison with selected referenca solution work mode.
+		/// Comparison with selected reference solution work mode.
 		/// </summary>
 		ReferenceSolution,
 

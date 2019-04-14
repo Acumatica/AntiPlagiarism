@@ -117,7 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AcumaticaSourcesWorkModeDescription" xml:space="preserve">
+    <value>Comparison with Acumatica sources provided with Acumatica ERP</value>
+  </data>
+  <data name="AcumaticaSourcesWorkModeTitle" xml:space="preserve">
+    <value>Acumatica Sources</value>
+  </data>
   <data name="AntiPlagiarismWindowTitle" xml:space="preserve">
     <value>AntiPlagiarism</value>
+  </data>
+  <data name="ReferenceSolutionWorkModeDescription" xml:space="preserve">
+    <value>Comparison with selected reference solution</value>
+  </data>
+  <data name="ReferenceSolutionWorkModeTitle" xml:space="preserve">
+    <value>Reference Solution</value>
+  </data>
+  <data name="SelfAnalysisWorkModeDescription" xml:space="preserve">
+    <value>Compare solution with itself to find possibilities for refactoring</value>
+  </data>
+  <data name="SelfAnalysisWorkModeTitle" xml:space="preserve">
+    <value>Self-Analysis</value>
   </data>
 </root>

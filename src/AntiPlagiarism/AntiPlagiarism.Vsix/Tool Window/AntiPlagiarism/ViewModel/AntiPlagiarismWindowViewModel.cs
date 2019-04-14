@@ -14,7 +14,7 @@ using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
-    public class AntiPlagiarismWindowViewModel : ToolWindowViewModelBase
+	public class AntiPlagiarismWindowViewModel : ToolWindowViewModelBase
 	{
 		private CancellationTokenSource _cancellationTokenSource;
 
@@ -28,6 +28,23 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 				if (_columnsVisibilityCollectionViewModel != value)
 				{
 					_columnsVisibilityCollectionViewModel = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public ExtendedObservableCollection<WorkModeViewModel> WorkModes { get; }
+
+		private WorkModeViewModel _selectedWorkMode;
+
+		public WorkModeViewModel SelectedWorkMode
+		{
+			get => _selectedWorkMode;
+			set
+			{
+				if (_selectedWorkMode != value)
+				{
+					_selectedWorkMode = value;
 					NotifyPropertyChanged();
 				}
 			}
@@ -145,6 +162,9 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		public AntiPlagiarismWindowViewModel()
 		{
 			PlagiatedItems = new ExtendedObservableCollection<PlagiarismInfoViewModel>();
+			var workModes = GetWorkModes();
+			WorkModes = new ExtendedObservableCollection<WorkModeViewModel>(workModes);
+			_selectedWorkMode = WorkModes.FirstOrDefault();
 
             OpenReferenceSolutionCommand = new Command(p => OpenReferenceSolution());
 			RunAnalysisCommand = new Command(p => RunAntiplagiatorAsync().Forget());
@@ -163,6 +183,16 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 				return;
 
 			ColumnsVisibilityCollectionViewModel = new ColumnsVisibilityCollectionViewModel(this, columnNames);
+		}
+
+		private IEnumerable<WorkModeViewModel> GetWorkModes()
+		{
+			yield return new WorkModeViewModel(WorkMode.SelfAnalysis, VSIXResource.SelfAnalysisWorkModeTitle,
+											   VSIXResource.SelfAnalysisWorkModeDescription);
+			yield return new WorkModeViewModel(WorkMode.ReferenceSolution, VSIXResource.ReferenceSolutionWorkModeTitle,
+											   VSIXResource.ReferenceSolutionWorkModeDescription);
+			yield return new WorkModeViewModel(WorkMode.AcumaticaSources, VSIXResource.AcumaticaSourcesWorkModeTitle,
+											   VSIXResource.AcumaticaSourcesWorkModeDescription);
 		}
 
 		private void OpenReferenceSolution()
