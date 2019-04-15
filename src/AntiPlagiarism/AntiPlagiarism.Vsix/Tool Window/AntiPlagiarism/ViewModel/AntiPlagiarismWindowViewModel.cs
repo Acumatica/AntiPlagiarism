@@ -116,7 +116,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			
 				if (value < 0 || value > 100)
 				{
-					throw new ArgumentOutOfRangeException("The value should be in range between 0 and 100");
+					throw new ArgumentOutOfRangeException(message: "The value should be in range between 0 and 100",
+														  innerException: null);
 				}
 
 				_threshholdPercent = value;
@@ -144,8 +145,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 				if (value < MinCheckedMethodSizeLowerBound || value > MinCheckedMethodSizeUpperBound)
 				{
-					throw new ArgumentOutOfRangeException(
-						$"The value should be in range between {MinCheckedMethodSizeLowerBound} and {MinCheckedMethodSizeUpperBound}");
+					throw new ArgumentOutOfRangeException(message: $"The value should be in range between {MinCheckedMethodSizeLowerBound} and {MinCheckedMethodSizeUpperBound}",
+														  innerException: null);
 				}
 
 				_minCheckedMethodSize = value;
