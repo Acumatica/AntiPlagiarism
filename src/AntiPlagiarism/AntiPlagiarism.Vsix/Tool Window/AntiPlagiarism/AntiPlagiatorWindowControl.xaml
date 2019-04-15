@@ -22,6 +22,8 @@
                     <!--Converters-->
                     <converters:BoolInversionConverter x:Key="boolInversionConverter"/>
                     <converters:BoolToVisibilityConverter x:Key="visibilityConverter"/>
+                    <converters:RunButtonIsEnabledMultiConverter x:Key="runButtonIsEnabledMultiConverter"/>
+                    
 
                     <!-- Buttons Style-->                                                     
                     <Style x:Key="toolbarButtonStyle" TargetType="Button" BasedOn="{StaticResource vsButtonStyle}">
@@ -153,22 +155,15 @@
                     </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button ToolTip="Run Anti-Plagiator" Command="{Binding Path=RunAnalysisCommand}">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource toolbarButtonStyle}">
-                                <Setter Property="IsEnabled" Value="True"/>
-
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Path=ReferenceSolutionPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                    <Button x:FieldModifier="private" x:Name="runButton" ToolTip="Run Anti-Plagiator" Command="{Binding Path=RunAnalysisCommand}"
+                            Style="{StaticResource toolbarButtonStyle}">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource runButtonIsEnabledMultiConverter}">
+                                <Binding Path="SelectedWorkMode.WorkMode" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="ReferenceSolutionPath" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="IsAnalysisRunning" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                            </MultiBinding>
+                        </Button.IsEnabled>
 
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Run.ico"/>
                     </Button>

@@ -59,6 +59,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Tool Window\AntiPlagiarism\AntiPlagiarismWindow.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\Converters\RunButtonIsEnabledMultiConverter.cs" />
     <Compile Include="Tool Window\AntiPlagiarism\OpenAntiPlagiarismWindowCommand.cs" />
     <Compile Include="Tool Window\AntiPlagiarism\ViewModel\AntiPlagiarismWindowViewModel.cs" />
     <Compile Include="Tool Window\AntiPlagiarism\ViewModel\ColumnsVisibility\ColumnVisibilityViewModel.cs" />
