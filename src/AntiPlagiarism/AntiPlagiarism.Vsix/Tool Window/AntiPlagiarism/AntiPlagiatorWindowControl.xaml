@@ -117,6 +117,7 @@
                             <Style TargetType="TextBox">
                                 <Style.Triggers>
                                     <Trigger Property="Validation.HasError" Value="True">
+                                        <Setter Property="Background" Value="Crimson"/>
                                         <Setter Property="ToolTip" 
                                                 Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent, 
                                                                 UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
@@ -140,6 +141,7 @@
                             <Style TargetType="TextBox">
                                 <Style.Triggers>
                                     <Trigger Property="Validation.HasError" Value="True">
+                                        <Setter Property="Background" Value="Crimson"/>
                                         <Setter Property="ToolTip" 
                                                 Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent, 
                                                                 UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
