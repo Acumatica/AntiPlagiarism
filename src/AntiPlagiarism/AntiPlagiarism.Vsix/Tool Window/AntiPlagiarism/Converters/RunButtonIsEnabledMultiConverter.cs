@@ -20,12 +20,12 @@ namespace AntiPlagiarism.Vsix.ToolWindows.Converters
 	
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (values == null || values.Length != 3 || !(values[0] is WorkMode workMode) ||
-				!(values[1] is string referenceSolutionPath) || !(values[2] is bool analysisIsRunning))
+			if (values == null || values.Length != 3 || !(values[0] is WorkMode workMode) || !(values[2] is bool analysisIsRunning))
 			{
 				return Binding.DoNothing;
 			}
 
+			string referenceSolutionPath = values[1] as string;
 			bool isEnabled = !analysisIsRunning && (workMode == WorkMode.SelfAnalysis || !referenceSolutionPath.IsNullOrWhiteSpace());
 			return isEnabled;
 		}
