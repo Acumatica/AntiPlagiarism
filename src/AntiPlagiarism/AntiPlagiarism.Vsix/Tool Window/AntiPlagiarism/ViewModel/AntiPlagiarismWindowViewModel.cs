@@ -251,25 +251,39 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		{
 			PlagiatedItems.Clear();
 			string solutionPath = await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
+			string referenceSolutionPath = SelectedWorkMode.WorkMode == WorkMode.SelfAnalysis
+				? solutionPath
+				: ReferenceSolutionPath;
 
-			if (ReferenceSolutionPath.IsNullOrWhiteSpace() || solutionPath.IsNullOrWhiteSpace() || cancellationToken.IsCancellationRequested)
+			if (referenceSolutionPath.IsNullOrWhiteSpace() || solutionPath.IsNullOrWhiteSpace() || cancellationToken.IsCancellationRequested)
 				return;
 
 			int tabSize = await AntiPlagiarismPackage.Instance.GetTabSizeAsync();
-			await TaskScheduler.Default; //switch to background thread
-			string sourceSolutionDir = Path.GetDirectoryName(solutionPath) + Path.DirectorySeparatorChar;
-			string referenceSolutionDir = Path.GetDirectoryName(ReferenceSolutionPath) + Path.DirectorySeparatorChar;
-			double threshholdFraction = ThreshholdPercent / 100.0;
-			PlagiarismScanner plagiarismScanner = new PlagiarismScanner(ReferenceSolutionPath, solutionPath, 
-																		threshholdFraction, MinCheckedMethodSize);
-			var plagiatedItems = plagiarismScanner.Scan(callFromVS: true)
-												  .Select(item => new PlagiarismInfoViewModel(this, item, referenceSolutionDir, sourceSolutionDir, tabSize));
+
+			await TaskScheduler.Default;		 //switch to background thread
 			
+			double threshholdFraction = ThreshholdPercent / 100.0;
+			PlagiarismScanner plagiarismScanner = new PlagiarismScanner(referenceSolutionPath, solutionPath, 
+																		threshholdFraction, MinCheckedMethodSize);
+			IEnumerable<PlagiarismInfo> plagiatedItems = plagiarismScanner.Scan(callFromVS: true) ?? Enumerable.Empty<PlagiarismInfo>();
+
+			if (SelectedWorkMode.WorkMode == WorkMode.SelfAnalysis)
+			{
+				plagiatedItems = plagiatedItems.Where(item => !item.Input.Equals(item.Reference));
+			}
+
+			plagiatedItems = plagiatedItems.OrderByDescending(item => item.Similarity);
+
 			if (cancellationToken.IsCancellationRequested)
 				return;
 
+			string sourceSolutionDir = Path.GetDirectoryName(solutionPath) + Path.DirectorySeparatorChar;
+			string referenceSolutionDir = Path.GetDirectoryName(referenceSolutionPath) + Path.DirectorySeparatorChar;
+			var plagiatedItemVMs = plagiatedItems.Select(item => new PlagiarismInfoViewModel(this, item, referenceSolutionDir, sourceSolutionDir, tabSize))
+												 .ToList();			//Make sure to create View Models on the background thread via buffering operation
+			
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-			PlagiatedItems.AddRange(plagiatedItems);
+			PlagiatedItems.AddRange(plagiatedItemVMs);				//Add view models on UI thread
 		}	
 	}
 }
