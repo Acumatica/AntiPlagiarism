@@ -112,7 +112,19 @@
                     <TextBlock Text="Threshhold:" Margin="10,2,0,2" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding Path=ThreshholdPercent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
                                             StringFormat={}{0:F1}, ValidatesOnExceptions=True}"
-                             TextAlignment="Center" Margin="10,2,0,2" MinWidth="50" MaxWidth="50" VerticalAlignment="Center"/>
+                             TextAlignment="Center" Margin="10,2,0,2" MinWidth="50" MaxWidth="50" VerticalAlignment="Center">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <Trigger Property="Validation.HasError" Value="True">
+                                        <Setter Property="ToolTip" 
+                                                Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent, 
+                                                                UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
                     <TextBlock Text="%" Margin="2,2,0,2" VerticalAlignment="Center"/>
                 </StackPanel>
 
@@ -123,7 +135,19 @@
                     <TextBox Text="{Binding Path=MinCheckedMethodSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
                                             ValidatesOnExceptions=True}"
                              TextAlignment="Center" Margin="10,2,0,2" MinWidth="50" MaxWidth="50" VerticalAlignment="Center"
-                             MaxLength="4"/>
+                             MaxLength="4">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <Trigger Property="Validation.HasError" Value="True">
+                                        <Setter Property="ToolTip" 
+                                                Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent, 
+                                                                UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" 
