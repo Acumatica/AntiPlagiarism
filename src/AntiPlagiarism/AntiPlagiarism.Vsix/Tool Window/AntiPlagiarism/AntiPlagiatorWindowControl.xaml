@@ -22,6 +22,8 @@
                     <!--Converters-->
                     <converters:BoolInversionConverter x:Key="boolInversionConverter"/>
                     <converters:BoolToVisibilityConverter x:Key="visibilityConverter"/>
+                    <converters:RunButtonIsEnabledMultiConverter x:Key="runButtonIsEnabledMultiConverter"/>
+                    
 
                     <!-- Buttons Style-->                                                     
                     <Style x:Key="toolbarButtonStyle" TargetType="Button" BasedOn="{StaticResource vsButtonStyle}">
@@ -93,7 +95,7 @@
                 BorderBrush="{DynamicResource {x:Static platformUI:EnvironmentColors.BrandedUIBorderBrushKey}}">
             <WrapPanel Orientation="Horizontal">
                 <ToggleButton x:FieldModifier="private" x:Name="settingsButton" ToolTip="Expand Setting" Margin="5,5,0,5" VerticalAlignment="Center"
-                              IsChecked="True" Style="{StaticResource vsToggleButtonStyle}">
+                              Style="{StaticResource vsToggleButtonStyle}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Settings.ico"/>
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ExpandDown.ico"
@@ -110,7 +112,20 @@
                     <TextBlock Text="Threshhold:" Margin="10,2,0,2" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding Path=ThreshholdPercent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
                                             StringFormat={}{0:F1}, ValidatesOnExceptions=True}"
-                             TextAlignment="Center" Margin="10,2,0,2" MinWidth="50" MaxWidth="50" VerticalAlignment="Center"/>
+                             TextAlignment="Center" Margin="10,2,0,2" MinWidth="50" MaxWidth="50" VerticalAlignment="Center">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <Trigger Property="Validation.HasError" Value="True">
+                                        <Setter Property="Background" Value="Crimson"/>
+                                        <Setter Property="ToolTip" 
+                                                Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent, 
+                                                                UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
                     <TextBlock Text="%" Margin="2,2,0,2" VerticalAlignment="Center"/>
                 </StackPanel>
 
@@ -121,12 +136,41 @@
                     <TextBox Text="{Binding Path=MinCheckedMethodSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
                                             ValidatesOnExceptions=True}"
                              TextAlignment="Center" Margin="10,2,0,2" MinWidth="50" MaxWidth="50" VerticalAlignment="Center"
-                             MaxLength="4"/>
+                             MaxLength="4">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <Trigger Property="Validation.HasError" Value="True">
+                                        <Setter Property="Background" Value="Crimson"/>
+                                        <Setter Property="ToolTip" 
+                                                Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent, 
+                                                                UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" 
                             IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
                                                 Converter={StaticResource boolInversionConverter}}">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelectedWorkMode.WorkMode, Mode=OneWay,
+                                             UpdateSourceTrigger=PropertyChanged}">
+                                    <DataTrigger.Value>
+                                        <local:WorkMode>SelfAnalysis</local:WorkMode>
+                                    </DataTrigger.Value>
+
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    
                     <TextBlock Text="Reference Solution:" Margin="10,2,0,2" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding Path=ReferenceSolutionPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                              Margin="10,2,0,2" IsReadOnly="True" MinWidth="300" MaxWidth="300" VerticalAlignment="Center"
@@ -137,22 +181,15 @@
                     </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button ToolTip="Run Anti-Plagiator" Command="{Binding Path=RunAnalysisCommand}">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource toolbarButtonStyle}">
-                                <Setter Property="IsEnabled" Value="True"/>
-
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Value="True">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Path=ReferenceSolutionPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Value="{x:Null}">
-                                        <Setter Property="IsEnabled" Value="False"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                    <Button x:FieldModifier="private" x:Name="runButton" ToolTip="Run Anti-Plagiator" Command="{Binding Path=RunAnalysisCommand}"
+                            Style="{StaticResource toolbarButtonStyle}">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource runButtonIsEnabledMultiConverter}">
+                                <Binding Path="SelectedWorkMode.WorkMode" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="ReferenceSolutionPath" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="IsAnalysisRunning" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                            </MultiBinding>
+                        </Button.IsEnabled>
 
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Run.ico"/>
                     </Button>
@@ -187,6 +224,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" MinWidth="200" MaxWidth="200"/>
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Style="{StaticResource toolbarButtonStyle}" ToolTip="Columns Visibility" Padding="0" Background="Transparent"
@@ -239,6 +278,21 @@
                     </Image.Style>
                 </Image>
             </ToggleButton>
+
+            <TextBlock Grid.Column="2" Text="Work Mode:" TextAlignment="Center" VerticalAlignment="Center"
+                       Margin="20,5,0,5"/>
+            <ComboBox Grid.Column="3" Margin="5,5,0,5" Style="{StaticResource vsComboboxStyle}"
+                      ItemsSource="{Binding Path=WorkModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding Path=SelectedWorkMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ToolTip="{Binding Path=SelectedWorkMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                   Text="{Binding Path=Name, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                   ToolTip="{Binding Path=Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </Grid>
 
         <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"          
