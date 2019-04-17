@@ -418,6 +418,7 @@
                 </DataGridTextColumn>
 
                 <DataGridTemplateColumn Header="Similarity" Width="0.5*" SortMemberPath="Similarity"
+                                        ClipboardContentBinding="{Binding Path=Similarity, UpdateSourceTrigger=PropertyChanged}"
                                         Visibility="{Binding Source={StaticResource proxyElement},
                                                              Path='DataContext.ColumnsVisibilityCollectionViewModel[Similarity].IsVisible', 
                                                              Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource visibilityConverter}}">
