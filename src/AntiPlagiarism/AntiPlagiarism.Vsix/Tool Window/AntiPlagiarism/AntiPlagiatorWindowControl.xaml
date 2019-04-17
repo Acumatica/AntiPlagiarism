@@ -94,8 +94,19 @@
         <Border Grid.Row="0" BorderThickness="1" CornerRadius="3" Margin="2,4"
                 BorderBrush="{DynamicResource {x:Static platformUI:EnvironmentColors.BrandedUIBorderBrushKey}}">
             <WrapPanel Orientation="Horizontal">
-                <ToggleButton x:FieldModifier="private" x:Name="settingsButton" ToolTip="Expand Setting" Margin="5,5,0,5" VerticalAlignment="Center"
-                              Style="{StaticResource vsToggleButtonStyle}">
+                <ToggleButton x:FieldModifier="private" x:Name="settingsButton" Margin="5,5,0,5" VerticalAlignment="Center">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource vsToggleButtonStyle}">
+                            <Setter Property="ToolTip" Value="Expand Settings"/>
+
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="ToolTip" Value="Collapse Settings"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                    
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Settings.ico"/>
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ExpandDown.ico"
@@ -279,12 +290,12 @@
                 </Image>
             </ToggleButton>
 
-            <TextBlock Grid.Column="2" Text="Work Mode:" TextAlignment="Center" VerticalAlignment="Center"
-                       Margin="20,5,0,5"/>
+            <TextBlock Grid.Column="2" Text="Work Mode:" TextAlignment="Center" VerticalAlignment="Center" Margin="20,5,0,5"/>
             <ComboBox Grid.Column="3" Margin="5,5,0,5" Style="{StaticResource vsComboboxStyle}"
                       ItemsSource="{Binding Path=WorkModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                       SelectedItem="{Binding Path=SelectedWorkMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      ToolTip="{Binding Path=SelectedWorkMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                      ToolTip="{Binding Path=SelectedWorkMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ShowOnDisabled="True"
+                      IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource boolInversionConverter}}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch"
