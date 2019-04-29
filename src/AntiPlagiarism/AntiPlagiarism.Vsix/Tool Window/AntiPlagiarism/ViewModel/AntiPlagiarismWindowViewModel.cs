@@ -1,16 +1,17 @@
-﻿using AntiPlagiarism.Core.Method;
-using AntiPlagiarism.Core.Plagiarism;
-using AntiPlagiarism.Core.Utilities;
-using AntiPlagiarism.Vsix.Utilities;
-using Microsoft.VisualStudio.Threading;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Threading;
+using AntiPlagiarism.Core.Plagiarism;
+using AntiPlagiarism.Core.Utilities;
+using AntiPlagiarism.Vsix.Utilities;
+
 using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
+
+
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
@@ -198,26 +199,14 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 		private void OpenReferenceSolution()
 		{
-			OpenFileDialog openFileDialog = new OpenFileDialog
+			if (SelectedWorkMode.WorkMode == WorkMode.ReferenceSolution)
 			{
-				Filter = "Solution files (*.sln)|*.sln|Project files (*.csproj)|*.csproj|All files (*.*)|*.*",
-				DefaultExt = "csproj",
-				AddExtension = true,
-				CheckFileExists = true,
-				CheckPathExists = true,
-				Multiselect = false,
-				Title = "Select reference solution file"
-			};
-
-			if (openFileDialog.ShowDialog() != true || openFileDialog.FileName.IsNullOrWhiteSpace() || !File.Exists(openFileDialog.FileName))
-				return;
-
-			string extension = Path.GetExtension(openFileDialog.FileName);
-
-			if (extension != MethodReader.SolutionExtension && extension != MethodReader.ProjectExtension)
-				return;
-
-			ReferenceSolutionPath = openFileDialog.FileName;
+				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetReferenceSolutionFilePath() ?? ReferenceSolutionPath;
+			}
+			else if (SelectedWorkMode.WorkMode == WorkMode.AcumaticaSources)
+			{
+				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetAcumaticaSourcesFolderPath() ?? ReferenceSolutionPath;
+			}			
 		}
 
 		private async Task RunAntiplagiatorAsync()
