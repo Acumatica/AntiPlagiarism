@@ -182,13 +182,43 @@
                             </Style.Triggers>
                         </Style>
                     </StackPanel.Style>
-                    
-                    <TextBlock Text="Reference Solution:" Margin="10,2,0,2" VerticalAlignment="Center"/>
+
+                    <TextBlock Margin="10,2,0,2" VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Reference Solution:"/>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=SelectedWorkMode.WorkMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <DataTrigger.Value>
+                                            <local:WorkMode>AcumaticaSources</local:WorkMode>
+                                        </DataTrigger.Value>
+
+                                        <Setter Property="Text" Value="Acumatica Sources"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                     <TextBox Text="{Binding Path=ReferenceSolutionPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                              Margin="10,2,0,2" IsReadOnly="True" MinWidth="300" MaxWidth="300" VerticalAlignment="Center"
                              ToolTip="{Binding Path=ReferenceSolutionPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button ToolTip="Open Reference Solution"  Command="{Binding Path=OpenReferenceSolutionCommand}"
-                            Style="{StaticResource toolbarButtonStyle}">
+                    <Button Command="{Binding Path=OpenReferenceSolutionCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource toolbarButtonStyle}">
+                                <Setter Property="ToolTip" Value="Open Reference Solution"/>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=SelectedWorkMode.WorkMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <DataTrigger.Value>
+                                            <local:WorkMode>AcumaticaSources</local:WorkMode>
+                                        </DataTrigger.Value>
+                                        
+                                        <Setter Property="ToolTip" Value="Select folder with Acumatica sources"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/OpenFolder.ico"/>
                     </Button>
                 </StackPanel>
