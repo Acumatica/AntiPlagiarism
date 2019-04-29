@@ -1,10 +1,13 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.MSBuild;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace AntiPlagiarism.Core.Method
 {
@@ -12,6 +15,8 @@ namespace AntiPlagiarism.Core.Method
     {
         public const string SolutionExtension = ".sln";
         public const string ProjectExtension = ".csproj";
+		private const string CSharpExtension = ".cs";
+		private const string AnyCSharpFilePattern = "*" + CSharpExtension;
 
         private static bool IsSolution(string path)
         {
@@ -30,49 +35,76 @@ namespace AntiPlagiarism.Core.Method
             return extension.Equals(pathExtension, StringComparison.Ordinal);
         }
 
-        internal static IEnumerable<MethodDeclarationSyntax> EnumerateMethods(string codePath, int minStatementsCount)
+		private static IEnumerable<Project> GetProjects(string codePath)
+		{
+			var workspace = MSBuildWorkspace.Create();
+			workspace.WorkspaceFailed += Workspace_WorkspaceFailed;
+
+			if (IsSolution(codePath))
+			{
+				var solution = workspace.OpenSolutionAsync(codePath).Result;
+
+				return solution.Projects;
+			}
+			else if (IsProject(codePath))
+			{
+				var project = workspace.OpenProjectAsync(codePath).Result;
+
+				return new[] { project };
+			}
+			else
+			{
+				throw new ArgumentException($"The code path {codePath} is not supported", nameof(codePath));
+			}
+		}
+
+		private static IEnumerable<SyntaxTree> GetSyntaxTreesFromProjects(string codePath)
+		{
+			var projects = GetProjects(codePath);
+
+			return projects
+				.Select(p => p.GetCompilationAsync().Result)
+				.SelectMany(c => c.SyntaxTrees);
+		}
+
+		private static IEnumerable<SyntaxTree> GetSyntaxTreesFromFolder(string codePath)
+		{
+			var cSharpFiles = Directory.EnumerateFiles(codePath, AnyCSharpFilePattern, SearchOption.AllDirectories);
+
+			return cSharpFiles
+				.Select(file => SyntaxFactory.ParseSyntaxTree(File.ReadAllText(file), path: file));
+		}
+
+		private static IEnumerable<SyntaxTree> GetSyntaxTrees(string codePath)
+		{
+			if (Directory.Exists(codePath))
+			{
+				return GetSyntaxTreesFromFolder(codePath);
+			}
+
+			return GetSyntaxTreesFromProjects(codePath);
+		}
+
+
+		internal static IEnumerable<MethodDeclarationSyntax> EnumerateMethods(string codePath, int minStatementsCount)
         {
-            var workspace = MSBuildWorkspace.Create();
-            workspace.WorkspaceFailed += Workspace_WorkspaceFailed;
+			var syntaxTrees = GetSyntaxTrees(codePath);
 
-            var projects = Enumerable.Empty<Project>();
+			foreach (var tree in syntaxTrees)
+			{
+				var methodDeclarations = tree.GetRoot()
+					.DescendantNodesAndSelf()
+					.OfType<MethodDeclarationSyntax>()
+					.Where(m => m.Body?.Statements.Count >= minStatementsCount);
 
-            if (IsSolution(codePath))
-            {
-                var solution = workspace.OpenSolutionAsync(codePath).Result;
-                projects = solution.Projects;
-            }
-            else if (IsProject(codePath))
-            {
-                var project = workspace.OpenProjectAsync(codePath).Result;
-                projects = new[] { project };
-            }
-            else
-            {
-                throw new ArgumentException($"The code path {codePath} is not supported", nameof(codePath));
-            }
+				foreach (var method in methodDeclarations)
+				{
+					yield return method;
+				}
+			}
+		}
 
-            foreach (var project in projects)
-            {
-                var compilation = project.GetCompilationAsync().Result;
-
-                foreach (var tree in compilation.SyntaxTrees)
-                {
-                    var semanticModel = compilation.GetSemanticModel(tree);
-                    var methodDeclarations = tree.GetRoot()
-                        .DescendantNodesAndSelf()
-                        .OfType<MethodDeclarationSyntax>()
-                        .Where(m => m.Body?.Statements.Count >= minStatementsCount);
-
-                    foreach (var method in methodDeclarations)
-                    {
-                        yield return method;
-                    }
-                }
-            }
-        }
-
-        internal static MethodDeclarationSyntax[] GetMethods(string codePath, int minStatementsCount)
+		internal static MethodDeclarationSyntax[] GetMethods(string codePath, int minStatementsCount)
         {
             var methodsArray = EnumerateMethods(codePath, minStatementsCount).ToArray();
 
