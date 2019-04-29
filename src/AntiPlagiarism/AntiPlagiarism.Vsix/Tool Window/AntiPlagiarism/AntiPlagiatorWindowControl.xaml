@@ -94,7 +94,8 @@
         <Border Grid.Row="0" BorderThickness="1" CornerRadius="3" Margin="2,4"
                 BorderBrush="{DynamicResource {x:Static platformUI:EnvironmentColors.BrandedUIBorderBrushKey}}">
             <WrapPanel Orientation="Horizontal">
-                <ToggleButton x:FieldModifier="private" x:Name="settingsButton" Margin="5,5,0,5" VerticalAlignment="Center">
+                <ToggleButton x:FieldModifier="private" x:Name="settingsButton" Margin="5,5,0,5" VerticalAlignment="Center"
+                              IsChecked="True">
                     <ToggleButton.Style>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource vsToggleButtonStyle}">
                             <Setter Property="ToolTip" Value="Expand Settings"/>

@@ -165,7 +165,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			PlagiatedItems = new ExtendedObservableCollection<PlagiarismInfoViewModel>();
 			var workModes = GetWorkModes();
 			WorkModes = new ExtendedObservableCollection<WorkModeViewModel>(workModes);
-			_selectedWorkMode = WorkModes.FirstOrDefault();
+			_selectedWorkMode = WorkModes.FirstOrDefault(mode => mode.WorkMode == WorkMode.ReferenceSolution);
 
             OpenReferenceSolutionCommand = new Command(p => OpenReferenceSolution());
 			RunAnalysisCommand = new Command(p => RunAntiplagiatorAsync().Forget());
