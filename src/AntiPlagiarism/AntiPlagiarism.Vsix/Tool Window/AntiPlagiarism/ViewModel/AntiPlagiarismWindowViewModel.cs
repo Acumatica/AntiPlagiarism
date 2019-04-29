@@ -8,9 +8,9 @@ using Microsoft.VisualStudio.Threading;
 using AntiPlagiarism.Core.Plagiarism;
 using AntiPlagiarism.Core.Utilities;
 using AntiPlagiarism.Vsix.Utilities;
+using AntiPlagiarism.Core.Method;
 
 using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
-
 
 
 namespace AntiPlagiarism.Vsix.ToolWindows
@@ -259,7 +259,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 			if (SelectedWorkMode.WorkMode == WorkMode.SelfAnalysis)
 			{
-				plagiatedItems = plagiatedItems.Where(item => !item.Input.Equals(item.Reference));
+				plagiatedItems = FilterPlagiarismSimmetricResultsOnSelfAnalysis(plagiatedItems);
 			}
 
 			plagiatedItems = plagiatedItems.OrderByDescending(item => item.Similarity);
@@ -275,5 +275,20 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 			PlagiatedItems.AddRange(plagiatedItemVMs);				//Add view models on UI thread
 		}	
+
+		private IEnumerable<PlagiarismInfo> FilterPlagiarismSimmetricResultsOnSelfAnalysis(IEnumerable<PlagiarismInfo> plagiatedItems)
+		{
+			plagiatedItems = plagiatedItems.Where(item => !item.Input.Equals(item.Reference));
+			HashSet<MethodIndex> addedInputs = new HashSet<MethodIndex>();
+
+			foreach (PlagiarismInfo item in plagiatedItems)
+			{
+				if (addedInputs.Contains(item.Reference))
+					continue;
+
+				addedInputs.Add(item.Input);
+				yield return item;
+			}
+		}
 	}
 }
