@@ -6,29 +6,43 @@ using AntiPlagiarism.Core.Method;
 using AntiPlagiarism.Core.Plagiarism;
 using AntiPlagiarism.Core.Utilities;
 using AntiPlagiarism.Vsix.Utilities;
-using AntiPlagiarism.Vsix.Utilities.Navigation;
-
-using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
 
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
-	public class WorkModeViewModel
+	public abstract class WorkModeViewModel
 	{
-		public WorkMode WorkMode { get; }
-
 		public string Name { get; }
 
 		public string Description { get; }
 
-		public WorkModeViewModel(WorkMode workMode, string name, string description)
+		protected WorkModeViewModel(string name, string description)
 		{
 			name.ThrowOnNullOrWhiteSpace(nameof(name));
 			description.ThrowOnNullOrWhiteSpace(nameof(description));
-			
-			WorkMode = workMode;
+
 			Name = name;
 			Description = description;
 		}
+
+		public static WorkModeViewModel<TMode> New<TMode>(TMode mode, string name, string description)
+		where TMode : struct, Enum
+		{
+			return new WorkModeViewModel<TMode>(mode, name, description);
+		}
+	}
+
+
+
+	public class WorkModeViewModel<TWorkMode> : WorkModeViewModel
+	where TWorkMode : struct, Enum
+	{
+		public TWorkMode WorkMode { get; }
+
+		public WorkModeViewModel(TWorkMode workMode, string name, string description) :
+							base(name, description)
+		{
+			WorkMode = workMode;
+		}		
 	}
 }

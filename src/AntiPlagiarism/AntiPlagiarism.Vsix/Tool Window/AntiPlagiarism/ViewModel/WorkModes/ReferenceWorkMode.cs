@@ -5,9 +5,9 @@
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
 	/// <summary>
-	/// Values that represent different work modes.
+	/// Values that represent different work modes for reference solution.
 	/// </summary>
-	public enum WorkMode
+	public enum ReferenceWorkMode
 	{
 		/// <summary>
 		/// Self analysis work mode.

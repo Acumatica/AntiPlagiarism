@@ -173,7 +173,7 @@
                                 <DataTrigger Binding="{Binding Path=SelectedWorkMode.WorkMode, Mode=OneWay,
                                              UpdateSourceTrigger=PropertyChanged}">
                                     <DataTrigger.Value>
-                                        <local:WorkMode>SelfAnalysis</local:WorkMode>
+                                        <local:ReferenceWorkMode>SelfAnalysis</local:ReferenceWorkMode>
                                     </DataTrigger.Value>
 
                                     <Setter Property="IsEnabled" Value="False"/>
@@ -191,7 +191,7 @@
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=SelectedWorkMode.WorkMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                                         <DataTrigger.Value>
-                                            <local:WorkMode>AcumaticaSources</local:WorkMode>
+                                            <local:ReferenceWorkMode>AcumaticaSources</local:ReferenceWorkMode>
                                         </DataTrigger.Value>
 
                                         <Setter Property="Text" Value="Acumatica Sources"/>
@@ -211,7 +211,7 @@
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Path=SelectedWorkMode.WorkMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                                         <DataTrigger.Value>
-                                            <local:WorkMode>AcumaticaSources</local:WorkMode>
+                                            <local:ReferenceWorkMode>AcumaticaSources</local:ReferenceWorkMode>
                                         </DataTrigger.Value>
                                         
                                         <Setter Property="ToolTip" Value="Select folder with Acumatica sources"/>
