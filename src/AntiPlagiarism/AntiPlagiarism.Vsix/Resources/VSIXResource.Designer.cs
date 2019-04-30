@@ -88,6 +88,42 @@ namespace AntiPlagiarism.Vsix {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use current project as a source for comparison.
+        /// </summary>
+        public static string CurrentProjectSourceOriginDescription {
+            get {
+                return ResourceManager.GetString("CurrentProjectSourceOriginDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Project.
+        /// </summary>
+        public static string CurrentProjectSourceOriginTitle {
+            get {
+                return ResourceManager.GetString("CurrentProjectSourceOriginTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use current solution as a source for comparison.
+        /// </summary>
+        public static string CurrentSolutionSourceOriginDescription {
+            get {
+                return ResourceManager.GetString("CurrentSolutionSourceOriginDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Solution.
+        /// </summary>
+        public static string CurrentSolutionSourceOriginTitle {
+            get {
+                return ResourceManager.GetString("CurrentSolutionSourceOriginTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Comparison with selected reference solution.
         /// </summary>
         public static string ReferenceSolutionWorkModeDescription {
@@ -102,6 +138,24 @@ namespace AntiPlagiarism.Vsix {
         public static string ReferenceSolutionWorkModeTitle {
             get {
                 return ResourceManager.GetString("ReferenceSolutionWorkModeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use selected folder as a source for comparison.
+        /// </summary>
+        public static string SelectedFolderSourceOriginDescription {
+            get {
+                return ResourceManager.GetString("SelectedFolderSourceOriginDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected Folder.
+        /// </summary>
+        public static string SelectedFolderSourceOriginTitle {
+            get {
+                return ResourceManager.GetString("SelectedFolderSourceOriginTitle", resourceCulture);
             }
         }
         
