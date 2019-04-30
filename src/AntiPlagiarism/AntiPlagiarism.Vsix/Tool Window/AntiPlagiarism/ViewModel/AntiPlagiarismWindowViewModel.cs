@@ -225,8 +225,6 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 											   VSIXResource.CurrentSolutionSourceOriginDescription);
 			yield return WorkModeViewModel.New(SourceOriginMode.CurrentProject, VSIXResource.CurrentProjectSourceOriginTitle,
 											   VSIXResource.CurrentProjectSourceOriginDescription);
-			yield return WorkModeViewModel.New(SourceOriginMode.SelectedFolder, VSIXResource.SelectedFolderSourceOriginTitle,
-											   VSIXResource.SelectedFolderSourceOriginDescription);
 		}
 
 		private void OpenReferenceSolution()
