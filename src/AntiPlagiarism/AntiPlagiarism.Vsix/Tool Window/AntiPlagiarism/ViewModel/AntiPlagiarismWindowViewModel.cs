@@ -34,18 +34,35 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			}
 		}
 
-		public ExtendedObservableCollection<WorkModeViewModel<ReferenceWorkMode>> WorkModes { get; }
+		public ExtendedObservableCollection<WorkModeViewModel<ReferenceWorkMode>> ReferenceWorkModes { get; }
 
-		private WorkModeViewModel<ReferenceWorkMode> _selectedWorkMode;
+		private WorkModeViewModel<ReferenceWorkMode> _selectedReferenceWorkMode;
 
-		public WorkModeViewModel<ReferenceWorkMode> SelectedWorkMode
+		public WorkModeViewModel<ReferenceWorkMode> SelectedReferenceWorkMode
 		{
-			get => _selectedWorkMode;
+			get => _selectedReferenceWorkMode;
 			set
 			{
-				if (_selectedWorkMode != value)
+				if (_selectedReferenceWorkMode != value)
 				{
-					_selectedWorkMode = value;
+					_selectedReferenceWorkMode = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public ExtendedObservableCollection<WorkModeViewModel<SourceOriginMode>> SourceOriginModes { get; }
+
+		private WorkModeViewModel<SourceOriginMode> _selectedSourceOriginMode;
+
+		public WorkModeViewModel<SourceOriginMode> SelectedSourceOriginMode
+		{
+			get => _selectedSourceOriginMode;
+			set
+			{
+				if (_selectedSourceOriginMode != value)
+				{
+					_selectedSourceOriginMode = value;
 					NotifyPropertyChanged();
 				}
 			}
@@ -164,9 +181,14 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		public AntiPlagiarismWindowViewModel()
 		{
 			PlagiatedItems = new ExtendedObservableCollection<PlagiarismInfoViewModel>();
+
 			var workModes = GetReferenceWorkModes();
-			WorkModes = new ExtendedObservableCollection<WorkModeViewModel<ReferenceWorkMode>>(workModes);
-			_selectedWorkMode = WorkModes.FirstOrDefault(mode => mode.WorkMode == ReferenceWorkMode.ReferenceSolution);
+			ReferenceWorkModes = new ExtendedObservableCollection<WorkModeViewModel<ReferenceWorkMode>>(workModes);
+			_selectedReferenceWorkMode = ReferenceWorkModes.FirstOrDefault(mode => mode.WorkMode == ReferenceWorkMode.ReferenceSolution);
+
+			var sourceOriginModes = GetSourceOriginModes();
+			SourceOriginModes = new ExtendedObservableCollection<WorkModeViewModel<SourceOriginMode>>(sourceOriginModes);
+			_selectedSourceOriginMode = SourceOriginModes.FirstOrDefault(mode => mode.WorkMode == SourceOriginMode.CurrentSolution);
 
             OpenReferenceSolutionCommand = new Command(p => OpenReferenceSolution());
 			RunAnalysisCommand = new Command(p => RunAntiplagiatorAsync().Forget());
@@ -197,13 +219,23 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 											   VSIXResource.AcumaticaSourcesWorkModeDescription);
 		}
 
+		private IEnumerable<WorkModeViewModel<SourceOriginMode>> GetSourceOriginModes()
+		{
+			yield return WorkModeViewModel.New(SourceOriginMode.CurrentSolution, VSIXResource.CurrentSolutionSourceOriginTitle,
+											   VSIXResource.CurrentSolutionSourceOriginDescription);
+			yield return WorkModeViewModel.New(SourceOriginMode.CurrentProject, VSIXResource.CurrentProjectSourceOriginTitle,
+											   VSIXResource.CurrentProjectSourceOriginDescription);
+			yield return WorkModeViewModel.New(SourceOriginMode.SelectedFolder, VSIXResource.SelectedFolderSourceOriginTitle,
+											   VSIXResource.SelectedFolderSourceOriginDescription);
+		}
+
 		private void OpenReferenceSolution()
 		{
-			if (SelectedWorkMode.WorkMode == ReferenceWorkMode.ReferenceSolution)
+			if (SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.ReferenceSolution)
 			{
 				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetReferenceSolutionFilePath() ?? ReferenceSolutionPath;
 			}
-			else if (SelectedWorkMode.WorkMode == ReferenceWorkMode.AcumaticaSources)
+			else if (SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.AcumaticaSources)
 			{
 				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetAcumaticaSourcesFolderPath() ?? ReferenceSolutionPath;
 			}			
@@ -241,7 +273,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		{
 			PlagiatedItems.Clear();
 			string solutionPath = await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
-			string referenceSolutionPath = SelectedWorkMode.WorkMode == ReferenceWorkMode.SelfAnalysis
+			string referenceSolutionPath = SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.SelfAnalysis
 				? solutionPath
 				: ReferenceSolutionPath;
 
@@ -257,7 +289,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 																		threshholdFraction, MinCheckedMethodSize);
 			IEnumerable<PlagiarismInfo> plagiatedItems = plagiarismScanner.Scan(callFromVS: true) ?? Enumerable.Empty<PlagiarismInfo>();
 
-			if (SelectedWorkMode.WorkMode == ReferenceWorkMode.SelfAnalysis)
+			if (SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.SelfAnalysis)
 			{
 				plagiatedItems = FilterPlagiarismSimmetricResultsOnSelfAnalysis(plagiatedItems);
 			}
