@@ -16,6 +16,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 {
 	public class SettingsViewModel : ViewModelBase
 	{
+		public AntiPlagiarismWindowViewModel ParentViewModel { get; }
+
 		private ColumnsVisibilityCollectionViewModel _columnsVisibilityCollectionViewModel;
 
 		public ColumnsVisibilityCollectionViewModel ColumnsVisibilityCollectionViewModel
@@ -65,8 +67,26 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			}
 		}
 
-		public SettingsViewModel()
+		private bool _showOnlyItemsExceedingThreshold;
+
+		public bool ShowOnlyItemsExceedingThreshold
 		{
+			get => _showOnlyItemsExceedingThreshold;
+			set
+			{
+				if (_showOnlyItemsExceedingThreshold != value)
+				{
+					_showOnlyItemsExceedingThreshold = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public SettingsViewModel(AntiPlagiarismWindowViewModel antiPlagiarismWindowViewModel)
+		{
+			antiPlagiarismWindowViewModel.ThrowOnNull(nameof(antiPlagiarismWindowViewModel));
+
+			ParentViewModel = antiPlagiarismWindowViewModel;
 			var workModes = GetReferenceWorkModes();
 			ReferenceWorkModes = new ExtendedObservableCollection<WorkModeViewModel<ReferenceWorkMode>>(workModes);
 			_selectedReferenceWorkMode = ReferenceWorkModes.FirstOrDefault(mode => mode.WorkMode == ReferenceWorkMode.ReferenceSolution);
@@ -98,7 +118,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		{
 			yield return WorkModeViewModel.New(SourceOriginMode.CurrentSolution, VSIXResource.CurrentSolutionSourceOriginTitle,
 											   VSIXResource.CurrentSolutionSourceOriginDescription);
-			yield return WorkModeViewModel.New(SourceOriginMode.CurrentProject, VSIXResource.CurrentProjectSourceOriginTitle,
+			yield return WorkModeViewModel.New(SourceOriginMode.SelectedProject, VSIXResource.CurrentProjectSourceOriginTitle,
 											   VSIXResource.CurrentProjectSourceOriginDescription);
 		}
 	}

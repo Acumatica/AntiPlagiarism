@@ -15,8 +15,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		CurrentSolution,
 
 		/// <summary>
-		/// Use current project as a source.
+		/// Use selected project as a source.
 		/// </summary>
-		CurrentProject
+		SelectedProject
 	}
 }

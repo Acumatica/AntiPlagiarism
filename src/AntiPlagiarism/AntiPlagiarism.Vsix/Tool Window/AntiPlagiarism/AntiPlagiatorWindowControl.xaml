@@ -243,7 +243,18 @@
         </Border>
 
         <local:SettingsControl Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                               DataContext="{Binding Path=Settings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                               DataContext="{Binding Path=Settings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <local:SettingsControl.Style>
+                <Style TargetType="{x:Type local:SettingsControl}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=settingsButton, Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                                     Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </local:SettingsControl.Style>
+        </local:SettingsControl>
 
         <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"          
                   ItemsSource="{Binding Path=PlagiatedItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
@@ -312,9 +323,8 @@
                     </Setter>
 
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=gridRowVisibilityToggleButton, Path=IsChecked,
-                                                       Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                                     Value="True">
+                        <DataTrigger Binding="{Binding Path=ParentViewModel.Settings.ShowOnlyItemsExceedingThreshold,
+                                                       Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Value="True">
                             <Setter Property="Visibility" 
                                     Value="{Binding Path=IsThresholdExceeded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
                                                     Converter={StaticResource visibilityConverter}}"/>

@@ -134,7 +134,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		public AntiPlagiarismWindowViewModel()
 		{
 			PlagiatedItems = new ExtendedObservableCollection<PlagiarismInfoViewModel>();
-			Settings = new SettingsViewModel();
+			Settings = new SettingsViewModel(this);
 
             OpenReferenceSolutionCommand = new Command(p => OpenReferenceSolution());
 			RunAnalysisCommand = new Command(p => RunAntiplagiatorAsync().Forget());
@@ -235,7 +235,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			{
 				case SourceOriginMode.CurrentSolution:
 					return await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
-				case SourceOriginMode.CurrentProject:
+				case SourceOriginMode.SelectedProject:
 					var workspace = await AntiPlagiarismPackage.Instance.GetVSWorkspaceAsync();
 					return string.Empty;
 					break;

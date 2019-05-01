@@ -10,7 +10,7 @@
              
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="1000"
-             d:DataContext="{d:DesignInstance Type=local:SettingsViewModel, IsDesignTimeCreatable=True}">
+             d:DataContext="{d:DesignInstance Type=local:SettingsViewModel, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -24,13 +24,23 @@
                     <!-- Image Style-->
                     <Style TargetType="Image" BasedOn="{StaticResource vsImageStyle}"/>
 
-                    <!--Work mode combobox style-->
-                    <Style x:Key="workModeComboboxStyle" TargetType="ComboBox" BasedOn="{StaticResource vsComboboxStyle}">
+                    <!-- Settings TextBlock style -->
+                    <Style x:Key="settingsTextBlock" TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Center"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="10,5,0,5"/>
+                    </Style>
+                    
+                    <!--Combobox styles-->
+                    <Style x:Key="settingsComboboxStyle" TargetType="ComboBox" BasedOn="{StaticResource vsComboboxStyle}">
                         <Setter Property="Margin" Value="5,5,0,5"/>
                         <Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
                         <Setter Property="IsEnabled" 
                                 Value="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
                                                 Converter={StaticResource boolInversionConverter}}"/>
+                    </Style>
+
+                    <Style x:Key="workModeComboboxStyle" TargetType="ComboBox" BasedOn="{StaticResource settingsComboboxStyle}">
                         <Setter Property="ItemTemplate">
                             <Setter.Value>
                                 <DataTemplate>
@@ -47,17 +57,10 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid.Style>
-            <Style TargetType="Grid">
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding ElementName=settingsButton, Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                                     Value="False">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </Grid.Style>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
@@ -67,11 +70,12 @@
             <ColumnDefinition Width="Auto" MinWidth="200" MaxWidth="200"/>
         </Grid.ColumnDefinitions>
 
-        <Button Grid.Column="0" Style="{StaticResource toolbarButtonStyle}" ToolTip="Columns Visibility" Padding="0" Background="Transparent"
-                    BorderThickness="0" Margin="2,5,0,5" ContextMenuService.IsEnabled="False"
-                    Click="ColumnsVisibilityButton_Click">
+        <!-- First row -->
+        <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource toolbarButtonStyle}" ToolTip="Columns Visibility" Padding="0" 
+                Background="Transparent" BorderThickness="0" Margin="2,5,0,5" ContextMenuService.IsEnabled="False"
+                Click="ColumnsVisibilityButton_Click">
             <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ColumnSettings.ico"
-                       MaxHeight="20" MaxWidth="20"/>
+                   MaxHeight="20" MaxWidth="20"/>
             <Button.ContextMenu>
                 <ContextMenu Placement="Bottom" ItemsSource="{Binding Path=ColumnsVisibilityCollectionViewModel.Columns}">
                     <ContextMenu.ItemContainerStyle>
@@ -86,8 +90,8 @@
             </Button.ContextMenu>
         </Button>
 
-        <ToggleButton x:FieldModifier="private" x:Name="gridRowVisibilityToggleButton"
-                          Grid.Column="1" Margin="2,5,0,5">
+        <ToggleButton Grid.Row="0" Grid.Column="1" Margin="2,5,0,5"
+                      IsChecked="{Binding Path=ShowOnlyItemsExceedingThreshold, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ToggleButton.Style>
                 <Style TargetType="ToggleButton" BasedOn="{StaticResource vsToggleButtonStyle}">
                     <Setter Property="ToolTip" Value="Show all rows in the grid. Click to show only rows which exceed threshold"/>
@@ -103,14 +107,14 @@
                 <Image.Style>
                     <Style TargetType="Image" BasedOn="{StaticResource vsImageStyle}">
                         <Setter Property="Source" 
-                                    Value="pack://application:,,,/AntiPlagiarism;component/Resources/StatusInformation.ico"/>
+                                Value="pack://application:,,,/AntiPlagiarism;component/Resources/StatusInformation.ico"/>
 
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToggleButton}, 
                                                                Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                             Value="True">
+                                         Value="True">
                                 <Setter Property="Source" 
-                                            Value="pack://application:,,,/AntiPlagiarism;component/Resources/StatusInvalid.ico"/>
+                                        Value="pack://application:,,,/AntiPlagiarism;component/Resources/StatusInvalid.ico"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -118,16 +122,36 @@
             </Image>
         </ToggleButton>
 
-        <TextBlock Grid.Column="2" Text="Work Mode:" TextAlignment="Center" VerticalAlignment="Center" Margin="10,5,0,5"/>
-        <ComboBox Grid.Column="3" Style="{StaticResource workModeComboboxStyle}"
-                      ItemsSource="{Binding Path=ReferenceWorkModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedItem="{Binding Path=SelectedReferenceWorkMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      ToolTip="{Binding Path=SelectedReferenceWorkMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="0" Grid.Column="2" Text="Source Origin:" Style="{StaticResource settingsTextBlock}"/>
+        <ComboBox Grid.Row="0" Grid.Column="3" Style="{StaticResource workModeComboboxStyle}"
+                  ItemsSource="{Binding Path=SourceOriginModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding Path=SelectedSourceOriginMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  ToolTip="{Binding Path=SelectedSourceOriginMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <TextBlock Grid.Column="4" Text="Source Origin:" TextAlignment="Center" VerticalAlignment="Center" Margin="10,5,0,5"/>
-        <ComboBox Grid.Column="5" Style="{StaticResource workModeComboboxStyle}"
-                      ItemsSource="{Binding Path=SourceOriginModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedItem="{Binding Path=SelectedSourceOriginMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      ToolTip="{Binding Path=SelectedSourceOriginMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="0" Grid.Column="4" Text="Work Mode:" Style="{StaticResource settingsTextBlock}"/>
+        <ComboBox Grid.Row="0" Grid.Column="5" Style="{StaticResource workModeComboboxStyle}"
+                  ItemsSource="{Binding Path=ReferenceWorkModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding Path=SelectedReferenceWorkMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  ToolTip="{Binding Path=SelectedReferenceWorkMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!-- Second row -->
+        <TextBlock Grid.Row="1" Grid.Column="2" Text="Select project:">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource settingsTextBlock}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=SelectedSourceOriginMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                            <DataTrigger.Value>
+                                <local:SourceOriginMode>SelectedProject</local:SourceOriginMode>
+                            </DataTrigger.Value>
+                            
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <ComboBox Grid.Row="1" Grid.Column="3" Style="{StaticResource workModeComboboxStyle}"
+                  ItemsSource="{Binding Path=SourceOriginModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding Path=SelectedSourceOriginMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  ToolTip="{Binding Path=SelectedSourceOriginMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </UserControl>
