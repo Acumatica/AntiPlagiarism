@@ -83,7 +83,7 @@
         <Border Grid.Row="0" BorderThickness="1" CornerRadius="3" Margin="2,4"
                 BorderBrush="{DynamicResource {x:Static platformUI:EnvironmentColors.BrandedUIBorderBrushKey}}">
             <WrapPanel Orientation="Horizontal">
-                <ToggleButton x:FieldModifier="private" Name="settingsToggleButton" Margin="5,5,0,5" VerticalAlignment="Center" 
+                <ToggleButton Margin="5,5,0,5" VerticalAlignment="Center" 
                               IsChecked="{Binding Path=AreSettingsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ToggleButton.Style>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource vsToggleButtonStyle}">
@@ -100,10 +100,11 @@
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Settings.ico"/>
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ExpandDown.ico"
-                               Visibility="{Binding ElementName=settingsButton, Path=IsChecked, Converter={StaticResource visibilityConverter}, 
-                                                    ConverterParameter=!}"/>
+                               Visibility="{Binding Path=AreSettingsExpanded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
+                                                    Converter={StaticResource visibilityConverter}, ConverterParameter=!}"/>
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/CollapseUp.ico"
-                               Visibility="{Binding ElementName=settingsButton, Path=IsChecked,Converter={StaticResource visibilityConverter}}"/>
+                               Visibility="{Binding Path=AreSettingsExpanded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
+                                                    Converter={StaticResource visibilityConverter}}"/>
                     </StackPanel>
                 </ToggleButton>
                 
@@ -220,6 +221,9 @@
                             <MultiBinding Converter="{StaticResource runButtonIsEnabledMultiConverter}">
                                 <Binding Path="Settings.SelectedReferenceWorkMode.WorkMode" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                                 <Binding Path="ReferenceSolutionPath" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="Settings.SelectedSourceOriginMode.WorkMode" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="Settings.SourceFolderPath" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="Settings.SelectedProject" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                                 <Binding Path="IsAnalysisRunning" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                             </MultiBinding>
                         </Button.IsEnabled>
