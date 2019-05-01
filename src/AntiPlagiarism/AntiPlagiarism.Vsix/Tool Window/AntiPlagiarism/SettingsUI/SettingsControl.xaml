@@ -10,7 +10,7 @@
              
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="1000"
-             d:DataContext="{d:DesignInstance Type=local:AntiPlagiarismWindowViewModel, IsDesignTimeCreatable=True}">
+             d:DataContext="{d:DesignInstance Type=local:SettingsViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

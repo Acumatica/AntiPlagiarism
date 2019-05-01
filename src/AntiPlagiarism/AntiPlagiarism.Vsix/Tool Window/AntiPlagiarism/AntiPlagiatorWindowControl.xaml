@@ -159,8 +159,8 @@
                     <StackPanel.Style>
                         <Style TargetType="StackPanel">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=SelectedReferenceWorkMode.WorkMode, Mode=OneWay,
-                                             UpdateSourceTrigger=PropertyChanged}">
+                                <DataTrigger Binding="{Binding Path=Settings.SelectedReferenceWorkMode.WorkMode, 
+                                                               Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                                     <DataTrigger.Value>
                                         <local:ReferenceWorkMode>SelfAnalysis</local:ReferenceWorkMode>
                                     </DataTrigger.Value>
@@ -178,7 +178,8 @@
                                 <Setter Property="Text" Value="Reference Solution:"/>
 
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=SelectedReferenceWorkMode.WorkMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <DataTrigger Binding="{Binding Path=Settings.SelectedReferenceWorkMode.WorkMode, 
+                                                                   Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                                         <DataTrigger.Value>
                                             <local:ReferenceWorkMode>AcumaticaSources</local:ReferenceWorkMode>
                                         </DataTrigger.Value>
@@ -198,7 +199,8 @@
                                 <Setter Property="ToolTip" Value="Open Reference Solution"/>
 
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=SelectedReferenceWorkMode.WorkMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <DataTrigger Binding="{Binding Path=Settings.SelectedReferenceWorkMode.WorkMode, 
+                                                                   Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                                         <DataTrigger.Value>
                                             <local:ReferenceWorkMode>AcumaticaSources</local:ReferenceWorkMode>
                                         </DataTrigger.Value>
@@ -216,7 +218,7 @@
                             Style="{StaticResource toolbarButtonStyle}">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource runButtonIsEnabledMultiConverter}">
-                                <Binding Path="SelectedReferenceWorkMode.WorkMode" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="Settings.SelectedReferenceWorkMode.WorkMode" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                                 <Binding Path="ReferenceSolutionPath" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                                 <Binding Path="IsAnalysisRunning" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                             </MultiBinding>
@@ -240,7 +242,8 @@
             </WrapPanel>
         </Border>
 
-        <local:SettingsControl Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <local:SettingsControl Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                               DataContext="{Binding Path=Settings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"          
                   ItemsSource="{Binding Path=PlagiatedItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
