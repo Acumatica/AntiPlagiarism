@@ -118,8 +118,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		{
 			yield return WorkModeViewModel.New(SourceOriginMode.CurrentSolution, VSIXResource.CurrentSolutionSourceOriginTitle,
 											   VSIXResource.CurrentSolutionSourceOriginDescription);
-			yield return WorkModeViewModel.New(SourceOriginMode.SelectedProject, VSIXResource.CurrentProjectSourceOriginTitle,
-											   VSIXResource.CurrentProjectSourceOriginDescription);
+			yield return WorkModeViewModel.New(SourceOriginMode.SelectedProject, VSIXResource.SelectedProjectSourceOriginTitle,
+											   VSIXResource.SelectedProjectSourceOriginDescription);
 		}
 	}
 }

@@ -126,12 +126,6 @@
   <data name="AntiPlagiarismWindowTitle" xml:space="preserve">
     <value>AntiPlagiarism</value>
   </data>
-  <data name="CurrentProjectSourceOriginDescription" xml:space="preserve">
-    <value>Use current project as a source for comparison</value>
-  </data>
-  <data name="CurrentProjectSourceOriginTitle" xml:space="preserve">
-    <value>Current Project</value>
-  </data>
   <data name="CurrentSolutionSourceOriginDescription" xml:space="preserve">
     <value>Use current solution as a source for comparison</value>
   </data>
@@ -149,6 +143,12 @@
   </data>
   <data name="SelectedFolderSourceOriginTitle" xml:space="preserve">
     <value>Selected Folder</value>
+  </data>
+  <data name="SelectedProjectSourceOriginDescription" xml:space="preserve">
+    <value>Use selected project as a source for comparison</value>
+  </data>
+  <data name="SelectedProjectSourceOriginTitle" xml:space="preserve">
+    <value>Selected Project</value>
   </data>
   <data name="SelfAnalysisWorkModeDescription" xml:space="preserve">
     <value>Compare solution with itself to find possibilities for refactoring</value>

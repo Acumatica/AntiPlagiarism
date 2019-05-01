@@ -88,24 +88,6 @@ namespace AntiPlagiarism.Vsix {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use current project as a source for comparison.
-        /// </summary>
-        public static string CurrentProjectSourceOriginDescription {
-            get {
-                return ResourceManager.GetString("CurrentProjectSourceOriginDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Current Project.
-        /// </summary>
-        public static string CurrentProjectSourceOriginTitle {
-            get {
-                return ResourceManager.GetString("CurrentProjectSourceOriginTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Use current solution as a source for comparison.
         /// </summary>
         public static string CurrentSolutionSourceOriginDescription {
@@ -156,6 +138,24 @@ namespace AntiPlagiarism.Vsix {
         public static string SelectedFolderSourceOriginTitle {
             get {
                 return ResourceManager.GetString("SelectedFolderSourceOriginTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use selected project as a source for comparison.
+        /// </summary>
+        public static string SelectedProjectSourceOriginDescription {
+            get {
+                return ResourceManager.GetString("SelectedProjectSourceOriginDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected Project.
+        /// </summary>
+        public static string SelectedProjectSourceOriginTitle {
+            get {
+                return ResourceManager.GetString("SelectedProjectSourceOriginTitle", resourceCulture);
             }
         }
         
