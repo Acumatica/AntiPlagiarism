@@ -17,6 +17,11 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		/// <summary>
 		/// Use selected project as a source.
 		/// </summary>
-		SelectedProject
+		SelectedProject,
+
+		/// <summary>
+		/// Use selected folder as a source.
+		/// </summary>
+		SelectedFolder
 	}
 }

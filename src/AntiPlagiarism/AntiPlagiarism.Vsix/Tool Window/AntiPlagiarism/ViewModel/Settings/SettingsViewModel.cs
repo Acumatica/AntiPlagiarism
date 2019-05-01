@@ -98,6 +98,23 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			}
 		}
 
+		private string _sourceFolderPath;
+
+		public string SourceFolderPath
+		{
+			get => _sourceFolderPath;
+			private set
+			{
+				if (_sourceFolderPath != value)
+				{
+					_sourceFolderPath = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
+		public Command SelectSourceFolderCommand { get; }
+
 		public SettingsViewModel(AntiPlagiarismWindowViewModel antiPlagiarismWindowViewModel)
 		{
 			antiPlagiarismWindowViewModel.ThrowOnNull(nameof(antiPlagiarismWindowViewModel));
@@ -110,6 +127,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			var sourceOriginModes = GetSourceOriginModes();
 			SourceOriginModes = new ExtendedObservableCollection<WorkModeViewModel<SourceOriginMode>>(sourceOriginModes);
 			_selectedSourceOriginMode = SourceOriginModes.FirstOrDefault(mode => mode.WorkMode == SourceOriginMode.CurrentSolution);
+
+			SelectSourceFolderCommand = new Command(p => SelectSourceFolder());
 		}
 
 		internal void FillColumnsVisibility(IEnumerable<string> columnNames)
@@ -146,6 +165,20 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 											   VSIXResource.CurrentSolutionSourceOriginDescription);
 			yield return WorkModeViewModel.New(SourceOriginMode.SelectedProject, VSIXResource.SelectedProjectSourceOriginTitle,
 											   VSIXResource.SelectedProjectSourceOriginDescription);
+			yield return WorkModeViewModel.New(SourceOriginMode.SelectedFolder, VSIXResource.SelectedFolderSourceOriginTitle,
+											   VSIXResource.SelectedFolderSourceOriginDescription);
+		}
+
+		private void SelectSourceFolder()
+		{
+			if (Settings.SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.ReferenceSolution)
+			{
+				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetReferenceSolutionFilePath() ?? ReferenceSolutionPath;
+			}
+			else if (Settings.SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.AcumaticaSources)
+			{
+				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetAcumaticaSourcesFolderPath() ?? ReferenceSolutionPath;
+			}
 		}
 	}
 }
