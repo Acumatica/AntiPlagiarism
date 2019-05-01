@@ -63,11 +63,14 @@
     <Compile Include="Tool Window\AntiPlagiarism\OpenAntiPlagiarismWindowCommand.cs" />
     <Compile Include="Tool Window\AntiPlagiarism\Utils\ReferenceSourcePathRetriever.cs" />
     <Compile Include="Tool Window\AntiPlagiarism\ViewModel\AntiPlagiarismWindowViewModel.cs" />
-    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\ColumnsVisibility\ColumnVisibilityViewModel.cs" />
-    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\ColumnsVisibility\ColumnsVisibilityCollectionViewModel.cs" />
-    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\WorkModes\SourceOriginMode.cs" />
-    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\WorkModes\WorkModeViewModel.cs" />
-    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\WorkModes\ReferenceWorkMode.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\Settings\ColumnsVisibility\ColumnVisibilityViewModel.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\Settings\ColumnsVisibility\ColumnsVisibilityCollectionViewModel.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\SettingsUI\SettingsControl.xaml.cs">
+      <DependentUpon>SettingsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\Settings\WorkModes\SourceOriginMode.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\Settings\WorkModes\WorkModeViewModel.cs" />
+    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\Settings\WorkModes\ReferenceWorkMode.cs" />
     <Compile Include="Utils\Colors\VSColors.cs" />
     <Compile Include="Tool Window\VSCommandBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -492,6 +495,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Tool Window\AntiPlagiarism\SettingsUI\SettingsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Tool Window\Themes\Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -526,6 +533,7 @@
     <Analyzer Include="..\..\packages\Microsoft.VisualStudio.SDK.Analyzers.15.8.36\analyzers\cs\Microsoft.VisualStudio.SDK.Analyzers.dll" />
     <Analyzer Include="..\..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.8.168\analyzers\cs\Microsoft.VisualStudio.Threading.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

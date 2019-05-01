@@ -270,12 +270,14 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		private async Task FillItemsAsync(CancellationToken cancellationToken)
 		{
 			PlagiatedItems.Clear();
-			string solutionPath = await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
+
+			var workspace = await AntiPlagiarismPackage.Instance.GetVSWorkspaceAsync();
+			string sourceSolutionPath = await GetSourceSolutionPathAsync();
 			string referenceSolutionPath = SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.SelfAnalysis
-				? solutionPath
+				? sourceSolutionPath
 				: ReferenceSolutionPath;
 
-			if (referenceSolutionPath.IsNullOrWhiteSpace() || solutionPath.IsNullOrWhiteSpace() || cancellationToken.IsCancellationRequested)
+			if (referenceSolutionPath.IsNullOrWhiteSpace() || sourceSolutionPath.IsNullOrWhiteSpace() || cancellationToken.IsCancellationRequested)
 				return;
 
 			int tabSize = await AntiPlagiarismPackage.Instance.GetTabSizeAsync();
@@ -283,7 +285,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			await TaskScheduler.Default;		 //switch to background thread
 			
 			double threshholdFraction = ThreshholdPercent / 100.0;
-			PlagiarismScanner plagiarismScanner = new PlagiarismScanner(referenceSolutionPath, solutionPath, 
+			PlagiarismScanner plagiarismScanner = new PlagiarismScanner(referenceSolutionPath, sourceSolutionPath, 
 																		threshholdFraction, MinCheckedMethodSize);
 			IEnumerable<PlagiarismInfo> plagiatedItems = plagiarismScanner.Scan(callFromVS: true) ?? Enumerable.Empty<PlagiarismInfo>();
 
@@ -297,14 +299,30 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			if (cancellationToken.IsCancellationRequested)
 				return;
 
-			string sourceSolutionDir = Path.GetDirectoryName(solutionPath) + Path.DirectorySeparatorChar;
+			string sourceSolutionDir = Path.GetDirectoryName(sourceSolutionPath) + Path.DirectorySeparatorChar;
 			string referenceSolutionDir = Path.GetDirectoryName(referenceSolutionPath) + Path.DirectorySeparatorChar;
-			var plagiatedItemVMs = plagiatedItems.Select(item => new PlagiarismInfoViewModel(this, item, referenceSolutionDir, sourceSolutionDir, tabSize))
+			var plagiatedItemVMs = plagiatedItems.Select(item => new PlagiarismInfoViewModel(this, item, referenceSolutionDir, 
+																							 sourceSolutionDir, tabSize))
 												 .ToList();			//Make sure to create View Models on the background thread via buffering operation
 			
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 			PlagiatedItems.AddRange(plagiatedItemVMs);				//Add view models on UI thread
 		}	
+
+		private async Task<string> GetSourceSolutionPathAsync()
+		{
+			switch (SelectedSourceOriginMode.WorkMode)
+			{
+				case SourceOriginMode.CurrentSolution:
+					return await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
+				case SourceOriginMode.CurrentProject:
+					var workspace = await AntiPlagiarismPackage.Instance.GetVSWorkspaceAsync();
+					return string.Empty;
+					break;
+				default:
+					return string.Empty;
+			}
+		}
 
 		private IEnumerable<PlagiarismInfo> FilterPlagiarismSimmetricResultsOnSelfAnalysis(IEnumerable<PlagiarismInfo> plagiatedItems)
 		{
