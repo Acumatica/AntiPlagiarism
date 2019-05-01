@@ -140,7 +140,7 @@
         <TextBlock Grid.Row="1" Grid.Column="2" Text="Select Project:">
             <TextBlock.Style>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource settingsTextBlock}">
-                    <!--<Setter Property="Visibility" Value="Collapsed"/>-->
+                    <Setter Property="Visibility" Value="Collapsed"/>
                     
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Path=SelectedSourceOriginMode.WorkMode, Mode=OneWay, 
@@ -160,7 +160,7 @@
                   SelectedItem="{Binding Path=SelectedProject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <ComboBox.Style>
                 <Style TargetType="ComboBox" BasedOn="{StaticResource settingsComboboxStyle}">
-                    <!--<Setter Property="Visibility" Value="Collapsed"/>-->
+                    <Setter Property="Visibility" Value="Collapsed"/>
 
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Path=SelectedSourceOriginMode.WorkMode, Mode=OneWay, 
@@ -182,7 +182,7 @@
                                      Converter={StaticResource boolInversionConverter}}">
             <StackPanel.Style>
                 <Style TargetType="StackPanel">
-                    <!--<Setter Property="Visibility" Value="Collapsed"/>-->
+                    <Setter Property="Visibility" Value="Collapsed"/>
 
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Path=Settings.SelectedSourceOriginMode.WorkMode, Mode=OneWay, 
@@ -202,23 +202,8 @@
                      Margin="6,5,0,5"  VerticalAlignment="Center" IsReadOnly="True" MinWidth="300" MaxWidth="300"
                      ToolTip="{Binding Path=SourceFolderPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <Button Command="{Binding Path=SelectSourceFolderCommand}">
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource toolbarButtonStyle}">
-                        <Setter Property="ToolTip" Value="Open Reference Solution"/>
-
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=Settings.SelectedReferenceWorkMode.WorkMode, 
-                                                                   Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-                                <DataTrigger.Value>
-                                    <local:ReferenceWorkMode>AcumaticaSources</local:ReferenceWorkMode>
-                                </DataTrigger.Value>
-
-                                <Setter Property="ToolTip" Value="Select folder with Acumatica sources"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
+            <Button Command="{Binding Path=SelectSourceFolderCommand}" Style="{StaticResource toolbarButtonStyle}"
+                    ToolTip="Select folder with code to use as a source for comparison">
                 <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/OpenFolder.ico"/>
             </Button>
         </StackPanel>

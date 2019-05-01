@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.VisualStudio.Threading;
 using AntiPlagiarism.Core.Plagiarism;
 using AntiPlagiarism.Core.Utilities;
 using AntiPlagiarism.Vsix.Utilities;
@@ -128,7 +129,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			SourceOriginModes = new ExtendedObservableCollection<WorkModeViewModel<SourceOriginMode>>(sourceOriginModes);
 			_selectedSourceOriginMode = SourceOriginModes.FirstOrDefault(mode => mode.WorkMode == SourceOriginMode.CurrentSolution);
 
-			SelectSourceFolderCommand = new Command(p => SelectSourceFolder());
+			SelectSourceFolderCommand = new Command(p => SelectSourceFolderAsync().Forget());
 		}
 
 		internal void FillColumnsVisibility(IEnumerable<string> columnNames)
@@ -169,16 +170,18 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 											   VSIXResource.SelectedFolderSourceOriginDescription);
 		}
 
-		private void SelectSourceFolder()
+		private async Task SelectSourceFolderAsync()
 		{
-			if (Settings.SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.ReferenceSolution)
-			{
-				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetReferenceSolutionFilePath() ?? ReferenceSolutionPath;
-			}
-			else if (Settings.SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.AcumaticaSources)
-			{
-				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetAcumaticaSourcesFolderPath() ?? ReferenceSolutionPath;
-			}
+			if (SelectedSourceOriginMode.WorkMode != SourceOriginMode.SelectedFolder)
+				return;
+
+			string currentSolutionPath = await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
+			string defaultDirectory = !currentSolutionPath.IsNullOrWhiteSpace()
+				? System.IO.Path.GetDirectoryName(currentSolutionPath)
+				: null;
+
+			SourceFolderPath = SelectFileOrFolder.SelectFolder(VSIXResource.SelectFolderWithSourceToCompareDialogMsg, defaultDirectory) ??
+												  SourceFolderPath;
 		}
 	}
 }

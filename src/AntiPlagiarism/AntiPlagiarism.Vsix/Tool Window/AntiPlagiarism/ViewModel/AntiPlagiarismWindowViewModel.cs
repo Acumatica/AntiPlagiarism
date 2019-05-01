@@ -151,11 +151,13 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		{
 			if (Settings.SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.ReferenceSolution)
 			{
-				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetReferenceSolutionFilePath() ?? ReferenceSolutionPath;
+				ReferenceSolutionPath = SelectFileOrFolder.SelectSolutionOrProjectFile(VSIXResource.SelectSolutionOrProjectFileDialogMsg) ??
+										ReferenceSolutionPath;
 			}
 			else if (Settings.SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.AcumaticaSources)
 			{
-				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetAcumaticaSourcesFolderPath() ?? ReferenceSolutionPath;
+				ReferenceSolutionPath = SelectFileOrFolder.SelectFolder(VSIXResource.SelectFolderWithAcumaticaSourceDialogMsg) ??
+										ReferenceSolutionPath;
 			}			
 		}
 
@@ -237,6 +239,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 					return await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
 				case SourceOriginMode.SelectedProject:
 					return Settings.SelectedProject?.Project?.FilePath ?? string.Empty;
+				case SourceOriginMode.SelectedFolder:
+					return Settings.SourceFolderPath ?? string.Empty;
 				default:
 					return string.Empty;
 			}

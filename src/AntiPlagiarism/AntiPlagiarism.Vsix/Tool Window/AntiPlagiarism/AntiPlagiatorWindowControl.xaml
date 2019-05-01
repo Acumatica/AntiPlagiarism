@@ -68,7 +68,7 @@
             <!--HACK - DataGridColumn isn't actually an element of VIsual Tree, it's not connected to DataGrid's data context and doesn't work with Visibility property.
                 We need proxy element to connect column to context
                 https://stackoverflow.com/questions/7660967/wpf-error-cannot-find-governing-frameworkelement-for-target-element-->
-            <FrameworkElement x:Key="proxyElement" DataContext="{Binding}"/>
+            <FrameworkElement x:Key="proxyElement" DataContext="{Binding Path=Settings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid.Resources>
         
         <Grid.RowDefinitions>
@@ -334,7 +334,7 @@
             </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Source Name" Width="*" Binding="{Binding Path=SourceName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Visibility="{Binding Source={StaticResource proxyElement}, 
+                                    Visibility="{Binding Source={StaticResource proxyElement}, 
                                                           Path='DataContext.ColumnsVisibilityCollectionViewModel[Source Name].IsVisible', 
                                                           Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource visibilityConverter}}"
                                     ElementStyle="{StaticResource cellTextBlockStyle}"/>
