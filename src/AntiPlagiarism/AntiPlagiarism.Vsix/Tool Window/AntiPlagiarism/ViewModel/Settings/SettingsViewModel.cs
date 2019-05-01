@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Threading;
 using AntiPlagiarism.Core.Plagiarism;
 using AntiPlagiarism.Core.Utilities;
 using AntiPlagiarism.Vsix.Utilities;
-
-using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
 
 
 namespace AntiPlagiarism.Vsix.ToolWindows
@@ -104,7 +101,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		public string SourceFolderPath
 		{
 			get => _sourceFolderPath;
-			private set
+			set
 			{
 				if (_sourceFolderPath != value)
 				{

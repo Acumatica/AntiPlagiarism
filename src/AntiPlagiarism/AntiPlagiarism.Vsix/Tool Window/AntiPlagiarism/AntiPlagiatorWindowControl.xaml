@@ -83,8 +83,8 @@
         <Border Grid.Row="0" BorderThickness="1" CornerRadius="3" Margin="2,4"
                 BorderBrush="{DynamicResource {x:Static platformUI:EnvironmentColors.BrandedUIBorderBrushKey}}">
             <WrapPanel Orientation="Horizontal">
-                <ToggleButton x:FieldModifier="private" x:Name="settingsButton" Margin="5,5,0,5" VerticalAlignment="Center"
-                              IsChecked="True">
+                <ToggleButton x:FieldModifier="private" Name="settingsToggleButton" Margin="5,5,0,5" VerticalAlignment="Center" 
+                              IsChecked="{Binding Path=AreSettingsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ToggleButton.Style>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource vsToggleButtonStyle}">
                             <Setter Property="ToolTip" Value="Expand Settings"/>
@@ -243,18 +243,9 @@
         </Border>
 
         <local:SettingsControl Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                               DataContext="{Binding Path=Settings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-            <local:SettingsControl.Style>
-                <Style TargetType="{x:Type local:SettingsControl}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=settingsButton, Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                                     Value="False">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </local:SettingsControl.Style>
-        </local:SettingsControl>
+                   DataContext="{Binding Path=Settings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                   Visibility="{Binding Path=ParentViewModel.AreSettingsExpanded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
+                                        Converter={StaticResource visibilityConverter}}"/>
 
         <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"          
                   ItemsSource="{Binding Path=PlagiatedItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"

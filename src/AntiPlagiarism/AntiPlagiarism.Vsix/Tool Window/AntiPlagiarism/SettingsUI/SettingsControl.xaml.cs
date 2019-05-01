@@ -11,7 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
+
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
@@ -40,8 +42,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			if (!(DataContext is SettingsViewModel settingsViewModel))
 				return;
 
-			await settingsViewModel.RefillProjectsAsync()
-								   .ConfigureAwait(continueOnCapturedContext: true); ;
+			await settingsViewModel.RefillProjectsAsync();
 		}
 	}
 }

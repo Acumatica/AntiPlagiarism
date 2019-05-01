@@ -113,7 +113,7 @@
 
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToggleButton}, 
-                                                               Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                           Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                          Value="True">
                                 <Setter Property="Source" 
                                         Value="pack://application:,,,/AntiPlagiarism;component/Resources/StatusInvalid.ico"/>
@@ -125,12 +125,15 @@
         </ToggleButton>
 
         <TextBlock Grid.Row="0" Grid.Column="2" Text="Source Origin:" Style="{StaticResource settingsTextBlock}"/>
+        
         <ComboBox Grid.Row="0" Grid.Column="3" Style="{StaticResource workModeComboboxStyle}"
                   ItemsSource="{Binding Path=SourceOriginModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                   SelectedItem="{Binding Path=SelectedSourceOriginMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   ToolTip="{Binding Path=SelectedSourceOriginMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
+        
         <TextBlock Grid.Row="0" Grid.Column="4" Text="Work Mode:" Style="{StaticResource settingsTextBlock}"/>
+        
         <ComboBox Grid.Row="0" Grid.Column="5" Style="{StaticResource workModeComboboxStyle}"
                   ItemsSource="{Binding Path=ReferenceWorkModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                   SelectedItem="{Binding Path=SelectedReferenceWorkMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -179,14 +182,13 @@
         <!-- Third row -->
         <StackPanel Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="4" Orientation="Horizontal"
                     IsEnabled="{Binding Path=ParentViewModel.IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
-                                     Converter={StaticResource boolInversionConverter}}">
+                                        Converter={StaticResource boolInversionConverter}}">
             <StackPanel.Style>
                 <Style TargetType="StackPanel">
                     <Setter Property="Visibility" Value="Collapsed"/>
 
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=Settings.SelectedSourceOriginMode.WorkMode, Mode=OneWay, 
-                                                       UpdateSourceTrigger=PropertyChanged}">
+                        <DataTrigger Binding="{Binding Path=SelectedSourceOriginMode.WorkMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                             <DataTrigger.Value>
                                 <local:SourceOriginMode>SelectedFolder</local:SourceOriginMode>
                             </DataTrigger.Value>
@@ -198,11 +200,13 @@
             </StackPanel.Style>
 
             <TextBlock Text="Select Folder:" Style="{StaticResource settingsTextBlock}" Margin="13,5,0,5"/>
+            
             <TextBox Text="{Binding Path=SourceFolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Margin="6,5,0,5"  VerticalAlignment="Center" IsReadOnly="True" MinWidth="300" MaxWidth="300"
                      ToolTip="{Binding Path=SourceFolderPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <Button Command="{Binding Path=SelectSourceFolderCommand}" Style="{StaticResource toolbarButtonStyle}"
+            <Button Command="{Binding Path=SelectSourceFolderCommand, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                    Style="{StaticResource toolbarButtonStyle}"
                     ToolTip="Select folder with code to use as a source for comparison">
                 <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/OpenFolder.ico"/>
             </Button>

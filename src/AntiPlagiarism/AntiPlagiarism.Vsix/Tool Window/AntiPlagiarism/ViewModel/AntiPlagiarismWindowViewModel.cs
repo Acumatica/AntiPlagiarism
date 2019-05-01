@@ -125,6 +125,21 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			}
 		}
 
+		private bool _areSettingsExpanded = true;
+
+		public bool AreSettingsExpanded
+		{
+			get => _areSettingsExpanded;
+			set
+			{
+				if (_areSettingsExpanded != value)
+				{
+					_areSettingsExpanded = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
 		public Command OpenReferenceSolutionCommand { get; }
 
         public Command RunAnalysisCommand { get; }
