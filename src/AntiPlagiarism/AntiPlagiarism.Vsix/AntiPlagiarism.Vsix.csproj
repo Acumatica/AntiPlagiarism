@@ -68,6 +68,7 @@
     <Compile Include="Tool Window\AntiPlagiarism\SettingsUI\SettingsControl.xaml.cs">
       <DependentUpon>SettingsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tool Window\AntiPlagiarism\ViewModel\Settings\Project\ProjectViewModel.cs" />
     <Compile Include="Tool Window\AntiPlagiarism\ViewModel\Settings\SettingsViewModel.cs" />
     <Compile Include="Tool Window\AntiPlagiarism\ViewModel\Settings\WorkModes\SourceOriginMode.cs" />
     <Compile Include="Tool Window\AntiPlagiarism\ViewModel\Settings\WorkModes\WorkModeViewModel.cs" />

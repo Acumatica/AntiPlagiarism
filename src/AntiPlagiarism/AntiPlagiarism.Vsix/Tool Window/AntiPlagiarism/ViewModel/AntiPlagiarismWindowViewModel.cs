@@ -236,9 +236,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 				case SourceOriginMode.CurrentSolution:
 					return await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
 				case SourceOriginMode.SelectedProject:
-					var workspace = await AntiPlagiarismPackage.Instance.GetVSWorkspaceAsync();
-					return string.Empty;
-					break;
+					return Settings.SelectedProject?.Project?.FilePath ?? string.Empty;
 				default:
 					return string.Empty;
 			}

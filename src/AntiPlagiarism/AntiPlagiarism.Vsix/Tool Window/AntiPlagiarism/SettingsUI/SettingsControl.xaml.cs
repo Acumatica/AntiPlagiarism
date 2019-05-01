@@ -34,5 +34,14 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			columnsVisibilityButton.ContextMenu.DataContext = columnsVisibilityButton.DataContext;
 			columnsVisibilityButton.ContextMenu.IsOpen = true;
 		}
+
+		private async void SettingsControl_Loaded(object sender, RoutedEventArgs e)
+		{
+			if (!(DataContext is SettingsViewModel settingsViewModel))
+				return;
+
+			await settingsViewModel.RefillProjectsAsync()
+								   .ConfigureAwait(continueOnCapturedContext: true); ;
+		}
 	}
 }

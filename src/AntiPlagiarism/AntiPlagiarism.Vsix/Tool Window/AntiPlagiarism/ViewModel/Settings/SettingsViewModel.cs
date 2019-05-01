@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AntiPlagiarism.Core.Method;
+using Microsoft.CodeAnalysis;
 using AntiPlagiarism.Core.Plagiarism;
 using AntiPlagiarism.Core.Utilities;
 using AntiPlagiarism.Vsix.Utilities;
-using AntiPlagiarism.Vsix.Utilities.Navigation;
 
 using ThreadHelper = Microsoft.VisualStudio.Shell.ThreadHelper;
 
@@ -67,6 +66,23 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			}
 		}
 
+		public ExtendedObservableCollection<ProjectViewModel> Projects { get; } = new ExtendedObservableCollection<ProjectViewModel>();
+
+		private ProjectViewModel _selectedProject;
+
+		public ProjectViewModel SelectedProject
+		{
+			get => _selectedProject;
+			set
+			{
+				if (_selectedProject != value)
+				{
+					_selectedProject = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
 		private bool _showOnlyItemsExceedingThreshold;
 
 		public bool ShowOnlyItemsExceedingThreshold
@@ -85,8 +101,8 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		public SettingsViewModel(AntiPlagiarismWindowViewModel antiPlagiarismWindowViewModel)
 		{
 			antiPlagiarismWindowViewModel.ThrowOnNull(nameof(antiPlagiarismWindowViewModel));
-
 			ParentViewModel = antiPlagiarismWindowViewModel;
+
 			var workModes = GetReferenceWorkModes();
 			ReferenceWorkModes = new ExtendedObservableCollection<WorkModeViewModel<ReferenceWorkMode>>(workModes);
 			_selectedReferenceWorkMode = ReferenceWorkModes.FirstOrDefault(mode => mode.WorkMode == ReferenceWorkMode.ReferenceSolution);
@@ -102,6 +118,16 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 				return;
 
 			ColumnsVisibilityCollectionViewModel = new ColumnsVisibilityCollectionViewModel(columnNames);
+		}
+
+		internal async Task RefillProjectsAsync()
+		{
+			var workspace = await AntiPlagiarismPackage.Instance.GetVSWorkspaceAsync()
+																.ConfigureAwait(continueOnCapturedContext: true);
+			var projectVMs = workspace?.CurrentSolution?.Projects?.Select(project => new ProjectViewModel(project)) ??
+							 Enumerable.Empty<ProjectViewModel>();
+			Projects.Reset(projectVMs);
+			SelectedProject = Projects.FirstOrDefault();
 		}
 
 		private IEnumerable<WorkModeViewModel<ReferenceWorkMode>> GetReferenceWorkModes()

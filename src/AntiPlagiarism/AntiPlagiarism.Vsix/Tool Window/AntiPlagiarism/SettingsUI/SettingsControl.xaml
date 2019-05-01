@@ -10,7 +10,8 @@
              
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="1000"
-             d:DataContext="{d:DesignInstance Type=local:SettingsViewModel, IsDesignTimeCreatable=False}">
+             d:DataContext="{d:DesignInstance Type=local:SettingsViewModel, IsDesignTimeCreatable=False}"
+             Loaded="SettingsControl_Loaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -36,7 +37,7 @@
                         <Setter Property="Margin" Value="5,5,0,5"/>
                         <Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
                         <Setter Property="IsEnabled" 
-                                Value="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
+                                Value="{Binding Path=ParentViewModel.IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
                                                 Converter={StaticResource boolInversionConverter}}"/>
                     </Style>
 
@@ -135,23 +136,43 @@
                   ToolTip="{Binding Path=SelectedReferenceWorkMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         <!-- Second row -->
-        <TextBlock Grid.Row="1" Grid.Column="2" Text="Select project:">
+        <TextBlock Grid.Row="1" Grid.Column="2" Text="Select Project:">
             <TextBlock.Style>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource settingsTextBlock}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=SelectedSourceOriginMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                        <DataTrigger Binding="{Binding Path=SelectedSourceOriginMode.WorkMode, Mode=OneWay, 
+                                                       UpdateSourceTrigger=PropertyChanged}">
                             <DataTrigger.Value>
                                 <local:SourceOriginMode>SelectedProject</local:SourceOriginMode>
                             </DataTrigger.Value>
-                            
+
+                            <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <ComboBox Grid.Row="1" Grid.Column="3" Style="{StaticResource workModeComboboxStyle}"
-                  ItemsSource="{Binding Path=SourceOriginModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedItem="{Binding Path=SelectedSourceOriginMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  ToolTip="{Binding Path=SelectedSourceOriginMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <ComboBox Grid.Row="1" Grid.Column="3" DisplayMemberPath="Project.Name"
+                  ItemsSource="{Binding Path=Projects, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding Path=SelectedProject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ComboBox.Style>
+                <Style TargetType="ComboBox" BasedOn="{StaticResource settingsComboboxStyle}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=SelectedSourceOriginMode.WorkMode, Mode=OneWay, 
+                                                       UpdateSourceTrigger=PropertyChanged}">
+                            <DataTrigger.Value>
+                                <local:SourceOriginMode>SelectedProject</local:SourceOriginMode>
+                            </DataTrigger.Value>
+
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ComboBox.Style>
+        </ComboBox>
     </Grid>
 </UserControl>
