@@ -162,9 +162,18 @@ namespace AntiPlagiarism.Vsix {
         /// <summary>
         ///   Looks up a localized string similar to Select folder with Acumatica source code files.
         /// </summary>
-        public static string SelectFolderWithSourceDialogMsg {
+        public static string SelectFolderWithAcumaticaSourceDialogMsg {
             get {
-                return ResourceManager.GetString("SelectFolderWithSourceDialogMsg", resourceCulture);
+                return ResourceManager.GetString("SelectFolderWithAcumaticaSourceDialogMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select folder with source code to compare.
+        /// </summary>
+        public static string SelectFolderWithSourceToCompareDialogMsg {
+            get {
+                return ResourceManager.GetString("SelectFolderWithSourceToCompareDialogMsg", resourceCulture);
             }
         }
         

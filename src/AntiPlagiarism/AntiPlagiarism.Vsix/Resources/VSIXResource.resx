@@ -150,7 +150,7 @@
   <data name="SelectedProjectSourceOriginTitle" xml:space="preserve">
     <value>Selected Project</value>
   </data>
-  <data name="SelectFolderWithSourceDialogMsg" xml:space="preserve">
+  <data name="SelectFolderWithAcumaticaSourceDialogMsg" xml:space="preserve">
     <value>Select folder with Acumatica source code files</value>
   </data>
   <data name="SelectSolutionOrProjectFileDialogMsg" xml:space="preserve">
@@ -161,5 +161,8 @@
   </data>
   <data name="SelfAnalysisWorkModeTitle" xml:space="preserve">
     <value>Self-Analysis</value>
+  </data>
+  <data name="SelectFolderWithSourceToCompareDialogMsg" xml:space="preserve">
+    <value>Select folder with source code to compare</value>
   </data>
 </root>
