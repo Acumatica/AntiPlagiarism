@@ -47,16 +47,6 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			windowViewModel.FillColumnsVisibility(columnNames);
 		}
 
-		private void ColumnsVisibilityButton_Click(object sender, RoutedEventArgs e)
-		{
-			if (!(sender is Button columnsVisibilityButton) || columnsVisibilityButton.ContextMenu == null)
-				return;
-
-			columnsVisibilityButton.ContextMenu.PlacementTarget = columnsVisibilityButton;
-			columnsVisibilityButton.ContextMenu.DataContext = columnsVisibilityButton.DataContext;
-			columnsVisibilityButton.ContextMenu.IsOpen = true;
-		}
-
 		private void NestedScrollViewer_HandlePreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
 		{
 			if (e.Handled || !(sender is ScrollViewer scrollControl) || !(scrollControl.Parent is UIElement parent))
