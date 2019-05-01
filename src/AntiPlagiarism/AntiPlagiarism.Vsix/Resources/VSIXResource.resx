@@ -150,6 +150,12 @@
   <data name="SelectedProjectSourceOriginTitle" xml:space="preserve">
     <value>Selected Project</value>
   </data>
+  <data name="SelectFolderWithSourceDialogMsg" xml:space="preserve">
+    <value>Select folder with Acumatica source code files</value>
+  </data>
+  <data name="SelectSolutionOrProjectFileDialogMsg" xml:space="preserve">
+    <value>Select reference solution file</value>
+  </data>
   <data name="SelfAnalysisWorkModeDescription" xml:space="preserve">
     <value>Compare solution with itself to find possibilities for refactoring</value>
   </data>
