@@ -20,14 +20,32 @@ namespace AntiPlagiarism.Vsix.ToolWindows.Converters
 	
 		public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (values == null || values.Length != 3 || !(values[0] is WorkMode workMode) || !(values[2] is bool analysisIsRunning))
+			if (values == null || values.Length != 6 || 
+				!(values[0] is ReferenceWorkMode referenceWorkMode) || 
+				!(values[2] is SourceOriginMode sourceOriginMode) ||
+				!(values[5] is bool analysisIsRunning))
 			{
 				return Binding.DoNothing;
 			}
 
+			if (analysisIsRunning)
+				return false;
+
 			string referenceSolutionPath = values[1] as string;
-			bool isEnabled = !analysisIsRunning && (workMode == WorkMode.SelfAnalysis || !referenceSolutionPath.IsNullOrWhiteSpace());
-			return isEnabled;
+			string sourceCodeFolderPath = values[3] as string;
+			var selectedProject = values[4] as ProjectViewModel;
+
+			if (referenceWorkMode != ReferenceWorkMode.SelfAnalysis && referenceSolutionPath.IsNullOrWhiteSpace())
+				return false;
+			
+			switch (sourceOriginMode)
+			{
+				case SourceOriginMode.SelectedProject when selectedProject == null:
+				case SourceOriginMode.SelectedFolder when sourceCodeFolderPath.IsNullOrWhiteSpace():
+					return false;
+				default:
+					return true;
+			}
 		}
 
 		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

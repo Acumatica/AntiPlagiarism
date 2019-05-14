@@ -8,9 +8,9 @@ using AntiPlagiarism.Core.Utilities;
 
 namespace AntiPlagiarism.Vsix.ToolWindows
 {
-	public static class ReferenceSourcePathRetriever
+	public static class SelectFileOrFolder
 	{
-		public static string GetReferenceSolutionFilePath()
+		public static string SelectSolutionOrProjectFile(string title)
 		{
 			OpenFileDialog openFileDialog = new OpenFileDialog
 			{
@@ -18,9 +18,9 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 				DefaultExt = "csproj",
 				AddExtension = true,
 				CheckFileExists = true,
-				CheckPathExists = true,
+				CheckPathExists = true,			
 				Multiselect = false,
-				Title = "Select reference solution file"
+				Title = title
 			};
 
 			if (openFileDialog.ShowDialog() != true || openFileDialog.FileName.IsNullOrWhiteSpace() || !File.Exists(openFileDialog.FileName))
@@ -34,44 +34,57 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			return openFileDialog.FileName;
 		}
 
-		public static string GetAcumaticaSourcesFolderPath()
+		public static string SelectFolder(string title, string defaultDirectory = null)
 		{
 			if (CommonFileDialog.IsPlatformSupported)
 			{
-				var folderSelectDialog = new CommonOpenFileDialog
+				if (defaultDirectory.IsNullOrWhiteSpace() || !Directory.Exists(defaultDirectory))
+				{
+					defaultDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+				}
+
+				using (var folderSelectDialog = CreateDialog())
+				{
+					var dialogRes = folderSelectDialog.ShowDialog();
+
+					if (dialogRes != CommonFileDialogResult.Ok)
+						return null;
+
+					string selectedDirectory = folderSelectDialog.FileName;
+					return !selectedDirectory.IsNullOrWhiteSpace() && Directory.Exists(selectedDirectory)
+						? selectedDirectory
+						: null;
+				}
+			}
+			else
+			{
+				return SelectFolderWithOldStyleDialog(title);
+			}
+
+			//-------------------------------------Local Function---------------------------------------------
+			CommonOpenFileDialog CreateDialog() =>
+				new CommonOpenFileDialog()
 				{
 					IsFolderPicker = true,
 					AllowNonFileSystemItems = false,
 					Multiselect = false,
-					Title = "Select folder with Acumatica source code files",				
+					Title = title,
 					EnsurePathExists = true,
+					EnsureValidNames = true,
 					AddToMostRecentlyUsedList = true,
-					DefaultDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-					ShowPlacesList = true				
+					DefaultDirectory =  defaultDirectory,
+					ShowPlacesList = true
 				};
-
-				var dialogRes = folderSelectDialog.ShowDialog();
-
-				if (dialogRes != CommonFileDialogResult.Ok)
-					return null;
-
-				string selectedDirectory = folderSelectDialog.FileName;
-				return !selectedDirectory.IsNullOrWhiteSpace() && Directory.Exists(selectedDirectory)
-					? selectedDirectory
-					: null;
-			}
-			else
-			{
-				return GetAcumaticaSourcesFolderPathWithOldStyleDialog();
-			}
 		}
 		
-		public static string GetAcumaticaSourcesFolderPathWithOldStyleDialog()
+		public static string SelectFolderWithOldStyleDialog(string title)
 		{
 			using (var openFolderDialog = new System.Windows.Forms.FolderBrowserDialog())
 			{
-				openFolderDialog.Description = "Select folder with Acumatica source code files";
+				openFolderDialog.Description = title;
 				openFolderDialog.ShowNewFolderButton = false;
+				openFolderDialog.RootFolder = Environment.SpecialFolder.MyDocuments;
+
 				var dialogRes = openFolderDialog.ShowDialog();
 
 				if (dialogRes != System.Windows.Forms.DialogResult.OK && dialogRes != System.Windows.Forms.DialogResult.Yes)

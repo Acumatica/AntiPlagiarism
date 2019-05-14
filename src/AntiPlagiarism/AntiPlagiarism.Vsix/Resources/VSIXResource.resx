@@ -126,16 +126,43 @@
   <data name="AntiPlagiarismWindowTitle" xml:space="preserve">
     <value>AntiPlagiarism</value>
   </data>
+  <data name="CurrentSolutionSourceOriginDescription" xml:space="preserve">
+    <value>Use current solution as a source for comparison</value>
+  </data>
+  <data name="CurrentSolutionSourceOriginTitle" xml:space="preserve">
+    <value>Current Solution</value>
+  </data>
   <data name="ReferenceSolutionWorkModeDescription" xml:space="preserve">
     <value>Comparison with selected reference solution</value>
   </data>
   <data name="ReferenceSolutionWorkModeTitle" xml:space="preserve">
     <value>Reference Solution</value>
   </data>
+  <data name="SelectedFolderSourceOriginDescription" xml:space="preserve">
+    <value>Use selected folder as a source for comparison</value>
+  </data>
+  <data name="SelectedFolderSourceOriginTitle" xml:space="preserve">
+    <value>Selected Folder</value>
+  </data>
+  <data name="SelectedProjectSourceOriginDescription" xml:space="preserve">
+    <value>Use selected project as a source for comparison</value>
+  </data>
+  <data name="SelectedProjectSourceOriginTitle" xml:space="preserve">
+    <value>Selected Project</value>
+  </data>
+  <data name="SelectFolderWithAcumaticaSourceDialogMsg" xml:space="preserve">
+    <value>Select folder with Acumatica source code files</value>
+  </data>
+  <data name="SelectSolutionOrProjectFileDialogMsg" xml:space="preserve">
+    <value>Select reference solution file</value>
+  </data>
   <data name="SelfAnalysisWorkModeDescription" xml:space="preserve">
     <value>Compare solution with itself to find possibilities for refactoring</value>
   </data>
   <data name="SelfAnalysisWorkModeTitle" xml:space="preserve">
     <value>Self-Analysis</value>
+  </data>
+  <data name="SelectFolderWithSourceToCompareDialogMsg" xml:space="preserve">
+    <value>Select folder with source code to compare</value>
   </data>
 </root>

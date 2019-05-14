@@ -19,37 +19,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 	{
 		private CancellationTokenSource _cancellationTokenSource;
 
-		private ColumnsVisibilityCollectionViewModel _columnsVisibilityCollectionViewModel;
-
-		public ColumnsVisibilityCollectionViewModel ColumnsVisibilityCollectionViewModel
-		{
-			get => _columnsVisibilityCollectionViewModel;
-			private set
-			{
-				if (_columnsVisibilityCollectionViewModel != value)
-				{
-					_columnsVisibilityCollectionViewModel = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
-
-		public ExtendedObservableCollection<WorkModeViewModel> WorkModes { get; }
-
-		private WorkModeViewModel _selectedWorkMode;
-
-		public WorkModeViewModel SelectedWorkMode
-		{
-			get => _selectedWorkMode;
-			set
-			{
-				if (_selectedWorkMode != value)
-				{
-					_selectedWorkMode = value;
-					NotifyPropertyChanged();
-				}
-			}
-		}
+		public SettingsViewModel Settings { get; }		
 
 		public ExtendedObservableCollection<PlagiarismInfoViewModel> PlagiatedItems { get; }
 		 
@@ -155,6 +125,21 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			}
 		}
 
+		private bool _areSettingsExpanded = true;
+
+		public bool AreSettingsExpanded
+		{
+			get => _areSettingsExpanded;
+			set
+			{
+				if (_areSettingsExpanded != value)
+				{
+					_areSettingsExpanded = value;
+					NotifyPropertyChanged();
+				}
+			}
+		}
+
 		public Command OpenReferenceSolutionCommand { get; }
 
         public Command RunAnalysisCommand { get; }
@@ -164,9 +149,7 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		public AntiPlagiarismWindowViewModel()
 		{
 			PlagiatedItems = new ExtendedObservableCollection<PlagiarismInfoViewModel>();
-			var workModes = GetWorkModes();
-			WorkModes = new ExtendedObservableCollection<WorkModeViewModel>(workModes);
-			_selectedWorkMode = WorkModes.FirstOrDefault(mode => mode.WorkMode == WorkMode.ReferenceSolution);
+			Settings = new SettingsViewModel(this);
 
             OpenReferenceSolutionCommand = new Command(p => OpenReferenceSolution());
 			RunAnalysisCommand = new Command(p => RunAntiplagiatorAsync().Forget());
@@ -179,33 +162,17 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			_cancellationTokenSource?.Dispose();
 		}
 
-		internal void FillColumnsVisibility(IEnumerable<string> columnNames)
-		{
-			if (columnNames.IsNullOrEmpty())
-				return;
-
-			ColumnsVisibilityCollectionViewModel = new ColumnsVisibilityCollectionViewModel(this, columnNames);
-		}
-
-		private IEnumerable<WorkModeViewModel> GetWorkModes()
-		{
-			yield return new WorkModeViewModel(WorkMode.SelfAnalysis, VSIXResource.SelfAnalysisWorkModeTitle,
-											   VSIXResource.SelfAnalysisWorkModeDescription);
-			yield return new WorkModeViewModel(WorkMode.ReferenceSolution, VSIXResource.ReferenceSolutionWorkModeTitle,
-											   VSIXResource.ReferenceSolutionWorkModeDescription);
-			yield return new WorkModeViewModel(WorkMode.AcumaticaSources, VSIXResource.AcumaticaSourcesWorkModeTitle,
-											   VSIXResource.AcumaticaSourcesWorkModeDescription);
-		}
-
 		private void OpenReferenceSolution()
 		{
-			if (SelectedWorkMode.WorkMode == WorkMode.ReferenceSolution)
+			if (Settings.SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.ReferenceSolution)
 			{
-				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetReferenceSolutionFilePath() ?? ReferenceSolutionPath;
+				ReferenceSolutionPath = SelectFileOrFolder.SelectSolutionOrProjectFile(VSIXResource.SelectSolutionOrProjectFileDialogMsg) ??
+										ReferenceSolutionPath;
 			}
-			else if (SelectedWorkMode.WorkMode == WorkMode.AcumaticaSources)
+			else if (Settings.SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.AcumaticaSources)
 			{
-				ReferenceSolutionPath = ReferenceSourcePathRetriever.GetAcumaticaSourcesFolderPath() ?? ReferenceSolutionPath;
+				ReferenceSolutionPath = SelectFileOrFolder.SelectFolder(VSIXResource.SelectFolderWithAcumaticaSourceDialogMsg) ??
+										ReferenceSolutionPath;
 			}			
 		}
 
@@ -240,12 +207,14 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		private async Task FillItemsAsync(CancellationToken cancellationToken)
 		{
 			PlagiatedItems.Clear();
-			string solutionPath = await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
-			string referenceSolutionPath = SelectedWorkMode.WorkMode == WorkMode.SelfAnalysis
-				? solutionPath
+
+			var workspace = await AntiPlagiarismPackage.Instance.GetVSWorkspaceAsync();
+			string sourceSolutionPath = await GetSourceSolutionPathAsync();
+			string referenceSolutionPath = Settings.SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.SelfAnalysis
+				? sourceSolutionPath
 				: ReferenceSolutionPath;
 
-			if (referenceSolutionPath.IsNullOrWhiteSpace() || solutionPath.IsNullOrWhiteSpace() || cancellationToken.IsCancellationRequested)
+			if (referenceSolutionPath.IsNullOrWhiteSpace() || sourceSolutionPath.IsNullOrWhiteSpace() || cancellationToken.IsCancellationRequested)
 				return;
 
 			int tabSize = await AntiPlagiarismPackage.Instance.GetTabSizeAsync();
@@ -253,11 +222,11 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			await TaskScheduler.Default;		 //switch to background thread
 			
 			double threshholdFraction = ThreshholdPercent / 100.0;
-			PlagiarismScanner plagiarismScanner = new PlagiarismScanner(referenceSolutionPath, solutionPath, 
+			PlagiarismScanner plagiarismScanner = new PlagiarismScanner(referenceSolutionPath, sourceSolutionPath, 
 																		threshholdFraction, MinCheckedMethodSize);
 			IEnumerable<PlagiarismInfo> plagiatedItems = plagiarismScanner.Scan(callFromVS: true) ?? Enumerable.Empty<PlagiarismInfo>();
 
-			if (SelectedWorkMode.WorkMode == WorkMode.SelfAnalysis)
+			if (Settings.SelectedReferenceWorkMode.WorkMode == ReferenceWorkMode.SelfAnalysis)
 			{
 				plagiatedItems = FilterPlagiarismSimmetricResultsOnSelfAnalysis(plagiatedItems);
 			}
@@ -267,14 +236,30 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 			if (cancellationToken.IsCancellationRequested)
 				return;
 
-			string sourceSolutionDir = Path.GetDirectoryName(solutionPath) + Path.DirectorySeparatorChar;
+			string sourceSolutionDir = Path.GetDirectoryName(sourceSolutionPath) + Path.DirectorySeparatorChar;
 			string referenceSolutionDir = Path.GetDirectoryName(referenceSolutionPath) + Path.DirectorySeparatorChar;
-			var plagiatedItemVMs = plagiatedItems.Select(item => new PlagiarismInfoViewModel(this, item, referenceSolutionDir, sourceSolutionDir, tabSize))
+			var plagiatedItemVMs = plagiatedItems.Select(item => new PlagiarismInfoViewModel(this, item, referenceSolutionDir, 
+																							 sourceSolutionDir, tabSize))
 												 .ToList();			//Make sure to create View Models on the background thread via buffering operation
 			
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 			PlagiatedItems.AddRange(plagiatedItemVMs);				//Add view models on UI thread
 		}	
+
+		private async Task<string> GetSourceSolutionPathAsync()
+		{
+			switch (Settings.SelectedSourceOriginMode.WorkMode)
+			{
+				case SourceOriginMode.CurrentSolution:
+					return await AntiPlagiarismPackage.Instance.GetSolutionPathAsync();
+				case SourceOriginMode.SelectedProject:
+					return Settings.SelectedProject?.Project?.FilePath ?? string.Empty;
+				case SourceOriginMode.SelectedFolder:
+					return Settings.SourceFolderPath ?? string.Empty;
+				default:
+					return string.Empty;
+			}
+		}
 
 		private IEnumerable<PlagiarismInfo> FilterPlagiarismSimmetricResultsOnSelfAnalysis(IEnumerable<PlagiarismInfo> plagiatedItems)
 		{

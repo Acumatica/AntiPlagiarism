@@ -23,18 +23,7 @@
                     <converters:BoolInversionConverter x:Key="boolInversionConverter"/>
                     <converters:BoolToVisibilityConverter x:Key="visibilityConverter"/>
                     <converters:RunButtonIsEnabledMultiConverter x:Key="runButtonIsEnabledMultiConverter"/>
-                    
-
-                    <!-- Buttons Style-->                                                     
-                    <Style x:Key="toolbarButtonStyle" TargetType="Button" BasedOn="{StaticResource vsButtonStyle}">
-                        <Setter Property="Padding" Value="4,2,4,2"/>
-                        <Setter Property="VerticalAlignment" Value="Center"/>
-                        <Setter Property="Margin" Value="5,2,0,2"/>
-                        <Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
-                        <Setter Property="MaxWidth" Value="30"/>
-                        <Setter Property="MinWidth" Value="30"/>
-                    </Style>
-
+                                   
                     <!-- Image Style-->
                     <Style TargetType="Image" BasedOn="{StaticResource vsImageStyle}"/>
 
@@ -79,7 +68,7 @@
             <!--HACK - DataGridColumn isn't actually an element of VIsual Tree, it's not connected to DataGrid's data context and doesn't work with Visibility property.
                 We need proxy element to connect column to context
                 https://stackoverflow.com/questions/7660967/wpf-error-cannot-find-governing-frameworkelement-for-target-element-->
-            <FrameworkElement x:Key="proxyElement" DataContext="{Binding}"/>
+            <FrameworkElement x:Key="proxyElement" DataContext="{Binding Path=Settings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid.Resources>
         
         <Grid.RowDefinitions>
@@ -94,8 +83,8 @@
         <Border Grid.Row="0" BorderThickness="1" CornerRadius="3" Margin="2,4"
                 BorderBrush="{DynamicResource {x:Static platformUI:EnvironmentColors.BrandedUIBorderBrushKey}}">
             <WrapPanel Orientation="Horizontal">
-                <ToggleButton x:FieldModifier="private" x:Name="settingsButton" Margin="5,5,0,5" VerticalAlignment="Center"
-                              IsChecked="True">
+                <ToggleButton Margin="5,5,0,5" VerticalAlignment="Center" 
+                              IsChecked="{Binding Path=AreSettingsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ToggleButton.Style>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource vsToggleButtonStyle}">
                             <Setter Property="ToolTip" Value="Expand Settings"/>
@@ -111,10 +100,11 @@
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/Settings.ico"/>
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ExpandDown.ico"
-                               Visibility="{Binding ElementName=settingsButton, Path=IsChecked, Converter={StaticResource visibilityConverter}, 
-                                                    ConverterParameter=!}"/>
+                               Visibility="{Binding Path=AreSettingsExpanded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
+                                                    Converter={StaticResource visibilityConverter}, ConverterParameter=!}"/>
                         <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/CollapseUp.ico"
-                               Visibility="{Binding ElementName=settingsButton, Path=IsChecked,Converter={StaticResource visibilityConverter}}"/>
+                               Visibility="{Binding Path=AreSettingsExpanded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
+                                                    Converter={StaticResource visibilityConverter}}"/>
                     </StackPanel>
                 </ToggleButton>
                 
@@ -170,10 +160,10 @@
                     <StackPanel.Style>
                         <Style TargetType="StackPanel">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=SelectedWorkMode.WorkMode, Mode=OneWay,
-                                             UpdateSourceTrigger=PropertyChanged}">
+                                <DataTrigger Binding="{Binding Path=Settings.SelectedReferenceWorkMode.WorkMode, 
+                                                               Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                                     <DataTrigger.Value>
-                                        <local:WorkMode>SelfAnalysis</local:WorkMode>
+                                        <local:ReferenceWorkMode>SelfAnalysis</local:ReferenceWorkMode>
                                     </DataTrigger.Value>
 
                                     <Setter Property="IsEnabled" Value="False"/>
@@ -189,9 +179,10 @@
                                 <Setter Property="Text" Value="Reference Solution:"/>
 
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=SelectedWorkMode.WorkMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <DataTrigger Binding="{Binding Path=Settings.SelectedReferenceWorkMode.WorkMode, 
+                                                                   Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                                         <DataTrigger.Value>
-                                            <local:WorkMode>AcumaticaSources</local:WorkMode>
+                                            <local:ReferenceWorkMode>AcumaticaSources</local:ReferenceWorkMode>
                                         </DataTrigger.Value>
 
                                         <Setter Property="Text" Value="Acumatica Sources"/>
@@ -209,9 +200,10 @@
                                 <Setter Property="ToolTip" Value="Open Reference Solution"/>
 
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=SelectedWorkMode.WorkMode, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <DataTrigger Binding="{Binding Path=Settings.SelectedReferenceWorkMode.WorkMode, 
+                                                                   Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                                         <DataTrigger.Value>
-                                            <local:WorkMode>AcumaticaSources</local:WorkMode>
+                                            <local:ReferenceWorkMode>AcumaticaSources</local:ReferenceWorkMode>
                                         </DataTrigger.Value>
                                         
                                         <Setter Property="ToolTip" Value="Select folder with Acumatica sources"/>
@@ -227,8 +219,11 @@
                             Style="{StaticResource toolbarButtonStyle}">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource runButtonIsEnabledMultiConverter}">
-                                <Binding Path="SelectedWorkMode.WorkMode" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="Settings.SelectedReferenceWorkMode.WorkMode" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                                 <Binding Path="ReferenceSolutionPath" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="Settings.SelectedSourceOriginMode.WorkMode" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="Settings.SourceFolderPath" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
+                                <Binding Path="Settings.SelectedProject" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                                 <Binding Path="IsAnalysisRunning" Mode="OneWay" UpdateSourceTrigger="PropertyChanged"/>
                             </MultiBinding>
                         </Button.IsEnabled>
@@ -251,91 +246,10 @@
             </WrapPanel>
         </Border>
 
-        <Grid Grid.Row="1">
-            <Grid.Style>
-                <Style TargetType="Grid">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=settingsButton, Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Value="False">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>
-            
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto" MinWidth="200" MaxWidth="200"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" Style="{StaticResource toolbarButtonStyle}" ToolTip="Columns Visibility" Padding="0" Background="Transparent"
-                    BorderThickness="0" Margin="2,5,0,5" ContextMenuService.IsEnabled="False"
-                    Click="ColumnsVisibilityButton_Click">
-                <Image Source="pack://application:,,,/AntiPlagiarism;component/Resources/ColumnSettings.ico"
-                       MaxHeight="20" MaxWidth="20"/>
-                <Button.ContextMenu>
-                    <ContextMenu Placement="Bottom" ItemsSource="{Binding Path=ColumnsVisibilityCollectionViewModel.Columns}">
-                        <ContextMenu.ItemContainerStyle>
-                            <Style TargetType="{x:Type MenuItem}">
-                                <Setter Property="IsCheckable" Value="True"/>
-                                <Setter Property="StaysOpenOnClick" Value="True"/>
-                                <Setter Property="IsChecked" Value="{Binding Path=IsVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <Setter Property="Header" Value="{Binding Path=ColumnName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            </Style>
-                        </ContextMenu.ItemContainerStyle>
-                    </ContextMenu>
-                </Button.ContextMenu>
-            </Button>
-
-            <ToggleButton x:FieldModifier="private" x:Name="gridRowVisibilityToggleButton"
-                          Grid.Column="1" Margin="2,5,0,5">
-                <ToggleButton.Style>
-                    <Style TargetType="ToggleButton" BasedOn="{StaticResource vsToggleButtonStyle}">
-                        <Setter Property="ToolTip" Value="Show all rows in the grid. Click to show only rows which exceed threshold"/>
-
-                        <Style.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="ToolTip" Value="Show only rows which exceed threshold in the grid. Click to show all rows"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ToggleButton.Style>
-                <Image MaxHeight="18" MaxWidth="18">
-                    <Image.Style>
-                        <Style TargetType="Image" BasedOn="{StaticResource vsImageStyle}">
-                            <Setter Property="Source" 
-                                    Value="pack://application:,,,/AntiPlagiarism;component/Resources/StatusInformation.ico"/>
-
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ToggleButton}, 
-                                                               Path=IsChecked, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                             Value="True">
-                                    <Setter Property="Source" 
-                                            Value="pack://application:,,,/AntiPlagiarism;component/Resources/StatusInvalid.ico"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
-            </ToggleButton>
-
-            <TextBlock Grid.Column="2" Text="Work Mode:" TextAlignment="Center" VerticalAlignment="Center" Margin="20,5,0,5"/>
-            <ComboBox Grid.Column="3" Margin="5,5,0,5" Style="{StaticResource vsComboboxStyle}"
-                      ItemsSource="{Binding Path=WorkModes, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                      SelectedItem="{Binding Path=SelectedWorkMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      ToolTip="{Binding Path=SelectedWorkMode.Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" ToolTipService.ShowOnDisabled="True"
-                      IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource boolInversionConverter}}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                                   Text="{Binding Path=Name, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                   ToolTip="{Binding Path=Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </Grid>
+        <local:SettingsControl Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                   DataContext="{Binding Path=Settings, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                   Visibility="{Binding Path=ParentViewModel.AreSettingsExpanded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
+                                        Converter={StaticResource visibilityConverter}}"/>
 
         <DataGrid Grid.Row="2" Style="{StaticResource readonlyDataGridStyle}" CellStyle="{StaticResource datagridCellStyle}"          
                   ItemsSource="{Binding Path=PlagiatedItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
@@ -404,9 +318,8 @@
                     </Setter>
 
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=gridRowVisibilityToggleButton, Path=IsChecked,
-                                                       Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-                                     Value="True">
+                        <DataTrigger Binding="{Binding Path=ParentViewModel.Settings.ShowOnlyItemsExceedingThreshold,
+                                                       Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Value="True">
                             <Setter Property="Visibility" 
                                     Value="{Binding Path=IsThresholdExceeded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
                                                     Converter={StaticResource visibilityConverter}}"/>
@@ -416,7 +329,7 @@
             </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Source Name" Width="*" Binding="{Binding Path=SourceName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Visibility="{Binding Source={StaticResource proxyElement}, 
+                                    Visibility="{Binding Source={StaticResource proxyElement}, 
                                                           Path='DataContext.ColumnsVisibilityCollectionViewModel[Source Name].IsVisible', 
                                                           Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource visibilityConverter}}"
                                     ElementStyle="{StaticResource cellTextBlockStyle}"/>

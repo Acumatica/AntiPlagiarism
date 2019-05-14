@@ -14,8 +14,6 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 		private readonly Dictionary<string, ColumnVisibilityViewModel> _columnVisibilitiesByName;
 		private readonly ObservableCollection<ColumnVisibilityViewModel> _columns;
 
-		public AntiPlagiarismWindowViewModel ParentViewModel { get; }
-
 		public ReadOnlyObservableCollection<ColumnVisibilityViewModel> Columns { get; }
 
 		public ColumnVisibilityViewModel this[string name] => 
@@ -25,13 +23,10 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 					? columnVM
 					: null;
 
-		public ColumnsVisibilityCollectionViewModel(AntiPlagiarismWindowViewModel parentViewModel,
-													IEnumerable<string> columnNames)
+		public ColumnsVisibilityCollectionViewModel(IEnumerable<string> columnNames)
 		{
-			parentViewModel.ThrowOnNull(nameof(parentViewModel));
 			columnNames.ThrowOnNull(nameof(columnNames));
 
-			ParentViewModel = parentViewModel;
 			_columnVisibilitiesByName = columnNames.Distinct()
 												   .Select(name => new ColumnVisibilityViewModel(name))
 												   .ToDictionary(colName => colName.ColumnName);

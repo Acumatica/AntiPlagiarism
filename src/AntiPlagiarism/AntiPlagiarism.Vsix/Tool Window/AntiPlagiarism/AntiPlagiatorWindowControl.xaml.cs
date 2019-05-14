@@ -37,24 +37,17 @@ namespace AntiPlagiarism.Vsix.ToolWindows
 
 		private void DataGrid_Initialized(object sender, EventArgs e)
 		{
-			if (!(sender is DataGrid dataGrid) || !(dataGrid.DataContext is AntiPlagiarismWindowViewModel windowViewModel))
+			if (!(sender is DataGrid dataGrid) || !(dataGrid.DataContext is AntiPlagiarismWindowViewModel windowViewModel) ||
+				windowViewModel.Settings == null)
+
+			{
 				return;
+			}
 
 			var columnNames = dataGrid.Columns.Select(col => col.Header is DataGridColumnHeader header
 																? header.Tag.ToString()
-																: col.Header.ToString())
-											  .OfType<string>();
-			windowViewModel.FillColumnsVisibility(columnNames);
-		}
-
-		private void ColumnsVisibilityButton_Click(object sender, RoutedEventArgs e)
-		{
-			if (!(sender is Button columnsVisibilityButton) || columnsVisibilityButton.ContextMenu == null)
-				return;
-
-			columnsVisibilityButton.ContextMenu.PlacementTarget = columnsVisibilityButton;
-			columnsVisibilityButton.ContextMenu.DataContext = columnsVisibilityButton.DataContext;
-			columnsVisibilityButton.ContextMenu.IsOpen = true;
+																: col.Header.ToString()).OfType<string>();										  
+			windowViewModel.Settings.FillColumnsVisibility(columnNames);
 		}
 
 		private void NestedScrollViewer_HandlePreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
