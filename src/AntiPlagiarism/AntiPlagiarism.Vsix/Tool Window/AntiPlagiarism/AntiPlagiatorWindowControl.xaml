@@ -215,7 +215,7 @@
                     </Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button x:FieldModifier="private" x:Name="runButton" ToolTip="Run Anti-Plagiator" Command="{Binding Path=RunAnalysisCommand}"
+                    <Button x:FieldModifier="private" x:Name="runButton" ToolTip="Run analysis" Command="{Binding Path=RunAnalysisCommand}"
                             Style="{StaticResource toolbarButtonStyle}">
                         <Button.IsEnabled>
                             <MultiBinding Converter="{StaticResource runButtonIsEnabledMultiConverter}">
