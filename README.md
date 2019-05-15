@@ -1,6 +1,5 @@
 # Antiplagiarism
-Antiplagiarism is a Visual Studio extension that can compare the C# code in order to find similar methods. The tool can be used to compare the source code with itself
-in order to collect data for refactoring or with a custom code provided via path to folder/solution file/project file. 
+Antiplagiarism is a Visual Studio extension that can compare the C# code in order to find similar methods. The tool can be used to compare the source code with itself or with a provided custom code in order to collect data for refactoring. 
 Antiplagiarism was designed to be used for the development/certification of third party solutions for Acumatica ERP application. 
 However, it can be used with any C# code as an instrument to find code duplication in methods. The functionality is similar to the Code Clone Detection functionality,
 which is available in the Visual Studio Enterprise. (For details about this functionality, see https://docs.microsoft.com/en-us/previous-versions/hh205279(v=vs.140)
