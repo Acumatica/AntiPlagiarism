@@ -6,7 +6,7 @@ Antiplagiarism 1.3 includes new features, enhancements, and bug fixes described 
 
 ### Enhanced Code Comparison Algorithm
 Antiplagiarism now uses advanced code analysis algorithm from Roslyn, which performs more complex comparison of syntax trees as compared to the previous version of Antiplagiarism.
-With this new algorith, Antiplagiarism can find duplication even for methods that have from 5 to 10 lines.
+With this new algorithm, Antiplagiarism can find duplication even for methods that have from 5 to 10 lines.
 
 ### Code Fragments in the Data Grid
 In the data grid, you can now view the code fragments for the selected row if, in the context menu, you click **Show Code**. 
