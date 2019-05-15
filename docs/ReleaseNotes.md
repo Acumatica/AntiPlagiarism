@@ -1,19 +1,19 @@
-# Antiplagiarism Release Notes
-This document provides information about fixes, enhancements, and key features that are available in Antiplagiarism.
+# AntiPlagiarism Release Notes
+This document provides information about fixes, enhancements, and key features that are available in AntiPlagiarism.
 
-## Antiplagiarism 1.3
-Antiplagiarism 1.3 includes new features, enhancements, and bug fixes described in this section, as well as the features that have been implemented in the previous version.
+## AntiPlagiarism 1.3
+AntiPlagiarism 1.3 includes new features, enhancements, and bug fixes described in this section, as well as the features that have been implemented in the previous version.
 
 ### Enhanced Code Comparison Algorithm
-Antiplagiarism now uses advanced code analysis algorithm from Roslyn, which performs more complex comparison of syntax trees as compared to the previous version of Antiplagiarism.
-With this new algorithm, Antiplagiarism can find duplication even for methods that have from 5 to 10 lines.
+AntiPlagiarism now uses advanced code analysis algorithm from Roslyn, which performs more complex comparison of syntax trees as compared to the previous version of AntiPlagiarism.
+With this new algorithm, AntiPlagiarism can find duplication even for methods that have from 5 to 10 lines.
 
 ### Code Fragments in the Data Grid
 In the data grid, you can now view the code fragments for the selected row if, in the context menu, you click **Show Code**. 
 To hide the code, you can click **Hide Code** in the context menu or change the selected row.
 
 ### New Settings
-Antiplagiarism now has the **Settings** panel. You can expand or collapse the panel by clicking on the button with a gear icon. The panel includes the settings, which are described below.
+AntiPlagiarism now has the **Settings** panel. You can expand or collapse the panel by clicking on the button with a gear icon. The panel includes the settings, which are described below.
 
 #### Visibility of Columns
 You can specify the columns visible in the data grid by using the **Column Visibility** button. 
@@ -23,14 +23,14 @@ By using the **Show only rows exceeding threshold** button, you can turn on the 
 You can change the **Threshold** parameter to filter already calculated results.
 
 #### Ability to Select Parts of the Solution for Comparison
-In previous version of Antiplagiarism, you could only use the whole current solution as the source code for the comparison. Now you can choose one of the following options in **Source Origin**:
+In previous version of AntiPlagiarism, you could only use the whole current solution as the source code for the comparison. Now you can choose one of the following options in **Source Origin**:
 
 1. **Current Solution** to use the whole current solution for the comparison.
 2. **Selected Project** to use the selected project from the current solution. The **Select Project** box will appear in which you can choose the project for the comparison.
 3. **Selected Folder** to use the selected folder with the source code for the comparison. You can specify the folder in the **Select Folder** panel.
 
 #### New Work Modes
-In previous version of Antiplagiarism, you could only specify the solution file as the reference solution for the comparison. Now you can choose one of the following modes:
+In previous version of AntiPlagiarism, you could only specify the solution file as the reference solution for the comparison. Now you can choose one of the following modes:
 
 1) **Self-Analysis** to compare the source code with itself. This mode is useful for refactoring.
 2) **Reference Solution** to compare the source code with the provided reference solution. You can select the reference solution in the **Reference Solution** control.
@@ -56,9 +56,9 @@ In this version, the following bugs have been fixed.
 | The data from the **Similarity** column wasn't copied to the clipboard. | The data now is copied to the clipboard for all data grid columns. |
 
 
-## Antiplagiarism 1.0
-Antiplagiarism 1.0 is the first release of the tool. The tool allows you to compare the current solution with a specified reference solution.
-To start working with the Antiplagiarism, you must open in the Visual Studio the solution you want to analyze. Then you need to open the Antiplagiarism window
+## AntiPlagiarism 1.0
+AntiPlagiarism 1.0 is the first release of the tool. The tool allows you to compare the current solution with a specified reference solution.
+To start working with the AntiPlagiarism, you must open in the Visual Studio the solution you want to analyze. Then you need to open the AntiPlagiarism window
 from the **Tools** main menu of Visual Studio. 
 
 ###Functionality

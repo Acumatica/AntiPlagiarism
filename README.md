@@ -1,13 +1,13 @@
-# Antiplagiarism
-Antiplagiarism is a Visual Studio extension that can compare C# code from different sources and find similar methods in the compared code. You can use the tool to collect the data for refactoring by comparing the source code with itself or with the provided custom code. 
+# AntiPlagiarism
+AntiPlagiarism is a Visual Studio extension that can compare C# code from different sources and find similar methods in the compared code. You can use the tool to collect the data for refactoring by comparing the source code with itself or with the provided custom code. 
 
-Antiplagiarism is intended to be used for the development and certification of third-party solutions for the Acumatica ERP application. 
+AntiPlagiarism is intended to be used for the development and certification of third-party solutions for the Acumatica ERP application. 
 However, it can be used with any C# code as an instrument to find code duplication in methods. The functionality is similar to the Code Clone Detection functionality,
 which is available in Visual Studio Enterprise. (For details about this functionality, see https://docs.microsoft.com/en-us/previous-versions/hh205279(v=vs.140)
 .)
 
 ## Functionality
-To start working with Antiplagiarism, you open in Visual Studio the solution you want to analyse and then open the Antiplagiarism window
+To start working with AntiPlagiarism, you open in Visual Studio the solution you want to analyse and then open the AntiPlagiarism window
 from the **Tools** main menu of Visual Studio. 
 
 You can specify the parameters for analysis such as **Threshold** and **Min. Method Size**. You start the analysis by clicking the **Run** button. 
@@ -25,7 +25,7 @@ The copied data can be pasted to Excel or another place.
  - You can filter the data in the table by using the **Threshold** parameter. The **Similarity** column shows how similar the source and reference methods are. The red information sign to the left of the value indicates that the similarity value exceeds the threshold. If you change the **Threshold** parameter value for the already completed analysis, the red information signs is updated. You can also use the **Show only rows exceeding threshold** settign for filtering, which is described in the **Settings** section.
 
 ### Settings
-Antiplagiarism has the **Settings** panel. You can expand or collapse the panel by clicking on the button with a gear icon. 
+AntiPlagiarism has the **Settings** panel. You can expand or collapse the panel by clicking on the button with a gear icon. 
 
 The panel contains the following elements.
 
@@ -40,4 +40,4 @@ The panel contains the following elements.
 To build the solution, do the following:
 
 1. Add your strong-name key file as _src/Key.snk_. If you don't have one, run Developer Command Prompt and generate the key by using the following command: _sn.exe -k "src\Key.snk"_.
-2. Build _Antiplagiarism.sln_.
+2. Build _AntiPlagiarism.sln_.
