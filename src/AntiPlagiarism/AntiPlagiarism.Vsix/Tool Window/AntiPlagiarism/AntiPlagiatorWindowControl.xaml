@@ -111,7 +111,7 @@
                 <StackPanel Orientation="Horizontal" 
                             IsEnabled="{Binding Path=IsAnalysisRunning, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
                                                 Converter={StaticResource boolInversionConverter}}">
-                    <TextBlock Text="Threshhold:" Margin="10,2,0,2" VerticalAlignment="Center"/>
+                    <TextBlock Text="Threshold:" Margin="10,2,0,2" VerticalAlignment="Center"/>
                     <TextBox Text="{Binding Path=ThreshholdPercent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
                                             StringFormat={}{0:F1}, ValidatesOnExceptions=True}"
                              TextAlignment="Center" Margin="10,2,0,2" MinWidth="50" MaxWidth="50" VerticalAlignment="Center">
